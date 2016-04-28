@@ -232,7 +232,7 @@ a {
 }
 #container .left-col {
   background: rgba(255,255,255,0.85);
-  width: 300px;
+  width: 308px;
   position: fixed;
   opacity: 1;
   -webkit-transition: all 0.2s ease-in;
@@ -263,7 +263,7 @@ a {
   right: 0;
   min-height: 100%;
   background: rgba(255,255,255,0.8);
-  left: 300px;
+  left: 308px;
   width: auto;
 }
 @media screen and (max-width: 800px) {
@@ -680,7 +680,7 @@ a {
 }
 #header .header-menu li a {
   font-size: 0.875rem;
-  min-width: 300px;
+  min-width: 308px;
 }
 #header .switch-area {
   position: relative;
@@ -987,7 +987,7 @@ a {
 }
 .hide-labels {
   position: fixed;
-  left: 378px;
+  left: 386px;
   top: 30px;
   padding: 1px;
   border: none;
@@ -1008,7 +1008,7 @@ a {
   opacity: 1;
 }
 #post-nav-button {
-  left: 300px;
+  left: 308px;
   top: 61.8%;
 }
 #post-nav-button a {
@@ -1039,10 +1039,18 @@ color
 .post-list li:hover a {
   color: #88acdb;
 }
-.pace .pace-progress {
-  background: #77b6ff;
-  -webkit-box-shadow: 0 0 10px rgba(119,182,255,0.7);
-  box-shadow: 0 0 10px rgba(119,182,255,0.7);
+.ui-tooltip {
+  padding: 6px;
+  max-width: 30em;
+  -webkit-box-shadow: 0 0 0.8em rgba(0,0,0,0.6);
+  box-shadow: 0 0 0.8em rgba(0,0,0,0.6);
+  color: #fff;
+  font-family: "Lucida Grande", Verdana, "Helvetica Neue", Arial, "Microsoft YaHei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
+  font-size: 0.9em;
+  background: rgba(0,0,0,0.65);
+}
+body .ui-tooltip {
+  border: 1px solid #fff;
 }
 .social,
 .share,
@@ -1330,6 +1338,13 @@ color
 .article-entry blockquote blockquote {
   border-left: none;
 }
+.article-entry blockquote footer {
+  font-style: italic;
+}
+.article-entry blockquote footer cite::before {
+  content: "—";
+  padding: 0 0.3em;
+}
 .article-entry a:hover {
   text-decoration: underline;
   color: #9c9;
@@ -1370,6 +1385,12 @@ color
 .article-entry li ol li:before {
   content: "";
   background: #dedede;
+}
+.article-entry li.task-list {
+  list-style: none;
+}
+.article-entry li.task-list::before {
+  display: none;
 }
 .article-entry h1 {
   margin-top: 30px;
@@ -1600,7 +1621,7 @@ li:hover {
 #tocButton {
   position: fixed;
   border: none;
-  left: 220px;
+  left: 228px;
   top: 385px;
   background: none;
   font-size: 0.9em;
@@ -1616,7 +1637,7 @@ li:hover {
 }
 .toc-article {
   position: fixed;
-  width: 230px;
+  width: 238px;
   top: 378px;
   bottom: 1em;
   left: 0;
