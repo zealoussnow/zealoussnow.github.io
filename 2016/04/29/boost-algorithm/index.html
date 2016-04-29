@@ -3,18 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>分类 &amp; 标签 | LeoZhang&#39;s Blog</title>
+  <title>Boost学习 —— algorithm | LeoZhang&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Working Hard.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="分类 & 标签">
-<meta property="og:url" content="https://zealoussnow.github.io/tags/index.html">
+  <meta name="description" content="Searching AlgorithmsBoyer-Moore Search(boyer_moore.hpp)(1). Interface
+For flexibility, the Boyer-Moore algorithm has two interfaces:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Boost学习 —— algorithm">
+<meta property="og:url" content="https://zealoussnow.github.io/2016/04/29/boost-algorithm/index.html">
 <meta property="og:site_name" content="LeoZhang's Blog">
-<meta property="og:description" content="Working Hard.">
-<meta property="og:updated_time" content="2016-04-29T03:13:44.901Z">
+<meta property="og:description" content="Searching AlgorithmsBoyer-Moore Search(boyer_moore.hpp)(1). Interface
+For flexibility, the Boyer-Moore algorithm has two interfaces:">
+<meta property="og:updated_time" content="2016-04-29T09:39:42.788Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="分类 & 标签">
-<meta name="twitter:description" content="Working Hard.">
+<meta name="twitter:title" content="Boost学习 —— algorithm">
+<meta name="twitter:description" content="Searching AlgorithmsBoyer-Moore Search(boyer_moore.hpp)(1). Interface
+For flexibility, the Boyer-Moore algorithm has two interfaces:">
   
     <link rel="alternative" href="/atom.xml" title="LeoZhang&#39;s Blog" type="application/atom+xml">
   
@@ -46,7 +49,7 @@
           fancybox: true,
           animate: true,
           isHome: false,
-          isPost: false,
+          isPost: true,
           isArchive: false,
           isTag: false,
           isCategory: false,
@@ -257,11 +260,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-boost-algorithm" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/tags/index.html" class="article-date">
-      <time datetime="2016-04-29T01:43:12.000Z" itemprop="datePublished">2016-04-29</time>
+      <a href="/2016/04/29/boost-algorithm/" class="article-date">
+      <time datetime="2016-04-29T09:36:10.000Z" itemprop="datePublished">2016-04-29</time>
 </a>
     </div>
   
@@ -274,7 +277,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      分类 &amp; 标签
+      Boost学习 —— algorithm
     </h1>
   
 
@@ -282,8 +285,16 @@
       
       <div class="article-info article-info-post">
         
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/程序设计/">程序设计</a>
+    </div>
+
 
         
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C-Boost/">C++ Boost</a></li></ul>
+    </div>
+
         <div class="clearfix"></div>
       </div>
       
@@ -291,97 +302,121 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              <style>
-    .article-meta { display: none; }
-    #container .article .article-title { padding-right: 0; }
-    .article-header {
-        padding: 0;
-        padding-top: 26px;
-        border-left: none;
-        text-align: center;
-    }
-    .article-header:hover { border-left: none; }
-    .article-title { font-size: 1.6em }
-    .article-entry hr { margin: 0;}
-    .article-meta,
-    #container .article-info-post.article-info { display: none;}
-    #container .article .article-title { padding: 0; }
-</style>
+        <h2 id="Searching-Algorithms"><a href="#Searching-Algorithms" class="headerlink" title="Searching Algorithms"></a>Searching Algorithms</h2><h3 id="Boyer-Moore-Search-boyer-moore-hpp"><a href="#Boyer-Moore-Search-boyer-moore-hpp" class="headerlink" title="Boyer-Moore Search(boyer_moore.hpp)"></a>Boyer-Moore Search(boyer_moore.hpp)</h3><p>(1). Interface</p>
+<p>For flexibility, the Boyer-Moore algorithm has two interfaces:</p>
+<a id="more"></a>
+<ul>
+<li>A object-based interface</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> patIter&gt;</span><br><span class="line"><span class="keyword">class</span> boyer_moore {</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    boyer_moore(patIter first, patIter last);</span><br><span class="line">    ~boyter_moore();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> corpusIter&gt;</span><br><span class="line">    <span class="function">corpusIter <span class="title">operator</span><span class="params">()</span><span class="params">(corpusIter corpus_first, corpusIter corpus_last)</span></span>;</span><br><span class="line">};</span><br></pre></td></tr></table></figure>
+<ul>
+<li>A procedural one</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> patIter, <span class="keyword">typename</span> corpusIter&gt;</span><br><span class="line"><span class="function">corpusIter <span class="title">boyer_moore_search</span><span class="params">(</span><br><span class="line">    corpusIter corpus_first, corpusIter corpus_last,</span><br><span class="line">    patIter first, patIter last)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>(2). Performance</p>
+<p>(3). Memory Use</p>
+<p>The algorithm allocates two internal tables</p>
+<ul>
+<li>The first one is proportional to the length of the pattern</li>
+<li>The second one has one entry for each member of the &#x201C;alphabet&#x201D;<br>in the pattern. For (8-bit) character types, this table contains 256 entries.</li>
+</ul>
 
-
-    <!-- Tag Cloud Page -->
-    <hr>
-<br>
-<ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Nodejs/">Nodejs</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/文章摘录/">文章摘录</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/程序设计/">程序设计</a><span class="category-list-count">8</span></li></ul>
-
-<p class="count"></p>
-
-<div class="tags">
-    <a href="/tags/C/" style="font-size: 16px; color: #808080">C</a> <a href="/tags/C/" style="font-size: 25.5px; color: #404040">C++</a> <a href="/tags/C-Boost/" style="font-size: 16px; color: #808080">C++ Boost</a> <a href="/tags/Electron/" style="font-size: 16px; color: #808080">Electron</a> <a href="/tags/Linux基础/" style="font-size: 16px; color: #808080">Linux基础</a> <a href="/tags/Python高级编程/" style="font-size: 35px; color: #000">Python高级编程</a> <a href="/tags/Windows/" style="font-size: 16px; color: #808080">Windows</a> <a href="/tags/编程经验/" style="font-size: 16px; color: #808080">编程经验</a> <a href="/tags/网络基础/" style="font-size: 16px; color: #808080">网络基础</a>
-</div>
-<style>
-    .category-list li{
-        display: inline-block;
-        margin: 0 1em .5em 0;
-        padding: 4px;
-        border: 1px solid lightgray;
-        font-size: 1.2rem;
-    }
-    .category-list a { color: gray; }
-    .category-list-item:hover a {
-        color: gray;
-        text-decoration: none;
-    }
-    .category-list-count {
-        margin-left: 2px;
-        font-size: .9rem;
-    }
-    .article-entry ul li:before{ display: none; }
-    .article-inner { text-align: center; }
-    .tags {
-        max-width: 42em;
-        margin: 2em auto;
-        margin-top: 0em;
-    }
-    .tags a {
-        margin-right: 1em;
-        line-height: 65px;
-        border-bottom: 1px solid gray;
-        white-space: nowrap;
-        transition: border-bottom .5s;
-    }
-    .tags a:hover {
-        border-bottom: 3px dotted gray;
-        text-decoration: none;
-    }
-    #count > span {
-        margin: auto .2em;
-        font-weight: bold;
-    }
-</style>
-
-<!-- Count tags and categories -->
-<p id="count">
-        已有<span><script>document.write($(".category-list-item").length)</script></span>个分类，
-        共计<span><script>document.write($(".tags > a").length)</script></span>个标签
-</p>
-<script>
-    $('#count').appendTo('.count');
-</script>
-
-          
-        
       
     </div>
     
   </div>
   
     
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/04/29/boost-algorithm/">Boost学习 —— algorithm</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">LeoZhang</a></p>
+        <p><span>发布时间:</span>2016-04-29, 17:36:10</p>
+        <p><span>最后更新:</span>2016-04-29, 17:39:42</p>
+	<!-- 添加更新历史 -->
+        
+            <p>
+                <span>更新历史:</span><i class="fa fa-github"></i>
+                <a href="https://github.com/zealoussnow/BlogSource/blame/master/2016-04-29-boost-algorithm.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
+                <a href="https://github.com/zealoussnow/BlogSource/commits/master/2016-04-29-boost-algorithm.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">文本模式:</span><i class="fa fa-file-text-o"></i>
+                <a href="https://raw.githubusercontent.com/zealoussnow/BlogSource/master/2016-04-29-boost-algorithm.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
+            </p>
+        
 
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/04/29/boost-algorithm/" title="Boost学习 —— algorithm">https://zealoussnow.github.io/2016/04/29/boost-algorithm/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://zealoussnow.github.io/2016/04/29/boost-algorithm/　　作者: LeoZhang" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/04/29/build-tools/">
+                    C++程序构建工具
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/04/29/c++11-tutor/">
+                    C++11 —— override和final
+                </a>
+            </div>
+        
+    </nav>
 
 
   
 </article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Searching-Algorithms"><span class="toc-number">1.</span> <span class="toc-text">Searching Algorithms</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Boyer-Moore-Search-boyer-moore-hpp"><span class="toc-number">1.1.</span> <span class="toc-text">Boyer-Moore Search(boyer_moore.hpp)</span></a></li></ol></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
 
 
 
@@ -401,7 +436,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="tags/index.html" data-title="分类 &amp; 标签" data-url="https://zealoussnow.github.io/tags/index.html"></div>
+    <div class="ds-thread" data-thread-key="2016/04/29/boost-algorithm/" data-title="Boost学习 —— algorithm" data-url="https://zealoussnow.github.io/2016/04/29/boost-algorithm/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -420,6 +455,26 @@
 
     
 
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/04/29/build-tools/" title="上一篇: C++程序构建工具">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/04/29/c++11-tutor/" title="下一篇: C++11 —— override和final">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/setting-vnc/">Linux VNC服务配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/tcp-state-change/">剖析TCP状态变迁</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/api-hook/">API Hook</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/libevent/">libevent源码阅读</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/build-tools/">C++程序构建工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/boost-algorithm/">Boost学习 —— algorithm</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/c++11-tutor/">C++11 —— override和final</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/release-free-space-of-vector/">如何释放vector的闲置空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/good-habits/">开发者应该具备的15个编程好习惯</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/advanced-python-06/">Python高级编程(六)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/advanced-python-05/">Python高级编程(五)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-04/">Python高级编程(四)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-03/">Python高级编程(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-02/">Python高级编程(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-01/">Python高级编程(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/electron-quick-start/">Electron快速入门</a></li></ul>
 
 
 

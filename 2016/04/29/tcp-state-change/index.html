@@ -3,18 +3,20 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Python高级编程(六) | LeoZhang&#39;s Blog</title>
+  <title>剖析TCP状态变迁 | LeoZhang&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="&amp;#x4F7F;&amp;#x7528;zc.buildoutzc.buildout&amp;#x539F;&amp;#x7406;virtualenv&amp;#x5BF9;&amp;#x4E8E;&amp;#x9694;&amp;#x79BB;&amp;#x4E00;&amp;#x4E2A;python&amp;#x73AF;&amp;#x5883;&amp;#x76F8;&amp;#x5F53;&amp;#x65B9;&amp;#x4FBF;&amp;#x3002;zc.buildout&amp;#x63D0;&amp;#x4F9B">
+  <meta name="description">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python高级编程(六)">
-<meta property="og:url" content="https://zealoussnow.github.io/2016/04/29/advanced-python-06/index.html">
+<meta property="og:title" content="剖析TCP状态变迁">
+<meta property="og:url" content="https://zealoussnow.github.io/2016/04/29/tcp-state-change/index.html">
 <meta property="og:site_name" content="LeoZhang's Blog">
-<meta property="og:description" content="&amp;#x4F7F;&amp;#x7528;zc.buildoutzc.buildout&amp;#x539F;&amp;#x7406;virtualenv&amp;#x5BF9;&amp;#x4E8E;&amp;#x9694;&amp;#x79BB;&amp;#x4E00;&amp;#x4E2A;python&amp;#x73AF;&amp;#x5883;&amp;#x76F8;&amp;#x5F53;&amp;#x65B9;&amp;#x4FBF;&amp;#x3002;zc.buildout&amp;#x63D0;&amp;#x4F9B">
-<meta property="og:updated_time" content="2016-04-29T08:51:13.525Z">
+<meta property="og:description">
+<meta property="og:image" content="https://zealoussnow.github.io/2016/04/29/tcp-state-change/TCP连接的状态变迁.png">
+<meta property="og:updated_time" content="2016-04-29T10:01:40.154Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python高级编程(六)">
-<meta name="twitter:description" content="&amp;#x4F7F;&amp;#x7528;zc.buildoutzc.buildout&amp;#x539F;&amp;#x7406;virtualenv&amp;#x5BF9;&amp;#x4E8E;&amp;#x9694;&amp;#x79BB;&amp;#x4E00;&amp;#x4E2A;python&amp;#x73AF;&amp;#x5883;&amp;#x76F8;&amp;#x5F53;&amp;#x65B9;&amp;#x4FBF;&amp;#x3002;zc.buildout&amp;#x63D0;&amp;#x4F9B">
+<meta name="twitter:title" content="剖析TCP状态变迁">
+<meta name="twitter:description">
+<meta name="twitter:image" content="https://zealoussnow.github.io/2016/04/29/tcp-state-change/TCP连接的状态变迁.png">
   
     <link rel="alternative" href="/atom.xml" title="LeoZhang&#39;s Blog" type="application/atom+xml">
   
@@ -257,11 +259,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-advanced-python-06" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-tcp-state-change" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/04/29/advanced-python-06/" class="article-date">
-      <time datetime="2016-04-29T08:48:52.000Z" itemprop="datePublished">2016-04-29</time>
+      <a href="/2016/04/29/tcp-state-change/" class="article-date">
+      <time datetime="2016-04-29T09:57:26.000Z" itemprop="datePublished">2016-04-29</time>
 </a>
     </div>
   
@@ -274,7 +276,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Python高级编程(六)
+      剖析TCP状态变迁
     </h1>
   
 
@@ -283,13 +285,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Python/">Python</a>
+    <a class="article-category-link" href="/categories/程序设计/">程序设计</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python高级编程/">Python高级编程</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/网络基础/">网络基础</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -299,31 +301,19 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="&#x4F7F;&#x7528;zc-buildout"><a href="#&#x4F7F;&#x7528;zc-buildout" class="headerlink" title="&#x4F7F;&#x7528;zc.buildout"></a>&#x4F7F;&#x7528;zc.buildout</h2><h3 id="zc-buildout&#x539F;&#x7406;"><a href="#zc-buildout&#x539F;&#x7406;" class="headerlink" title="zc.buildout&#x539F;&#x7406;"></a>zc.buildout&#x539F;&#x7406;</h3><p>virtualenv&#x5BF9;&#x4E8E;&#x9694;&#x79BB;&#x4E00;&#x4E2A;python&#x73AF;&#x5883;&#x76F8;&#x5F53;&#x65B9;&#x4FBF;&#x3002;zc.buildout&#x63D0;&#x4F9B;&#x4E86;&#x76F8;&#x540C;&#x7684;&#x9694;&#x79BB;&#x529F;&#x80FD;&#xFF0C;&#x5E76;&#x4E14;&#x8FDB;&#x4E00;&#x6B65;&#x63D0;&#x4F9B;&#x4E86;&#xFF1A;</p>
-<ul>
-<li>&#x4E00;&#x4E2A;&#x7B80;&#x5355;&#x7684;&#x3001;&#x5728;&#x4E00;&#x4E2A;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4E2D;&#x5B9A;&#x4E49;&#x8FD9;&#x4E9B;&#x4F9D;&#x8D56;&#x6027;&#x7684;&#x63CF;&#x8FF0;&#x6027;&#x8BED;&#x8A00;</li>
-<li>&#x63D0;&#x4F9B;&#x94FE;&#x63A5;&#x4EE3;&#x7801;&#x8C03;&#x7528;&#x7EC4;&#x5408;&#x7684;&#x8F93;&#x5165;&#x70B9;&#x7684;&#x63D2;&#x4EF6;&#x7CFB;&#x7EDF;</li>
-<li>&#x4E00;&#x79CD;&#x90E8;&#x7F72;&#x548C;&#x53D1;&#x884C;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x6E90;&#x4EE3;&#x7801;&#x53CA;&#x5176;&#x6267;&#x884C;&#x73AF;&#x5883;&#x7684;&#x65B9;&#x6CD5;</li>
-</ul>
+        <p><img src="/2016/04/29/tcp-state-change/TCP&#x8FDE;&#x63A5;&#x7684;&#x72B6;&#x6001;&#x53D8;&#x8FC1;.png" alt="TCP&#x8FDE;&#x63A5;&#x7684;&#x72B6;&#x6001;&#x53D8;&#x8FC1;&#x56FE;"></p>
 <a id="more"></a>
-<p>&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x5C06;&#x63CF;&#x8FF0;&#x73AF;&#x5883;&#x4E2D;&#x6240;&#x9700;&#x7684;egg&#xFF0C;&#x5B83;&#x4EEC;&#x7684;&#x72B6;&#x6001;&#x4EE5;&#x53CA;&#x6784;&#x5EFA;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x6240;&#x9700;&#x8981;&#x7684;&#x6240;&#x6709;&#x5176;&#x4ED6;&#x5143;&#x7D20;</p>
-<p>&#x63D2;&#x4EF6;&#x7CFB;&#x7EDF;&#x5C06;&#x6CE8;&#x518C;&#x8FD9;&#x4E9B;&#x5305;&#x5E76;&#x6309;&#x7167;&#x6267;&#x884C;&#x7684;&#x987A;&#x5E8F;&#x5C06;&#x5B83;&#x4EEC;&#x94FE;&#x63A5;&#x8D77;&#x6765;</p>
-<p>&#x6700;&#x540E;&#xFF0C;&#x6574;&#x4E2A;&#x73AF;&#x5883;&#x662F;&#x72EC;&#x7ACB;&#x548C;&#x9694;&#x79BB;&#x7684;&#xFF0C;&#x56E0;&#x800C;&#x53EF;&#x4EE5;&#x50CF;&#x53D1;&#x884C;&#x548C;&#x90E8;&#x7F72;&#x540E;&#x90A3;&#x6837;&#x4F7F;&#x7528;</p>
-<h4 id="&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x7ED3;&#x6784;"><a href="#&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x7ED3;&#x6784;" class="headerlink" title="&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x7ED3;&#x6784;"></a>&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x7ED3;&#x6784;</h4><p>zc.buildout&#x4F9D;&#x8D56;&#x4E8E;&#x4E00;&#x4E2A;&#x7ED3;&#x6784;&#x4E0E;ConfigParser&#x6A21;&#x5757;&#x517C;&#x5BB9;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#xFF0C;&#x7C7B;&#x4F3C;&#x4E8E;ini&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x3002;</p>
-<h4 id="&#x6700;&#x5C0F;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;"><a href="#&#x6700;&#x5C0F;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;" class="headerlink" title="&#x6700;&#x5C0F;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;"></a>&#x6700;&#x5C0F;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;</h4><p>&#x6700;&#x5C0F;&#x7684;buildout&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4E2D;&#x5305;&#x542B;&#x4E00;&#x4E2A;&#x540D;&#x4E3A;<code>[buildout]</code>&#x7684;&#x5C0F;&#x8282;&#xFF0C;&#x5176;&#x4E2D;&#x6709;&#x4E00;&#x4E2A;&#x79F0;&#x4F5C;parts&#x7684;&#x53D8;&#x91CF;&#x3002;<br>&#x8FD9;&#x4E2A;&#x53D8;&#x91CF;&#x5305;&#x542B;&#x4E00;&#x4E2A;&#x63D0;&#x4F9B;&#x5C0F;&#x8282;&#x5217;&#x8868;&#x7684;&#x591A;&#x884C;&#x503C;&#xFF0C;&#x5982;&#x4E0B;&#x6240;&#x793A;&#xFF1A;</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[buildout]</span><br><span class="line">parts=</span><br><span class="line">	part1</span><br><span class="line">	part2</span><br><span class="line">[part1]</span><br><span class="line">recipe = my.recipe1</span><br><span class="line">[part2]</span><br><span class="line">recipe = my.recipe2</span><br></pre></td></tr></table></figure>
-<p>&#x5728;parts&#x4E2D;&#x6307;&#x5B9A;&#x7684;&#x6BCF;&#x4E2A;&#x5C0F;&#x8282;&#x81F3;&#x5C11;&#x6709;&#x4E00;&#x4E2A;&#x63D0;&#x4F9B;&#x5305;&#x540D;&#x79F0;&#x7684;recipe&#x503C;&#x3002;&#x8FD9;&#x4E2A;&#x5305;&#x53EF;&#x4EE5;&#x662F;&#x4EFB;&#x4F55;python&#x5305;&#xFF0C;&#x53EA;&#x8981;<br>&#x5B83;&#x5B9A;&#x4E49;&#x4E00;&#x4E2A;zc.buildout&#x5165;&#x53E3;&#x70B9;&#x3002;</p>
-<p>&#x7528;&#x8FD9;&#x4E2A;&#x6587;&#x4EF6;&#xFF0C;buildout&#x5C06;&#x6267;&#x884C;&#x4EE5;&#x4E0B;&#x5DE5;&#x4F5C;&#x5E8F;&#x5217;&#xFF1A;</p>
-<ul>
-<li><p>&#x68C0;&#x67E5;my.recipe1&#x5305;&#x662F;&#x5426;&#x5B89;&#x88C5;&#xFF0C;&#x5982;&#x679C;&#x6CA1;&#x6709;&#x5B89;&#x88C5;&#xFF0C;&#x8BFB;&#x53D6;&#x5E76;&#x5B8C;&#x6210;&#x672C;&#x5730;&#x5B89;&#x88C5;</p>
-</li>
-<li><p>&#x6267;&#x884C;my.recipe1&#x5165;&#x53E3;&#x70B9;&#x6240;&#x6307;&#x5411;&#x7684;&#x4EE3;&#x7801;</p>
-</li>
-<li><p>&#x7136;&#x540E;&#xFF0C;&#x5BF9;parts&#x505A;&#x540C;&#x6837;&#x7684;&#x4E8B;&#x60C5;</p>
-</li>
-</ul>
-<p>&#x56E0;&#x800C;&#xFF0C;buildout&#x662F;&#x4E00;&#x4E2A;&#x57FA;&#x4E8E;&#x63D2;&#x4EF6;&#x7684;&#x811A;&#x672C;&#xFF0C;&#x5C06;&#x88AB;&#x79F0;&#x4E3A;recipe&#x7684;&#x72EC;&#x7ACB;&#x5305;&#x7684;&#x6267;&#x884C;&#x94FE;&#x63A5;&#x8D77;&#x6765;&#x3002;&#x7528;&#x8FD9;&#x4E2A;&#x5DE5;&#x5177;&#x6784;&#x5EFA;&#x7684;<br>&#x73AF;&#x5883;&#x5305;&#x62EC;recipe&#x6B63;&#x786E;&#x987A;&#x5E8F;&#x7684;&#x5B9A;&#x4E49;&#x3002;</p>
-<h3 id="&#x53D1;&#x884C;&#x4E0E;&#x5206;&#x53D1;"><a href="#&#x53D1;&#x884C;&#x4E0E;&#x5206;&#x53D1;" class="headerlink" title="&#x53D1;&#x884C;&#x4E0E;&#x5206;&#x53D1;"></a>&#x53D1;&#x884C;&#x4E0E;&#x5206;&#x53D1;</h3><h3 id="&#x5C0F;&#x7ED3;"><a href="#&#x5C0F;&#x7ED3;" class="headerlink" title="&#x5C0F;&#x7ED3;"></a>&#x5C0F;&#x7ED3;</h3>
+<p><code>CLOSED</code>:&#x521D;&#x59CB;&#x72B6;&#x6001;</p>
+<p><code>LISTEN</code>:&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x7684;&#x67D0;&#x4E2A;SOCKET&#x5904;&#x4E8E;&#x76D1;&#x542C;&#x72B6;&#x6001;&#xFF0C;&#x53EF;&#x4EE5;&#x63A5;&#x53D7;&#x8FDE;&#x63A5;&#x4E86;</p>
+<p><code>SYN_RCVD</code>:&#x8868;&#x793A;&#x63A5;&#x6536;&#x5230;&#x4E86;SYN&#x62A5;&#x6587;&#xFF0C;&#x5728;&#x6B63;&#x5E38;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x8FD9;&#x4E2A;&#x72B6;&#x6001;&#x662F;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x7684;SOCKET&#x5728;&#x5EFA;&#x7ACB;TCP&#x8FDE;&#x63A5;&#x65F6;&#x7684;&#x4E09;&#x6B21;&#x63E1;&#x624B;&#x4F1A;&#x8BDD;&#x8FC7;&#x7A0B;&#x4E2D;&#x7684;&#x4E00;&#x4E2A;&#x4E2D;&#x95F4;&#x72B6;&#x6001;&#xFF0C;&#x5F88;&#x77ED;&#x6682;&#xFF0C;&#x57FA;&#x672C;&#x7528;netstat&#x5F88;&#x96BE;&#x770B;&#x5230;&#x8FD9;&#x79CD;&#x72B6;&#x6001;&#x3002;&#x56E0;&#x6B64;&#xFF0C;&#x8FD9;&#x79CD;&#x72B6;&#x6001;&#x65F6;&#xFF0C;&#x5F53;&#x53D7;&#x5230;&#x5BA2;&#x6237;&#x7AEF;&#x7684;ACK&#x62A5;&#x6587;&#x540E;&#xFF0C;&#x5B83;&#x4F1A;&#x8FDB;&#x5165;&#x5230;ESTABLISHED&#x72B6;&#x6001;</p>
+<p><code>SYN_SENT</code>:&#x8FD9;&#x4E2A;&#x72B6;&#x6001;&#x4E0E;SYN_RCVD&#x9065;&#x76F8;&#x547C;&#x5E94;&#xFF0C;&#x5F53;&#x5BA2;&#x6237;&#x7AEF;SOCKET&#x6267;&#x884C;connect&#x8FDE;&#x63A5;&#x65F6;&#xFF0C;&#x5B83;&#x9996;&#x5148;&#x53D1;&#x9001;SYN&#x62A5;&#x6587;&#xFF0C;&#x56E0;&#x6B64;&#x4E5F;&#x5C31;&#x8FDB;&#x5165;&#x5230;&#x4E86;SYN_SENT&#x72B6;&#x6001;&#xFF0C;&#x5E76;&#x7B49;&#x5F85;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x7684;&#x53D1;&#x9001;&#x4E09;&#x6B21;&#x63E1;&#x624B;&#x4E2D;&#x7684;&#x7B2C;2&#x4E2A;&#x62A5;&#x6587;&#x3002;SYN_SENT&#x8868;&#x793A;&#x5BA2;&#x6237;&#x7AEF;&#x5DF2;&#x7ECF;&#x53D1;&#x9001;SYN_SENT&#x62A5;&#x6587;</p>
+<p><code>ESTABLISHED</code>:&#x8868;&#x793A;&#x8FDE;&#x63A5;&#x5DF2;&#x7ECF;&#x5EFA;&#x7ACB;&#xFF0C;&#x5373;&#x4E09;&#x6B21;&#x63E1;&#x624B;&#x5DF2;&#x5B8C;&#x6210;</p>
+<p><code>FIN_WAIT_1</code>:&#x8FD9;&#x4E2A;&#x72B6;&#x6001;&#x8981;&#x597D;&#x597D;&#x89E3;&#x91CA;&#x4E00;&#x4E0B;&#xFF0C;&#x5176;&#x5B9E;FIN_WAIT_1&#x548C;FIN_WAIT_2&#x72B6;&#x6001;&#x7684;&#x771F;&#x6B63;&#x542B;&#x4E49;&#x90FD;&#x662F;&#x8868;&#x793A;&#x7B49;&#x5F85;&#x5BF9;&#x65B9;&#x7684;FIN&#x62A5;&#x6587;&#x3002;&#x800C;&#x8FD9;&#x4E24;&#x79CD;&#x72B6;&#x6001;&#x7684;&#x533A;&#x522B;&#x662F;&#xFF1A;FIN_WAIT_1&#x72B6;&#x6001;&#x5B9E;&#x9645;&#x4E0A;&#x662F;&#x5F53;SOCKET&#x5728;ESTABLISHED&#x72B6;&#x6001;&#x65F6;&#xFF0C;&#x5B83;&#x60F3;&#x4E3B;&#x52A8;&#x5173;&#x95ED;&#x8FDE;&#x63A5;&#xFF0C;&#x5411;&#x5BF9;&#x65B9;&#x53D1;&#x9001;&#x4E86;FIN&#x62A5;&#x6587;&#xFF0C;&#x6B64;&#x65F6;&#x8BE5;SOCKET&#x5373;&#x8FDB;&#x5165;&#x5230;FIN_WAIT_1&#x72B6;&#x6001;&#x3002;&#x800C;&#x5F53;&#x5BF9;&#x65B9;&#x56DE;&#x5E94;ACK&#x62A5;&#x6587;&#x540E;&#xFF0C;&#x5219;&#x8FDB;&#x5165;&#x5230;FIN_WAIT_2&#x72B6;&#x6001;&#xFF0C;&#x5F53;&#x7136;&#x5728;&#x5B9E;&#x9645;&#x7684;&#x6B63;&#x5E38;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x65E0;&#x8BBA;&#x5BF9;&#x65B9;&#x4F55;&#x79CD;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x90FD;&#x5E94;&#x8BE5;&#x9A6C;&#x4E0A;&#x56DE;&#x5E94;ACK&#x62A5;&#x6587;&#xFF0C;&#x6240;&#x4EE5;FIN_WAIT_1&#x72B6;&#x6001;&#x4E00;&#x822C;&#x662F;&#x6BD4;&#x8F83;&#x96BE;&#x89C1;&#x5230;&#x7684;&#xFF0C;&#x800C;FIN_WAIT_2&#x72B6;&#x6001;&#x8FD8;&#x6709;&#x65F6;&#x5E38;&#x5E38;&#x53EF;&#x4EE5;&#x7528;netstat&#x770B;&#x5230;&#x3002;</p>
+<p><code>FIN_WAIT_2</code>:&#x4E0A;&#x9762;&#x5DF2;&#x7ECF;&#x8BE6;&#x7EC6;&#x89E3;&#x91CA;&#x4E86;&#x8FD9;&#x79CD;&#x72B6;&#x6001;&#xFF0C;&#x5B9E;&#x9645;&#x4E0A;FIN_WAIT_2&#x72B6;&#x6001;&#x4E0B;&#x7684;SOCKET&#xFF0C;&#x8868;&#x793A;&#x534A;&#x8FDE;&#x63A5;&#xFF0C;&#x4E5F;&#x5373;&#x6709;&#x4E00;&#x65B9;&#x8981;&#x6C42;close&#x8FDE;&#x63A5;&#xFF0C;&#x4F46;&#x53E6;&#x5916;&#x8FD8;&#x544A;&#x8BC9;&#x5BF9;&#x65B9;&#xFF0C;&#x6211;&#x6682;&#x65F6;&#x8FD8;&#x6709;&#x70B9;&#x6570;&#x636E;&#x9700;&#x8981;&#x4F20;&#x9001;&#x7ED9;&#x4F60;&#xFF0C;&#x7A0D;&#x540E;&#x518D;&#x5173;&#x95ED;&#x8FDE;&#x63A5;&#x3002;</p>
+<p><code>TIME_WAIT</code>:&#x8868;&#x793A;&#x6536;&#x5230;&#x4E86;&#x5BF9;&#x65B9;&#x7684;FIN&#x62A5;&#x6587;&#xFF0C;&#x5E76;&#x53D1;&#x9001;&#x51FA;&#x4E86;ACK&#x62A5;&#x6587;&#xFF0C;&#x5C31;&#x7B49;2MSL&#x540E;&#x5373;&#x53EF;&#x56DE;&#x5230;CLOSED&#x53EF;&#x7528;&#x72B6;&#x6001;&#x4E86;&#x3002;&#x5982;&#x679C;FIN_WAIT_1&#x72B6;&#x6001;&#x4E0B;&#xFF0C;&#x6536;&#x5230;&#x4E86;&#x5BF9;&#x65B9;&#x540C;&#x65F6;&#x5E26;FIN&#x6807;&#x5FD7;&#x548C;ACK&#x6807;&#x5FD7;&#x7684;&#x62A5;&#x6587;&#x65F6;&#xFF0C;&#x53EF;&#x4EE5;&#x76F4;&#x63A5;&#x8FDB;&#x5165;&#x5230;TIME_WAIT&#x72B6;&#x6001;&#xFF0C;&#x800C;&#x65E0;&#x987B;&#x7ECF;&#x8FC7;FIN_WAIT_2&#x72B6;&#x6001;&#x3002;&#x4F8B;&#x5916;&#x72B6;&#x6001;&#x3002;&#x6B63;&#x5E38;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x5F53;&#x4F60;&#x53D1;&#x9001;FIN&#x62A5;&#x6587;&#x540E;&#xFF0C;&#x6309;&#x7406;&#x6765;&#x8BF4;&#x662F;&#x5E94;&#x8BE5;&#x5148;&#x6536;&#x5230;&#xFF08;&#x6216;&#x540C;&#x65F6;&#x6536;&#x5230;&#xFF09;&#x5BF9;&#x65B9;&#x7684;ACK&#x62A5;&#x6587;&#xFF0C;&#x518D;&#x6536;&#x5230;&#x5BF9;&#x65B9;&#x7684;FIN&#x62A5;&#x6587;&#x3002;&#x4F46;&#x662F;<code>CLOSING</code>&#x72B6;&#x6001;&#x8868;&#x793A;&#x4F60;&#x53D1;&#x9001;FIN&#x62A5;&#x6587;&#x540E;&#xFF0C;&#x5E76;&#x6CA1;&#x6709;&#x6536;&#x5230;&#x5BF9;&#x65B9;&#x7684;ACK&#x62A5;&#x6587;&#xFF0C;&#x53CD;&#x800C;&#x5374;&#x4E5F;&#x6536;&#x5230;&#x4E86;&#x5BF9;&#x65B9;&#x7684;FIN&#x62A5;&#x6587;&#x3002;&#x4EC0;&#x4E48;&#x60C5;&#x51B5;&#x4E0B;&#x4F1A;&#x51FA;&#x73B0;&#x6B64;&#x79CD;&#x60C5;&#x51B5;&#x5462;&#xFF1F;&#x5176;&#x5B9E;&#x7EC6;&#x60F3;&#x4E00;&#x4E0B;&#xFF0C;&#x4E5F;&#x4E0D;&#x96BE;&#x5F97;&#x51FA;&#x7ED3;&#x8BBA;&#xFF1A;&#x90A3;&#x5C31;&#x662F;&#x5982;&#x679C;&#x53CC;&#x65B9;&#x51E0;&#x4E4E;&#x5728;&#x540C;&#x65F6;close&#x4E00;&#x4E2A;SOCKET&#x7684;&#x8BDD;&#xFF0C;&#x90A3;&#x4E48;&#x5C31;&#x51FA;&#x73B0;&#x4E86;&#x53CC;&#x65B9;&#x540C;&#x65F6;&#x53D1;&#x9001;FIN&#x62A5;&#x6587;&#x7684;&#x60C5;&#x51B5;&#xFF0C;&#x4E5F;&#x5373;&#x4F1A;&#x51FA;&#x73B0;CLOSING&#x72B6;&#x6001;&#xFF0C;&#x8868;&#x793A;&#x53CC;&#x65B9;&#x90FD;&#x6B63;&#x5728;&#x5173;&#x95ED;SOCKET&#x8FDE;&#x63A5;&#x3002;</p>
+<p><code>CLOSE_WAIT</code>:&#x8FD9;&#x79CD;&#x72B6;&#x6001;&#x7684;&#x542B;&#x4E49;&#x5176;&#x5B9E;&#x662F;&#x8868;&#x793A;&#x5728;&#x7B49;&#x5F85;&#x5173;&#x95ED;&#x3002;&#x600E;&#x4E48;&#x7406;&#x89E3;&#x5462;&#xFF1F;&#x5F53;&#x5BF9;&#x65B9;close&#x4E00;&#x4E2A;SOCKET&#x540E;&#x53D1;&#x9001;FIN&#x62A5;&#x6587;&#x7ED9;&#x81EA;&#x5DF1;&#xFF0C;&#x4F60;&#x7CFB;&#x7EDF;&#x6BEB;&#x65E0;&#x7591;&#x95EE;&#x5730;&#x4F1A;&#x56DE;&#x5E94;&#x4E00;&#x4E2A;ACK&#x62A5;&#x6587;&#x7ED9;&#x5BF9;&#x65B9;&#xFF0C;&#x6B64;&#x65F6;&#x5219;&#x8FDB;&#x5165;&#x5230;CLOSE_WAIT&#x72B6;&#x6001;&#x3002;&#x63A5;&#x4E0B;&#x6765;&#x5462;&#xFF0C;&#x5B9E;&#x9645;&#x4E0A;&#x4F60;&#x771F;&#x6B63;&#x9700;&#x8981;&#x8003;&#x8651;&#x7684;&#x4E8B;&#x60C5;&#x662F;&#x5BDF;&#x770B;&#x4F60;&#x662F;&#x5426;&#x8FD8;&#x6709;&#x6570;&#x636E;&#x53D1;&#x9001;&#x7ED9;&#x5BF9;&#x65B9;&#xFF0C;&#x5982;&#x679C;&#x6CA1;&#x6709;&#x7684;&#x8BDD;&#xFF0C;&#x90A3;&#x4E48;&#x4F60;&#x4E5F;&#x5C31;&#x53EF;&#x4EE5;close&#x8FD9;&#x4E2A;SOCKET&#xFF0C;&#x53D1;&#x9001;FIN&#x62A5;&#x6587;&#x7ED9;&#x5BF9;&#x65B9;&#xFF0C;&#x4E5F;&#x5373;&#x5173;&#x95ED;&#x8FDE;&#x63A5;&#x3002;&#x6240;&#x4EE5;&#x4F60;&#x5728;CLOSE_WAIT&#x72B6;&#x6001;&#x4E0B;&#xFF0C;&#x9700;&#x8981;&#x5B8C;&#x6210;&#x7684;&#x4E8B;&#x60C5;&#x662F;&#x7B49;&#x5F85;&#x4F60;&#x53BB;&#x5173;&#x95ED;&#x8FDE;&#x63A5;&#x3002;</p>
+<p><code>LAST_ACK</code>:&#x8FD9;&#x4E2A;&#x72B6;&#x6001;&#x8FD8;&#x662F;&#x6BD4;&#x8F83;&#x5BB9;&#x6613;&#x597D;&#x7406;&#x89E3;&#x7684;&#xFF0C;&#x5B83;&#x662F;&#x88AB;&#x52A8;&#x5173;&#x95ED;&#x4E00;&#x65B9;&#x5728;&#x53D1;&#x9001;FIN&#x62A5;&#x6587;&#x540E;&#xFF0C;&#x6700;&#x540E;&#x7B49;&#x5F85;&#x5BF9;&#x65B9;&#x7684;ACK&#x62A5;&#x6587;&#x3002;&#x5F53;&#x6536;&#x5230;ACK&#x62A5;&#x6587;&#x540E;&#xFF0C;&#x4E5F;&#x5373;&#x53EF;&#x4EE5;&#x8FDB;&#x5165;&#x5230;CLOSED&#x53EF;&#x7528;&#x72B6;&#x6001;&#x4E86;&#x3002;</p>
+
       
     </div>
     
@@ -331,23 +321,23 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/04/29/advanced-python-06/">Python高级编程(六)</a></p>
+        <p><span>本文标题:</span><a href="/2016/04/29/tcp-state-change/">剖析TCP状态变迁</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">LeoZhang</a></p>
-        <p><span>发布时间:</span>2016-04-29, 16:48:52</p>
-        <p><span>最后更新:</span>2016-04-29, 16:51:13</p>
+        <p><span>发布时间:</span>2016-04-29, 17:57:26</p>
+        <p><span>最后更新:</span>2016-04-29, 18:01:40</p>
 	<!-- 添加更新历史 -->
         
             <p>
                 <span>更新历史:</span><i class="fa fa-github"></i>
-                <a href="https://github.com/zealoussnow/BlogSource/blame/master/2016-04-29-advanced-python-06.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
-                <a href="https://github.com/zealoussnow/BlogSource/commits/master/2016-04-29-advanced-python-06.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">文本模式:</span><i class="fa fa-file-text-o"></i>
-                <a href="https://raw.githubusercontent.com/zealoussnow/BlogSource/master/2016-04-29-advanced-python-06.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
+                <a href="https://github.com/zealoussnow/BlogSource/blame/master/2016-04-29-tcp-state-change.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
+                <a href="https://github.com/zealoussnow/BlogSource/commits/master/2016-04-29-tcp-state-change.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">文本模式:</span><i class="fa fa-file-text-o"></i>
+                <a href="https://raw.githubusercontent.com/zealoussnow/BlogSource/master/2016-04-29-tcp-state-change.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
             </p>
         
 
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/04/29/advanced-python-06/" title="Python高级编程(六)">https://zealoussnow.github.io/2016/04/29/advanced-python-06/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://zealoussnow.github.io/2016/04/29/advanced-python-06/　　作者: LeoZhang" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/04/29/tcp-state-change/" title="剖析TCP状态变迁">https://zealoussnow.github.io/2016/04/29/tcp-state-change/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://zealoussnow.github.io/2016/04/29/tcp-state-change/　　作者: LeoZhang" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -360,15 +350,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/04/29/good-habits/">
-                    开发者应该具备的15个编程好习惯
+                <a href="/2016/04/29/setting-vnc/">
+                    Linux VNC服务配置
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/04/29/advanced-python-05/">
-                    Python高级编程(五)
+                <a href="/2016/04/29/api-hook/">
+                    API Hook
                 </a>
             </div>
         
@@ -380,7 +370,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用zc-buildout"><span class="toc-number">1.</span> <span class="toc-text">使用zc.buildout</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#zc-buildout原理"><span class="toc-number">1.1.</span> <span class="toc-text">zc.buildout原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#配置文件结构"><span class="toc-number">1.1.1.</span> <span class="toc-text">配置文件结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#最小的配置文件"><span class="toc-number">1.1.2.</span> <span class="toc-text">最小的配置文件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发行与分发"><span class="toc-number">1.2.</span> <span class="toc-text">发行与分发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#小结"><span class="toc-number">1.3.</span> <span class="toc-text">小结</span></a></li></ol></li></ol>
+    
 </div>
 <style>
     .left-col .switch-btn {
@@ -439,7 +429,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/04/29/advanced-python-06/" data-title="Python高级编程(六)" data-url="https://zealoussnow.github.io/2016/04/29/advanced-python-06/"></div>
+    <div class="ds-thread" data-thread-key="2016/04/29/tcp-state-change/" data-title="剖析TCP状态变迁" data-url="https://zealoussnow.github.io/2016/04/29/tcp-state-change/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -463,7 +453,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/04/29/good-habits/" title="上一篇: 开发者应该具备的15个编程好习惯">
+            <a href="/2016/04/29/setting-vnc/" title="上一篇: Linux VNC服务配置">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -471,7 +461,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/04/29/advanced-python-05/" title="下一篇: Python高级编程(五)">
+            <a href="/2016/04/29/api-hook/" title="下一篇: API Hook">
                 <i class="fa fa-angle-right"></i>
             </a>
         

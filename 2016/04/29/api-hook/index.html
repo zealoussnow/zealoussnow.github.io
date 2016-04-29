@@ -3,18 +3,20 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Python高级编程(六) | LeoZhang&#39;s Blog</title>
+  <title>API Hook | LeoZhang&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="&amp;#x4F7F;&amp;#x7528;zc.buildoutzc.buildout&amp;#x539F;&amp;#x7406;virtualenv&amp;#x5BF9;&amp;#x4E8E;&amp;#x9694;&amp;#x79BB;&amp;#x4E00;&amp;#x4E2A;python&amp;#x73AF;&amp;#x5883;&amp;#x76F8;&amp;#x5F53;&amp;#x65B9;&amp;#x4FBF;&amp;#x3002;zc.buildout&amp;#x63D0;&amp;#x4F9B">
+  <meta name="description" content="&amp;#x6BCF;&amp;#x4E00;&amp;#x7C7B;HOOK&amp;#x90FD;&amp;#x5B58;&amp;#x653E;&amp;#x5728;&amp;#x4E00;&amp;#x4E2A;&amp;#x6307;&amp;#x9488;&amp;#x5217;&amp;#x8868;&amp;#x4E2D;&amp;#xFF0C;&amp;#x79F0;&amp;#x4E4B;&amp;#x4E3A;&amp;#x94A9;&amp;#x5B50;&amp;#x94FE;&amp;#x8868;&amp;#xFF0C;&amp;#x8FD9;&amp;#x">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python高级编程(六)">
-<meta property="og:url" content="https://zealoussnow.github.io/2016/04/29/advanced-python-06/index.html">
+<meta property="og:title" content="API Hook">
+<meta property="og:url" content="https://zealoussnow.github.io/2016/04/29/api-hook/index.html">
 <meta property="og:site_name" content="LeoZhang's Blog">
-<meta property="og:description" content="&amp;#x4F7F;&amp;#x7528;zc.buildoutzc.buildout&amp;#x539F;&amp;#x7406;virtualenv&amp;#x5BF9;&amp;#x4E8E;&amp;#x9694;&amp;#x79BB;&amp;#x4E00;&amp;#x4E2A;python&amp;#x73AF;&amp;#x5883;&amp;#x76F8;&amp;#x5F53;&amp;#x65B9;&amp;#x4FBF;&amp;#x3002;zc.buildout&amp;#x63D0;&amp;#x4F9B">
-<meta property="og:updated_time" content="2016-04-29T08:51:13.525Z">
+<meta property="og:description" content="&amp;#x6BCF;&amp;#x4E00;&amp;#x7C7B;HOOK&amp;#x90FD;&amp;#x5B58;&amp;#x653E;&amp;#x5728;&amp;#x4E00;&amp;#x4E2A;&amp;#x6307;&amp;#x9488;&amp;#x5217;&amp;#x8868;&amp;#x4E2D;&amp;#xFF0C;&amp;#x79F0;&amp;#x4E4B;&amp;#x4E3A;&amp;#x94A9;&amp;#x5B50;&amp;#x94FE;&amp;#x8868;&amp;#xFF0C;&amp;#x8FD9;&amp;#x">
+<meta property="og:image" content="https://zealoussnow.github.io/2016/04/29/api-hook/hook_base.jpg">
+<meta property="og:updated_time" content="2016-04-29T09:55:45.978Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python高级编程(六)">
-<meta name="twitter:description" content="&amp;#x4F7F;&amp;#x7528;zc.buildoutzc.buildout&amp;#x539F;&amp;#x7406;virtualenv&amp;#x5BF9;&amp;#x4E8E;&amp;#x9694;&amp;#x79BB;&amp;#x4E00;&amp;#x4E2A;python&amp;#x73AF;&amp;#x5883;&amp;#x76F8;&amp;#x5F53;&amp;#x65B9;&amp;#x4FBF;&amp;#x3002;zc.buildout&amp;#x63D0;&amp;#x4F9B">
+<meta name="twitter:title" content="API Hook">
+<meta name="twitter:description" content="&amp;#x6BCF;&amp;#x4E00;&amp;#x7C7B;HOOK&amp;#x90FD;&amp;#x5B58;&amp;#x653E;&amp;#x5728;&amp;#x4E00;&amp;#x4E2A;&amp;#x6307;&amp;#x9488;&amp;#x5217;&amp;#x8868;&amp;#x4E2D;&amp;#xFF0C;&amp;#x79F0;&amp;#x4E4B;&amp;#x4E3A;&amp;#x94A9;&amp;#x5B50;&amp;#x94FE;&amp;#x8868;&amp;#xFF0C;&amp;#x8FD9;&amp;#x">
+<meta name="twitter:image" content="https://zealoussnow.github.io/2016/04/29/api-hook/hook_base.jpg">
   
     <link rel="alternative" href="/atom.xml" title="LeoZhang&#39;s Blog" type="application/atom+xml">
   
@@ -257,11 +259,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-advanced-python-06" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-api-hook" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/04/29/advanced-python-06/" class="article-date">
-      <time datetime="2016-04-29T08:48:52.000Z" itemprop="datePublished">2016-04-29</time>
+      <a href="/2016/04/29/api-hook/" class="article-date">
+      <time datetime="2016-04-29T09:48:12.000Z" itemprop="datePublished">2016-04-29</time>
 </a>
     </div>
   
@@ -274,7 +276,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Python高级编程(六)
+      API Hook
     </h1>
   
 
@@ -283,13 +285,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Python/">Python</a>
+    <a class="article-category-link" href="/categories/程序设计/">程序设计</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python高级编程/">Python高级编程</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Windows/">Windows</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -299,31 +301,26 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="&#x4F7F;&#x7528;zc-buildout"><a href="#&#x4F7F;&#x7528;zc-buildout" class="headerlink" title="&#x4F7F;&#x7528;zc.buildout"></a>&#x4F7F;&#x7528;zc.buildout</h2><h3 id="zc-buildout&#x539F;&#x7406;"><a href="#zc-buildout&#x539F;&#x7406;" class="headerlink" title="zc.buildout&#x539F;&#x7406;"></a>zc.buildout&#x539F;&#x7406;</h3><p>virtualenv&#x5BF9;&#x4E8E;&#x9694;&#x79BB;&#x4E00;&#x4E2A;python&#x73AF;&#x5883;&#x76F8;&#x5F53;&#x65B9;&#x4FBF;&#x3002;zc.buildout&#x63D0;&#x4F9B;&#x4E86;&#x76F8;&#x540C;&#x7684;&#x9694;&#x79BB;&#x529F;&#x80FD;&#xFF0C;&#x5E76;&#x4E14;&#x8FDB;&#x4E00;&#x6B65;&#x63D0;&#x4F9B;&#x4E86;&#xFF1A;</p>
-<ul>
-<li>&#x4E00;&#x4E2A;&#x7B80;&#x5355;&#x7684;&#x3001;&#x5728;&#x4E00;&#x4E2A;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4E2D;&#x5B9A;&#x4E49;&#x8FD9;&#x4E9B;&#x4F9D;&#x8D56;&#x6027;&#x7684;&#x63CF;&#x8FF0;&#x6027;&#x8BED;&#x8A00;</li>
-<li>&#x63D0;&#x4F9B;&#x94FE;&#x63A5;&#x4EE3;&#x7801;&#x8C03;&#x7528;&#x7EC4;&#x5408;&#x7684;&#x8F93;&#x5165;&#x70B9;&#x7684;&#x63D2;&#x4EF6;&#x7CFB;&#x7EDF;</li>
-<li>&#x4E00;&#x79CD;&#x90E8;&#x7F72;&#x548C;&#x53D1;&#x884C;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x6E90;&#x4EE3;&#x7801;&#x53CA;&#x5176;&#x6267;&#x884C;&#x73AF;&#x5883;&#x7684;&#x65B9;&#x6CD5;</li>
-</ul>
+        <p><img src="/2016/04/29/api-hook/hook_base.jpg" alt="&#x94A9;&#x5B50;&#x7B80;&#x5355;&#x539F;&#x7406;&#x56FE;"></p>
+<p>&#x6BCF;&#x4E00;&#x7C7B;HOOK&#x90FD;&#x5B58;&#x653E;&#x5728;&#x4E00;&#x4E2A;&#x6307;&#x9488;&#x5217;&#x8868;&#x4E2D;&#xFF0C;&#x79F0;&#x4E4B;&#x4E3A;&#x94A9;&#x5B50;&#x94FE;&#x8868;&#xFF0C;&#x8FD9;&#x4E9B;&#x94A9;&#x5B50;&#x94FE;&#x8868;&#x7531;Windows&#x7CFB;&#x7EDF;&#x6765;&#x7EF4;&#x62A4;&#x3002;&#x8FD9;&#x4E2A;&#x5217;&#x8868;&#x7684;&#x6307;&#x9488;&#x6307;&#x5411;&#x6307;&#x5B9A;&#x7684;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x5B9A;&#x4E49;&#x7684;&#xFF0C;&#x88AB;HOOK&#x5B50;&#x7A0B;&#x8C03;&#x7528;&#x7684;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x8BE5;&#x94A9;&#x5B50;&#x7684;&#x5404;&#x4E2A;&#x5904;&#x7406;&#x5B50;&#x7A0B;&#x3002;&#x5F53;&#x4E0E;&#x6307;&#x5B9A;&#x7684;HOOK&#x7C7B;&#x578B;&#x5173;&#x8054;&#x7684;&#x6D88;&#x606F;&#x53D1;&#x751F;&#x65F6;&#xFF0C;&#x7CFB;&#x7EDF;&#x5C31;&#x628A;&#x8FD9;&#x4E2A;&#x6D88;&#x606F;&#x4F20;&#x9012;&#x5230;HOOK&#x5B50;&#x7A0B;&#xFF08;&#x56DE;&#x8C03;&#x51FD;&#x6570;&#xFF09;&#x3002;HOOK&#x5B50;&#x7A0B;&#x5C31;&#x53EF;&#x4EE5;&#x76D1;&#x89C6;&#x6D88;&#x606F;&#xFF0C;&#x6216;&#x8005;&#x4FEE;&#x6539;&#x6D88;&#x606F;&#xFF0C;&#x6216;&#x8005;&#x505C;&#x6B62;&#x6D88;&#x606F;&#x7684;&#x524D;&#x8FDB;&#xFF0C;&#x907F;&#x514D;&#x8FD9;&#x4E9B;&#x6D88;&#x606F;&#x4F20;&#x9012;&#x5230;&#x4E0B;&#x4E00;&#x4E2A;HOOK&#x5B50;&#x7A0B;&#x6216;&#x8005;&#x76EE;&#x7684;&#x7A97;&#x53E3;&#x3002;&#x8C03;&#x7528;&#x7CFB;&#x7EDF;API&#x7684;&#x51FD;&#x6570;SetWindowsHookEx&#x53EF;&#x4EE5;&#x628A;HOOK&#x5B50;&#x7A0B;&#x8BBE;&#x7F6E;&#x5230;&#x94A9;&#x5B50;&#x94FE;&#x8868;&#x4E2D;&#x53BB;&#x3002;</p>
 <a id="more"></a>
-<p>&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x5C06;&#x63CF;&#x8FF0;&#x73AF;&#x5883;&#x4E2D;&#x6240;&#x9700;&#x7684;egg&#xFF0C;&#x5B83;&#x4EEC;&#x7684;&#x72B6;&#x6001;&#x4EE5;&#x53CA;&#x6784;&#x5EFA;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x6240;&#x9700;&#x8981;&#x7684;&#x6240;&#x6709;&#x5176;&#x4ED6;&#x5143;&#x7D20;</p>
-<p>&#x63D2;&#x4EF6;&#x7CFB;&#x7EDF;&#x5C06;&#x6CE8;&#x518C;&#x8FD9;&#x4E9B;&#x5305;&#x5E76;&#x6309;&#x7167;&#x6267;&#x884C;&#x7684;&#x987A;&#x5E8F;&#x5C06;&#x5B83;&#x4EEC;&#x94FE;&#x63A5;&#x8D77;&#x6765;</p>
-<p>&#x6700;&#x540E;&#xFF0C;&#x6574;&#x4E2A;&#x73AF;&#x5883;&#x662F;&#x72EC;&#x7ACB;&#x548C;&#x9694;&#x79BB;&#x7684;&#xFF0C;&#x56E0;&#x800C;&#x53EF;&#x4EE5;&#x50CF;&#x53D1;&#x884C;&#x548C;&#x90E8;&#x7F72;&#x540E;&#x90A3;&#x6837;&#x4F7F;&#x7528;</p>
-<h4 id="&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x7ED3;&#x6784;"><a href="#&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x7ED3;&#x6784;" class="headerlink" title="&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x7ED3;&#x6784;"></a>&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x7ED3;&#x6784;</h4><p>zc.buildout&#x4F9D;&#x8D56;&#x4E8E;&#x4E00;&#x4E2A;&#x7ED3;&#x6784;&#x4E0E;ConfigParser&#x6A21;&#x5757;&#x517C;&#x5BB9;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#xFF0C;&#x7C7B;&#x4F3C;&#x4E8E;ini&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x3002;</p>
-<h4 id="&#x6700;&#x5C0F;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;"><a href="#&#x6700;&#x5C0F;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;" class="headerlink" title="&#x6700;&#x5C0F;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;"></a>&#x6700;&#x5C0F;&#x7684;&#x914D;&#x7F6E;&#x6587;&#x4EF6;</h4><p>&#x6700;&#x5C0F;&#x7684;buildout&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4E2D;&#x5305;&#x542B;&#x4E00;&#x4E2A;&#x540D;&#x4E3A;<code>[buildout]</code>&#x7684;&#x5C0F;&#x8282;&#xFF0C;&#x5176;&#x4E2D;&#x6709;&#x4E00;&#x4E2A;&#x79F0;&#x4F5C;parts&#x7684;&#x53D8;&#x91CF;&#x3002;<br>&#x8FD9;&#x4E2A;&#x53D8;&#x91CF;&#x5305;&#x542B;&#x4E00;&#x4E2A;&#x63D0;&#x4F9B;&#x5C0F;&#x8282;&#x5217;&#x8868;&#x7684;&#x591A;&#x884C;&#x503C;&#xFF0C;&#x5982;&#x4E0B;&#x6240;&#x793A;&#xFF1A;</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[buildout]</span><br><span class="line">parts=</span><br><span class="line">	part1</span><br><span class="line">	part2</span><br><span class="line">[part1]</span><br><span class="line">recipe = my.recipe1</span><br><span class="line">[part2]</span><br><span class="line">recipe = my.recipe2</span><br></pre></td></tr></table></figure>
-<p>&#x5728;parts&#x4E2D;&#x6307;&#x5B9A;&#x7684;&#x6BCF;&#x4E2A;&#x5C0F;&#x8282;&#x81F3;&#x5C11;&#x6709;&#x4E00;&#x4E2A;&#x63D0;&#x4F9B;&#x5305;&#x540D;&#x79F0;&#x7684;recipe&#x503C;&#x3002;&#x8FD9;&#x4E2A;&#x5305;&#x53EF;&#x4EE5;&#x662F;&#x4EFB;&#x4F55;python&#x5305;&#xFF0C;&#x53EA;&#x8981;<br>&#x5B83;&#x5B9A;&#x4E49;&#x4E00;&#x4E2A;zc.buildout&#x5165;&#x53E3;&#x70B9;&#x3002;</p>
-<p>&#x7528;&#x8FD9;&#x4E2A;&#x6587;&#x4EF6;&#xFF0C;buildout&#x5C06;&#x6267;&#x884C;&#x4EE5;&#x4E0B;&#x5DE5;&#x4F5C;&#x5E8F;&#x5217;&#xFF1A;</p>
+<h3 id="&#x4EE3;&#x7801;&#x7684;injection"><a href="#&#x4EE3;&#x7801;&#x7684;injection" class="headerlink" title="&#x4EE3;&#x7801;&#x7684;injection"></a>&#x4EE3;&#x7801;&#x7684;injection</h3><p>&#x5E38;&#x7528;&#x7684;&#x65B9;&#x6CD5;&#x6709;&#xFF1A;</p>
+<p>1.&#x4F7F;&#x7528;&#x6CE8;&#x518C;&#x8868;HKLM/Software/Microsoft/Windows NT/CurrentVersion/Windows/AppInit_DLLs</p>
+<p>&#x8FD9;&#x79CD;&#x65B9;&#x6CD5;&#x53EF;&#x4EE5;&#x6307;&#x5B9A;&#x591A;&#x4E2A;DLL&#xFF0C;&#x7528;&#x7A7A;&#x683C;&#x9694;&#x5F00;&#x3002;&#x8FD9;&#x4E9B;DLL&#x4F1A;&#x88AB;&#x4EFB;&#x4F55;&#x7528;&#x5230;User32.dll&#x7684;&#x6240;&#x6709;&#x7A0B;&#x5E8F;&#x81EA;&#x52A8;&#x52A0;&#x8F7D;&#x3002;&#x5F53;User32.dll&#x52A0;&#x8F7D;&#x7684;&#x65F6;&#x5019;&#xFF0C;User32.dll&#x7684;DllMain&#x4F1A;&#x6536;&#x5230;&#x4E00;&#x4E2A;DLL_PROCESS_ATTACH&#x901A;&#x77E5;&#xFF0C;User32&#x5728;&#x8FD9;&#x4E2A;&#x65F6;&#x5019;&#x8BFB;&#x53D6;&#x6CE8;&#x518C;&#x8868;&#x9879;&#x4E2D;&#x7684;&#x503C;&#xFF0C;&#x8C03;&#x7528;LoadLibrary&#x52A0;&#x8F7D;&#x5404;&#x4E2A;DLL&#x3002;&#x663E;&#x7136;&#x4F7F;&#x7528;&#x8FD9;&#x79CD;&#x65B9;&#x6CD5;&#x8981;&#x6C42;&#x8BBE;&#x7F6E;&#x6CE8;&#x518C;&#x8868;&#x4E4B;&#x540E;&#x7ACB;&#x523B;&#x91CD;&#x8D77;&#x7CFB;&#x7EDF;&#xFF0C;&#x4E0D;&#x8FC7;&#x4E00;&#x822C;&#x60C5;&#x51B5;&#x4E0B;&#x8FD9;&#x4E0D;&#x662F;&#x5927;&#x95EE;&#x9898;&#x3002;&#x8FD9;&#x79CD;&#x65B9;&#x6CD5;&#x7684;&#x4E3B;&#x8981;&#x95EE;&#x9898;&#x5728;&#x4E8E;&#xFF0C;&#x53EA;&#x6709;&#x7528;&#x5230;User32.dll&#x7684;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x624D;&#x4F1A;&#x88AB;Inject&#x3002;&#x6240;&#x6709;&#x7684;GUI&#x548C;&#x5C11;&#x90E8;&#x5206;CUI&#x7A0B;&#x5E8F;&#x4F1A;&#x7528;&#x5230;User32.dll&#xFF0C;&#x6240;&#x4EE5;&#x5982;&#x679C;&#x4F60;&#x7684;API Hook&#x7A0B;&#x5E8F;&#x4E0D;&#x6253;&#x7B97;&#x76D1;&#x89C6;CUI&#x7A0B;&#x5E8F;&#x7684;&#x8BDD;&#xFF0C;&#x90A3;&#x4E48;&#x53EF;&#x80FD;&#x95EE;&#x9898;&#x5E76;&#x4E0D;&#x592A;&#x5927;&#x3002;&#x4F46;&#x662F;&#x5982;&#x679C;&#x4F60;&#x7684;API Hook&#x7A0B;&#x5E8F;&#x9700;&#x8981;&#x76D1;&#x89C6;&#x7CFB;&#x7EDF;&#x4E2D;&#x6240;&#x6709;&#x8FDB;&#x7A0B;&#x7684;&#x8BDD;&#xFF0C;&#x8FD9;&#x79CD;&#x65B9;&#x6CD5;&#x7684;&#x9650;&#x5236;&#x5C06;&#x662F;&#x975E;&#x5E38;&#x81F4;&#x547D;&#x7684;&#x3002;</p>
+<p>2.&#x8C03;&#x7528;SetWindowsHookEx(WH_GETMESSAGE, &#x2026;, 0)</p>
+<p>&#x53EF;&#x4EE5;&#x4F7F;&#x7528;SetWindowsHookEx(WH_GETMESSAGE, &#x2026;, 0) &#x8BBE;&#x7F6E;&#x5168;&#x5C40;&#x7684;&#x6D88;&#x606F;&#x94A9;&#x5B50;&#xFF0C;&#x867D;&#x7136;&#x53EF;&#x80FD;&#x4F60;&#x7684;&#x7A0B;&#x5E8F;&#x5E76;&#x4E0D;&#x7528;&#x5230;&#x6D88;&#x606F;&#x94A9;&#x5B50;&#xFF0C;&#x4F46;&#x662F;&#x94A9;&#x5B50;&#x7684;&#x4E00;&#x4E2A;&#x526F;&#x4F5C;&#x7528;&#x662F;&#x4F1A;&#x5C06;&#x5BF9;&#x5E94;&#x7684;DLL&#x52A0;&#x8F7D;&#x5230;&#x6240;&#x6709;&#x7684;GUI&#x7EBF;&#x7A0B;&#x4E4B;&#x4E2D;&#x3002;&#x7C7B;&#x4F3C;&#x7684;&#xFF0C;&#x53EA;&#x6709;&#x7528;&#x5230;GUI&#x7684;&#x8FDB;&#x7A0B;&#x624D;&#x4F1A;&#x88AB;&#x6302;&#x63A5;&#x3002;&#x867D;&#x7136;&#x6709;&#x8FD9;&#x79CD;&#x9650;&#x5236;&#xFF0C;&#x8FD9;&#x79CD;&#x65B9;&#x6CD5;&#x4ECD;&#x7136;&#x662F;&#x6700;&#x5E38;&#x7528;&#x7684;&#x6302;&#x63A5;&#x8FDB;&#x7A0B;&#x7684;&#x65B9;&#x6CD5;&#x3002;</p>
+<p>3.&#x4F7F;&#x7528;CreateRemoteThread&#x51FD;&#x6570;&#x5728;&#x76EE;&#x6807;&#x8FDB;&#x7A0B;&#x4E2D;&#x521B;&#x5EFA;&#x8FDC;&#x7A0B;&#x7EBF;&#x7A0B;</p>
+<p>&#x8FD9;&#x79CD;&#x65B9;&#x6CD5;&#x53EF;&#x4EE5;&#x5728;&#x4EFB;&#x610F;&#x7684;&#x76EE;&#x6807;&#x8FDB;&#x7A0B;&#x4E2D;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x8FDC;&#x7A0B;&#x7EBF;&#x7A0B;&#xFF0C;&#x8FDC;&#x7A0B;&#x7EBF;&#x7A0B;&#x4E2D;&#x53EF;&#x4EE5;&#x6267;&#x884C;&#x4EFB;&#x610F;&#x4EE3;&#x7801;&#xFF0C;&#x8FD9;&#x6837;&#x4FBF;&#x53EF;&#x4EE5;&#x505A;&#x5230;&#x628A;&#x6211;&#x4EEC;&#x7684;&#x4EE3;&#x7801;Inject&#x5230;&#x76EE;&#x6807;&#x8FDB;&#x7A0B;&#x4E2D;&#x3002;&#x8FD9;&#x79CD;&#x65B9;&#x6CD5;&#x5177;&#x6709;&#x6700;&#x5927;&#x6D3B;&#x6027;&#xFF0C;&#x4F46;&#x662F;&#x96BE;&#x5EA6;&#x4E5F;&#x6700;&#x9AD8;&#xFF1A;</p>
 <ul>
-<li><p>&#x68C0;&#x67E5;my.recipe1&#x5305;&#x662F;&#x5426;&#x5B89;&#x88C5;&#xFF0C;&#x5982;&#x679C;&#x6CA1;&#x6709;&#x5B89;&#x88C5;&#xFF0C;&#x8BFB;&#x53D6;&#x5E76;&#x5B8C;&#x6210;&#x672C;&#x5730;&#x5B89;&#x88C5;</p>
-</li>
-<li><p>&#x6267;&#x884C;my.recipe1&#x5165;&#x53E3;&#x70B9;&#x6240;&#x6307;&#x5411;&#x7684;&#x4EE3;&#x7801;</p>
-</li>
-<li><p>&#x7136;&#x540E;&#xFF0C;&#x5BF9;parts&#x505A;&#x540C;&#x6837;&#x7684;&#x4E8B;&#x60C5;</p>
-</li>
+<li>a) &#x8FDC;&#x7A0B;&#x7EBF;&#x7A0B;&#x4EE3;&#x7801;&#x5FC5;&#x987B;&#x53EF;&#x4EE5;&#x81EA;&#x91CD;&#x5B9A;&#x4F4D;</li>
+<li>b) &#x8981;&#x80FD;&#x591F;&#x76D1;&#x89C6;&#x8FDB;&#x7A0B;&#x7684;&#x542F;&#x52A8;&#x548C;&#x7ED3;&#x675F;&#xFF0C;&#x8FD9;&#x6837;&#x624D;&#x53EF;&#x4EE5;&#x6302;&#x63A5;&#x5230;&#x6240;&#x6709;&#x8FDB;&#x7A0B;</li>
 </ul>
-<p>&#x56E0;&#x800C;&#xFF0C;buildout&#x662F;&#x4E00;&#x4E2A;&#x57FA;&#x4E8E;&#x63D2;&#x4EF6;&#x7684;&#x811A;&#x672C;&#xFF0C;&#x5C06;&#x88AB;&#x79F0;&#x4E3A;recipe&#x7684;&#x72EC;&#x7ACB;&#x5305;&#x7684;&#x6267;&#x884C;&#x94FE;&#x63A5;&#x8D77;&#x6765;&#x3002;&#x7528;&#x8FD9;&#x4E2A;&#x5DE5;&#x5177;&#x6784;&#x5EFA;&#x7684;<br>&#x73AF;&#x5883;&#x5305;&#x62EC;recipe&#x6B63;&#x786E;&#x987A;&#x5E8F;&#x7684;&#x5B9A;&#x4E49;&#x3002;</p>
-<h3 id="&#x53D1;&#x884C;&#x4E0E;&#x5206;&#x53D1;"><a href="#&#x53D1;&#x884C;&#x4E0E;&#x5206;&#x53D1;" class="headerlink" title="&#x53D1;&#x884C;&#x4E0E;&#x5206;&#x53D1;"></a>&#x53D1;&#x884C;&#x4E0E;&#x5206;&#x53D1;</h3><h3 id="&#x5C0F;&#x7ED3;"><a href="#&#x5C0F;&#x7ED3;" class="headerlink" title="&#x5C0F;&#x7ED3;"></a>&#x5C0F;&#x7ED3;</h3>
+<p>4.&#x5982;&#x679C;&#x4F60;&#x53EA;&#x662F;&#x8981;&#x6302;&#x63A5;&#x67D0;&#x4E2A;&#x7279;&#x5B9A;&#x8FDB;&#x7A0B;&#x7684;&#x5E76;&#x4E14;&#x60C5;&#x51B5;&#x5141;&#x8BB8;&#x4F60;&#x81EA;&#x5DF1;&#x6765;&#x521B;&#x5EFA;&#x6B64;&#x8FDB;&#x7A0B;&#xFF0C;&#x4F60;&#x53EF;&#x4EE5;&#x8C03;&#x7528;CreateProcess(&#x2026;, CREATE_SUSPENDED)&#x521B;&#x5EFA;&#x5B50;&#x8FDB;&#x7A0B;&#x5E76;&#x6682;&#x505C;&#x8FD0;&#x884C;&#xFF0C;&#x7136;&#x540E;&#x4FEE;&#x6539;&#x5165;&#x53E3;&#x4EE3;&#x7801;&#x4F7F;&#x4E4B;&#x8C03;&#x7528;LoadLibrary&#x52A0;&#x8F7D;&#x81EA;&#x5DF1;&#x7684;DLL&#x3002;&#x8BE5;&#x65B9;&#x6CD5;&#x5728;&#x4E0D;&#x540C;CPU&#x4E4B;&#x95F4;&#x663E;&#x7136;&#x662F;&#x65E0;&#x6CD5;&#x79FB;&#x690D;&#x7684;&#x3002;</p>
+<h3 id="Hook-API"><a href="#Hook-API" class="headerlink" title="Hook API"></a>Hook API</h3><p>&#x5E38;&#x7528;&#x7684;&#x65B9;&#x6CD5;&#x6709;&#xFF1A;</p>
+<p>1.&#x627E;&#x5230;API&#x51FD;&#x6570;&#x5728;&#x5185;&#x5B58;&#x4E2D;&#x7684;&#x5730;&#x5740;&#xFF0C;&#x6539;&#x5199;&#x51FD;&#x6570;&#x5934;&#x51E0;&#x4E2A;&#x5B57;&#x8282;&#x4E3A;JMP&#x6307;&#x4EE4;&#x8DF3;&#x8F6C;&#x5230;&#x81EA;&#x5DF1;&#x7684;&#x4EE3;&#x7801;&#xFF0C;&#x6267;&#x884C;&#x5B8C;&#x6BD5;&#x518D;&#x6267;&#x884C;API&#x5F00;&#x5934;&#x51E0;&#x4E2A;&#x5B57;&#x8282;&#x7684;&#x5185;&#x5BB9;&#x518D;&#x8DF3;&#x56DE;&#x539F;&#x5730;&#x5740;&#x3002;&#x8FD9;&#x79CD;&#x65B9;&#x6CD5;&#x5BF9;CPU&#x6709;&#x8F83;&#x5927;&#x7684;&#x4F9D;&#x8D56;&#x6027;&#xFF0C;&#x800C;&#x4E14;&#x5728;&#x591A;&#x7EBF;&#x7A0B;&#x73AF;&#x5883;&#x4E0B;&#x53EF;&#x80FD;&#x51FA;&#x95EE;&#x9898;&#xFF0C;&#x5F53;&#x6539;&#x5199;&#x51FD;&#x6570;&#x4EE3;&#x7801;&#x7684;&#x65F6;&#x5019;&#x6709;&#x53EF;&#x80FD;&#x6B64;&#x51FD;&#x6570;&#x6B63;&#x5728;&#x88AB;&#x6267;&#x884C;&#xFF0C;&#x8FD9;&#x6837;&#x505A;&#x53EF;&#x80FD;&#x5BFC;&#x81F4;&#x7A0B;&#x5E8F;&#x51FA;&#x9519;&#x3002;</p>
+<p>2.&#x4FEE;&#x6539;PE&#x6587;&#x4EF6;&#x7684;IAT (Import Address Table)&#xFF0C;&#x4F7F;&#x4E4B;&#x6307;&#x5411;&#x81EA;&#x5DF1;&#x7684;&#x4EE3;&#x7801;&#xFF0C;&#x8FD9;&#x6837;EXE/DLL&#x5728;&#x8C03;&#x7528;&#x7CFB;&#x7EDF;API&#x7684;&#x65F6;&#x5019;&#x4FBF;&#x4F1A;&#x8C03;&#x7528;&#x4F60;&#x81EA;&#x5DF1;&#x7684;&#x51FD;&#x6570;</p>
+<p><a href="http://blog.csdn.net/atfield/article/details/1507122" target="_blank" rel="external">Refefence Website</a></p>
+
       
     </div>
     
@@ -331,23 +328,23 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/04/29/advanced-python-06/">Python高级编程(六)</a></p>
+        <p><span>本文标题:</span><a href="/2016/04/29/api-hook/">API Hook</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">LeoZhang</a></p>
-        <p><span>发布时间:</span>2016-04-29, 16:48:52</p>
-        <p><span>最后更新:</span>2016-04-29, 16:51:13</p>
+        <p><span>发布时间:</span>2016-04-29, 17:48:12</p>
+        <p><span>最后更新:</span>2016-04-29, 17:55:45</p>
 	<!-- 添加更新历史 -->
         
             <p>
                 <span>更新历史:</span><i class="fa fa-github"></i>
-                <a href="https://github.com/zealoussnow/BlogSource/blame/master/2016-04-29-advanced-python-06.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
-                <a href="https://github.com/zealoussnow/BlogSource/commits/master/2016-04-29-advanced-python-06.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">文本模式:</span><i class="fa fa-file-text-o"></i>
-                <a href="https://raw.githubusercontent.com/zealoussnow/BlogSource/master/2016-04-29-advanced-python-06.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
+                <a href="https://github.com/zealoussnow/BlogSource/blame/master/2016-04-29-api-hook.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
+                <a href="https://github.com/zealoussnow/BlogSource/commits/master/2016-04-29-api-hook.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">文本模式:</span><i class="fa fa-file-text-o"></i>
+                <a href="https://raw.githubusercontent.com/zealoussnow/BlogSource/master/2016-04-29-api-hook.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
             </p>
         
 
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/04/29/advanced-python-06/" title="Python高级编程(六)">https://zealoussnow.github.io/2016/04/29/advanced-python-06/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://zealoussnow.github.io/2016/04/29/advanced-python-06/　　作者: LeoZhang" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/04/29/api-hook/" title="API Hook">https://zealoussnow.github.io/2016/04/29/api-hook/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://zealoussnow.github.io/2016/04/29/api-hook/　　作者: LeoZhang" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -360,15 +357,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/04/29/good-habits/">
-                    开发者应该具备的15个编程好习惯
+                <a href="/2016/04/29/tcp-state-change/">
+                    剖析TCP状态变迁
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/04/29/advanced-python-05/">
-                    Python高级编程(五)
+                <a href="/2016/04/29/libevent/">
+                    libevent源码阅读
                 </a>
             </div>
         
@@ -380,7 +377,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用zc-buildout"><span class="toc-number">1.</span> <span class="toc-text">使用zc.buildout</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#zc-buildout原理"><span class="toc-number">1.1.</span> <span class="toc-text">zc.buildout原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#配置文件结构"><span class="toc-number">1.1.1.</span> <span class="toc-text">配置文件结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#最小的配置文件"><span class="toc-number">1.1.2.</span> <span class="toc-text">最小的配置文件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#发行与分发"><span class="toc-number">1.2.</span> <span class="toc-text">发行与分发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#小结"><span class="toc-number">1.3.</span> <span class="toc-text">小结</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#代码的injection"><span class="toc-number">1.</span> <span class="toc-text">代码的injection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hook-API"><span class="toc-number">2.</span> <span class="toc-text">Hook API</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -439,7 +436,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/04/29/advanced-python-06/" data-title="Python高级编程(六)" data-url="https://zealoussnow.github.io/2016/04/29/advanced-python-06/"></div>
+    <div class="ds-thread" data-thread-key="2016/04/29/api-hook/" data-title="API Hook" data-url="https://zealoussnow.github.io/2016/04/29/api-hook/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -463,7 +460,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/04/29/good-habits/" title="上一篇: 开发者应该具备的15个编程好习惯">
+            <a href="/2016/04/29/tcp-state-change/" title="上一篇: 剖析TCP状态变迁">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -471,7 +468,7 @@
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/04/29/advanced-python-05/" title="下一篇: Python高级编程(五)">
+            <a href="/2016/04/29/libevent/" title="下一篇: libevent源码阅读">
                 <i class="fa fa-angle-right"></i>
             </a>
         

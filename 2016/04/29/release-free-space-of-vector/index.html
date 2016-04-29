@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何释放vector的闲置空间 | LeoZhang&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="std::vector&amp;#x7684;&amp;#x5BB9;&amp;#x91CF;&amp;#x64CD;&amp;#x4F5C;C++ STL&amp;#x5BB9;&amp;#x5668;vector&amp;#x5BF9;&amp;#x4E8E;&amp;#x5BB9;&amp;#x91CF;&amp;#x7684;&amp;#x64CD;&amp;#x4F5C;&amp;#x662F;&amp;#x53EA;&amp;#x589E;&amp;#x4E0D;&amp;#x51CF;&amp;#xFF0C;&amp;#x5982;&amp;#x4E0B;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何释放vector的闲置空间">
+<meta property="og:url" content="https://zealoussnow.github.io/2016/04/29/release-free-space-of-vector/index.html">
+<meta property="og:site_name" content="LeoZhang's Blog">
+<meta property="og:description" content="std::vector&amp;#x7684;&amp;#x5BB9;&amp;#x91CF;&amp;#x64CD;&amp;#x4F5C;C++ STL&amp;#x5BB9;&amp;#x5668;vector&amp;#x5BF9;&amp;#x4E8E;&amp;#x5BB9;&amp;#x91CF;&amp;#x7684;&amp;#x64CD;&amp;#x4F5C;&amp;#x662F;&amp;#x53EA;&amp;#x589E;&amp;#x4E0D;&amp;#x51CF;&amp;#xFF0C;&amp;#x5982;&amp;#x4E0B;">
+<meta property="og:updated_time" content="2016-04-29T09:23:02.799Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何释放vector的闲置空间">
+<meta name="twitter:description" content="std::vector&amp;#x7684;&amp;#x5BB9;&amp;#x91CF;&amp;#x64CD;&amp;#x4F5C;C++ STL&amp;#x5BB9;&amp;#x5668;vector&amp;#x5BF9;&amp;#x4E8E;&amp;#x5BB9;&amp;#x91CF;&amp;#x7684;&amp;#x64CD;&amp;#x4F5C;&amp;#x662F;&amp;#x53EA;&amp;#x589E;&amp;#x4E0D;&amp;#x51CF;&amp;#xFF0C;&amp;#x5982;&amp;#x4E0B;">
+  
+    <link rel="alternative" href="/atom.xml" title="LeoZhang&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+      <link href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css" rel="stylesheet">
+  
+  
+      <link href="//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css" rel="stylesheet">
+  
+  
+      <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+      <link href="//cdn.bootcss.com/pace/1.0.2/themes/red/pace-theme-minimal.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+  
+  <script src="//cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.9/clipboard.min.js"></script>
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false,
+          fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+          scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.0.9/scrollreveal.min.js"
+      }
+  </script>
+
+  
+      <script>
+          yiliaConfig.rootUrl = "/";
+      </script>
+  
+
+  
+  
+      <script>
+          var _hmt = _hmt || [];
+          (function() {
+              var hm = document.createElement("script");
+              hm.src = "//hm.baidu.com/hm.js?13de9c375cb3e535cd7cc1bf7585ea03";
+              var s = document.getElementsByTagName("script")[0]; 
+              s.parentNode.insertBefore(hm, s);
+          })();
+      </script>
+  
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">LeoZhang</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Hear all parties!</p>
+        
+                
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                            <li><a href="/404.html">公益404</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#122;&#101;&#97;&#x6c;&#111;&#117;&#x73;&#x73;&#110;&#111;&#x77;&#64;&#49;&#54;&#51;&#x2e;&#x63;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa 新浪微博" target="_blank" href="http://weibo.com/zealoussnow" title="新浪微博"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/zealoussnow" title="GitHub"></a>
+                            
+                                <a class="fa 知乎" target="_blank" href="https://www.zhihu.com/people/zealoussnow" title="知乎"></a>
+                            
+                                <a class="fa SegmentFault" target="_blank" href="https://segmentfault.com/u/zealoussnow" title="SegmentFault"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C-Boost/">C++ Boost</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Electron/">Electron</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux基础/">Linux基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python高级编程/">Python高级编程</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Windows/">Windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/编程经验/">编程经验</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络基础/">网络基础</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://hexo.io/themes">HexoThemes</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://coolshell.cn/">Coolshell</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">C++程序员，专注于Linux网络编程</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">LeoZhang</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">LeoZhang</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Hear all parties!</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/404.html">公益404</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:&#122;&#101;&#97;&#x6c;&#111;&#117;&#x73;&#x73;&#110;&#111;&#x77;&#64;&#49;&#54;&#51;&#x2e;&#x63;&#111;&#109;" title="Email"></a>
+                            
+                                <a class="fa 新浪微博" target="_blank" href="http://weibo.com/zealoussnow" title="新浪微博"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/zealoussnow" title="GitHub"></a>
+                            
+                                <a class="fa 知乎" target="_blank" href="https://www.zhihu.com/people/zealoussnow" title="知乎"></a>
+                            
+                                <a class="fa SegmentFault" target="_blank" href="https://segmentfault.com/u/zealoussnow" title="SegmentFault"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-release-free-space-of-vector" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/29/release-free-space-of-vector/" class="article-date">
+      <time datetime="2016-04-29T09:17:35.000Z" itemprop="datePublished">2016-04-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      如何释放vector的闲置空间
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/程序设计/">程序设计</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h3 id="std-vector&#x7684;&#x5BB9;&#x91CF;&#x64CD;&#x4F5C;"><a href="#std-vector&#x7684;&#x5BB9;&#x91CF;&#x64CD;&#x4F5C;" class="headerlink" title="std::vector&#x7684;&#x5BB9;&#x91CF;&#x64CD;&#x4F5C;"></a>std::vector&#x7684;&#x5BB9;&#x91CF;&#x64CD;&#x4F5C;</h3><p>C++ STL&#x5BB9;&#x5668;vector&#x5BF9;&#x4E8E;&#x5BB9;&#x91CF;&#x7684;&#x64CD;&#x4F5C;&#x662F;&#x53EA;&#x589E;&#x4E0D;&#x51CF;&#xFF0C;&#x5982;&#x4E0B;&#x9762;&#x7684;&#x4EE3;&#x7801;&#xFF1A;</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</span><br><span class="line">v.push_back(<span class="number">12</span>); <span class="comment">// capacity: 1</span></span><br><span class="line">v.push_back(<span class="number">22</span>);<span class="comment">// capacity: 1 * 2 = 2</span></span><br><span class="line">v.push_back(<span class="number">32</span>);<span class="comment">// capacity: 2 * 2 = 4</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 4</span></span><br><span class="line">v.insert(v.begin(), <span class="number">12</span>, <span class="number">86</span>);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 15</span></span><br><span class="line"><span class="comment">// &#x5220;&#x9664;&#x7B2C; 3 &#x4E2A;&#x5230;&#x5012;&#x6570;&#x7B2C; 2 &#x4E2A;&#x5143;&#x7D20;&#xFF08;&#x4E0D;&#x542B;&#xFF09;&#x4E4B;&#x95F4;&#x7684;&#x6240;&#x6709;&#x5143;&#x7D20;</span></span><br><span class="line">v.erase(v.begin() + <span class="number">2</span>, v.end() &#xAD;- <span class="number">2</span>);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v.size() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// size: 4</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 15 &lt;&#xAD;&#xAD;&#xAD; #1</span></span><br><span class="line">v.clear();</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 15 &lt;&#xAD;&#xAD;&#xAD; #2</span></span><br><span class="line">v.reserve(<span class="number">0</span>);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 15 &lt;&#xAD;&#xAD;&#xAD; #3</span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>&#x7531;&#x4E0A;&#x9762;&#x7684;&#x4EE3;&#x7801;&#x53EF;&#x4EE5;&#x770B;&#x51FA;&#xFF0C;&#x4E0D;&#x8BBA;&#x662F;&#x5220;&#x9664;vector&#x4E2D;&#x7684;&#x5143;&#x7D20;(#1)&#x3001;&#x751A;&#x81F3;clear&#x6574;&#x4E2A;&#x5BB9;&#x5668;&#x7684;&#x5185;&#x5BB9;(#2)&#x3001;&#x6216;&#x663E;&#x5F0F;&#x5C06;capacity&#x4FDD;&#x7559;&#x4E3A;0(#3)&#xFF0C;&#x90FD;&#x65E0;&#x6CD5;&#x51CF;&#x5C0F;vector&#x4E2D;&#x95F2;&#x7F6E;&#x7684;&#x7A7A;&#x95F4;&#x3002;</p>
+<h3 id="std-vector&#x590D;&#x5236;&#x6784;&#x9020;&#x4E0D;&#x4F1A;&#x590D;&#x5236;capacity"><a href="#std-vector&#x590D;&#x5236;&#x6784;&#x9020;&#x4E0D;&#x4F1A;&#x590D;&#x5236;capacity" class="headerlink" title="std::vector&#x590D;&#x5236;&#x6784;&#x9020;&#x4E0D;&#x4F1A;&#x590D;&#x5236;capacity"></a>std::vector&#x590D;&#x5236;&#x6784;&#x9020;&#x4E0D;&#x4F1A;&#x590D;&#x5236;capacity</h3><p>&#x5982;&#x4E0B;&#x5217;&#x4EE3;&#x7801;:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v2;</span><br><span class="line">v2.push_back(<span class="number">12</span>);</span><br><span class="line">v2.push_back(<span class="number">28</span>);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v2.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 2</span></span><br><span class="line">v2.reserve(<span class="number">120</span>);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v2.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 120</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v2.size() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 2</span></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v3(v2);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v3.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 2  &lt;&#xAD;&#xAD; #1</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v3.size() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>&#x5982;&#x4E0A;&#x6240;&#x793A;&#xFF0C;v3&#x7684;capacity&#x53EA;&#x662F;2(#2)&#xFF0C;&#x5373;v2&#x4E2D;&#x7684;&#x5143;&#x7D20;&#x4E2A;&#x6570;&#x3002;</p>
+<h3 id="&#x901A;&#x8FC7;&#x590D;&#x5236;&#x6784;&#x9020;&#x548C;swap&#x6765;&#x91CA;&#x653E;vector&#x5BB9;&#x5668;&#x95F2;&#x7F6E;&#x7684;&#x5185;&#x5B58;&#x7A7A;&#x95F4;"><a href="#&#x901A;&#x8FC7;&#x590D;&#x5236;&#x6784;&#x9020;&#x548C;swap&#x6765;&#x91CA;&#x653E;vector&#x5BB9;&#x5668;&#x95F2;&#x7F6E;&#x7684;&#x5185;&#x5B58;&#x7A7A;&#x95F4;" class="headerlink" title="&#x901A;&#x8FC7;&#x590D;&#x5236;&#x6784;&#x9020;&#x548C;swap&#x6765;&#x91CA;&#x653E;vector&#x5BB9;&#x5668;&#x95F2;&#x7F6E;&#x7684;&#x5185;&#x5B58;&#x7A7A;&#x95F4;"></a>&#x901A;&#x8FC7;&#x590D;&#x5236;&#x6784;&#x9020;&#x548C;swap&#x6765;&#x91CA;&#x653E;vector&#x5BB9;&#x5668;&#x95F2;&#x7F6E;&#x7684;&#x5185;&#x5B58;&#x7A7A;&#x95F4;</h3><p>&#x5982;&#x4E0B;&#x5217;&#x4EE3;&#x7801;&#xFF1A;</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v2;</span><br><span class="line">v2.push_back(<span class="number">12</span>);</span><br><span class="line">v2.push_back(<span class="number">28</span>);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v2.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 2</span></span><br><span class="line">v2.reserve(<span class="number">120</span>);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v2.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 120</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v2.size() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 2</span></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; (v2).swap(v2); <span class="comment">// &lt;&#xAD;&#xAD; #1</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v2.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 2  &lt;&#xAD;&#xAD; #2</span></span><br></pre></td></tr></table></figure>
+<font color="green">&#x4E3A;&#x4EC0;&#x4E48;&#x53EF;&#x4EE5;&#x51CF;&#x5C0F;v2&#x7684;capacity&#xFF1F;</font>
+
+<ul>
+<li>vector<int>(v2)&#x8C03;&#x7528;vector&#x7684;&#x590D;&#x5236;&#x6784;&#x9020;&#x51FD;&#x6570;&#xFF0C;&#x7528;v2&#x7684;&#x5143;&#x7D20;&#x6765;&#x6784;&#x9020;&#x4E00;&#x4E2A;&#x65B0;&#x7684;&#x3001;&#x4E34;&#x65F6;&#x5BF9;&#x8C61;(&#x65E0;&#x540D;&#x5BF9;&#x8C61;)</int></li>
+<li>&#x7531;&#x4E8E;&#x662F;&#x590D;&#x5236;&#x6784;&#x9020;&#xFF0C;&#x6240;&#x4EE5;&#x65B0;&#x7684;&#x3001;&#x4E34;&#x65F6;&#x5BF9;&#x8C61;&#x7684;capacity&#x662F;v2&#x7684;&#x5143;&#x7D20;&#x7684;&#x4E2A;&#x6570;&#xFF0C;&#x6240;&#x4EE5;&#x4E3A;2</li>
+<li>&#x7531;&#x4E8E;&#x6210;&#x5458;&#x51FD;&#x6570;swap()&#x4EA4;&#x6362;&#x4E24;&#x4E2A;&#x5BB9;&#x5668;&#x7684;&#x4E00;&#x5207;&#xFF1A;&#x5305;&#x62EC;&#x6240;&#x6709;&#x8FED;&#x4EE3;&#x5668;&#x3001;size&#x3001;&#x6240;&#x6709;&#x5143;&#x7D20;&#x751A;&#x81F3;capacity</li>
+<li>&#x7ECF;&#x8FC7; swap()&#x540E;&#xFF0C;v2&#x7684;capacity&#x53D8;&#x6210;&#x65B0;&#x7684;&#x3001;&#x4E34;&#x65F6;&#x5BF9;&#x8C61;&#x7684;capacity&#xFF0C;&#x5373;2&#xFF0C;&#x5BF9;&#x5E94;&#x7684;&#xFF1A;&#x4E34;&#x65F6;&#x5BF9;&#x8C61;&#x7684;capacity&#x53D8;&#x6210;120</li>
+<li>&#x7531;&#x4E8E;vector<int>(v2)&#x521B;&#x5EFA;&#x7684;&#x4E34;&#x65F6;&#x5BF9;&#x8C61;&#x5728;vector<int>(v2).swap(v2);&#x8FD9;&#x4E2A;&#x8BED;&#x53E5;&#x7ED3;&#x675F;&#x540E;&#x9500;&#x6BC1;&#xFF0C;&#x81F3;&#x6B64;v2&#x7684;capacity&#x4E3A;2&#xFF0C;&#x539F;&#x5148;&#x95F2;&#x7F6E;&#x7684;&#x7A7A;&#x95F4;(120-2&#x4E2A;&#x5143;&#x7D20;&#x7684;&#x7A7A;&#x95F4;)&#x88AB;&#x91CA;&#x653E;(&#x968F;&#x7740;&#x4E34;&#x65F6;&#x5BB9;&#x5668;&#x5BF9;&#x8C61;&#x7684;&#x9500;&#x6BC1;&#x800C;&#x91CA;&#x653E;)&#x3002;</int></int></li>
+</ul>
+<p>&#x540C;&#x7406;&#xFF0C;&#x5B8C;&#x5168;&#x6E05;&#x9664;&#x4E00;&#x4E2A;vector&#x7684;&#x6240;&#x6709;&#x5B58;&#x50A8;&#xFF1A;</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v2;</span><br><span class="line">v2.push_back(<span class="number">12</span>);</span><br><span class="line">v2.push_back(<span class="number">28</span>);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v2.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 2</span></span><br><span class="line">v2.reserve(<span class="number">120</span>);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v2.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 120</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v2.size() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 2</span></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; ().swap(v2); <span class="comment">// &lt;&#xAD;&#xAD; #1</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v2.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// &lt;&#xAD;&#xAD; #2</span></span><br></pre></td></tr></table></figure>
+<p>(#1) &#x9996;&#x5148;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x4E34;&#x65F6;(&#x7A7A;) &#x5BB9;&#x5668;&#xFF0C;&#x7136;&#x540E;&#x4E0E;v2&#x8FDB;&#x884C;swap()</p>
+<p>&#x53C2;&#x8003;&#x94FE;&#x63A5;&#xFF1A;<br><a href="http://www.xuanyuansoft.com/images/files/Reference%20-%20How%20to%20Release%20Vector&apos;s%20Storage.pdf" target="_blank" rel="external">&#x5982;&#x4F55;&#x91CA;&#x653E; Vector &#x5BB9;&#x5668;&#x95F2;&#x7F6E;&#x7684;&#x7A7A;&#x95F4;</a></p>
+<hr>
+<h3 id="vector&#x7684;insert&#x548C;push-back&#x7684;&#x533A;&#x522B;"><a href="#vector&#x7684;insert&#x548C;push-back&#x7684;&#x533A;&#x522B;" class="headerlink" title="vector&#x7684;insert&#x548C;push_back&#x7684;&#x533A;&#x522B;"></a>vector&#x7684;insert&#x548C;push_back&#x7684;&#x533A;&#x522B;</h3><p>std::vector::insert(&#x5728;&#x5BB9;&#x5668;&#x7684;&#x6307;&#x5B9A;&#x4F4D;&#x7F6E;&#x63D2;&#x5165;&#x5143;&#x7D20;)</p>
+<ul>
+<li>&#x5982;&#x679C;&#x65B0;&#x7684;size()&#x6BD4;&#x65E7;&#x7684;capacity()&#x5927;&#xFF0C;&#x4F1A;&#x5BFC;&#x81F4;&#x91CD;&#x65B0;&#x5206;&#x914D;&#x7A7A;&#x95F4;&#x3002;&#x5982;&#x679C;&#x65B0;&#x7684;size()&#x6BD4;capacity()&#x5927;&#xFF0C;&#x6240;&#x6709;&#x7684;&#x8FED;&#x4EE3;&#x5668;&#x548C;&#x5F15;&#x7528;&#x662F;&#x65E0;&#x6548;&#x7684;&#x3002;&#x53E6;&#x5916;&#xFF0C;&#x53EA;&#x6709;&#x5728;&#x63D2;&#x5165;&#x4F4D;&#x7F6E;&#x4E4B;&#x524D;&#x4FDD;&#x7559;&#x7684;&#x8FED;&#x4EE3;&#x5668;&#x548C;&#x5F15;&#x7528;&#x662F;&#x6709;&#x6548;&#x7684;&#xFF0C;&#x8D85;&#x8FC7;&#x7ED3;&#x5C3E;&#x7684;&#x8FED;&#x4EE3;&#x5668;&#x540C;&#x6837;&#x662F;&#x65E0;&#x6548;&#x7684;&#x3002;<br>std::vector::push_back(&#x5C06;&#x7ED9;&#x5B9A;&#x7684;&#x5143;&#x7D20;&#x6DFB;&#x52A0;&#x5230;&#x5BB9;&#x5668;&#x7684;&#x672B;&#x5C3E;)</li>
+<li>&#x65B0;&#x7684;&#x5143;&#x7D20;&#x88AB;&#x7ED9;&#x5B9A;&#x5143;&#x7D20;&#x7684;&#x4E00;&#x4EFD;&#x62F7;&#x8D1D;&#x6240;&#x521D;&#x59CB;&#x5316;</li>
+<li>&#x7ED9;&#x5B9A;&#x7684;&#x503C;&#x79FB;&#x52A8;&#x5230;&#x65B0;&#x7684;&#x5143;&#x7D20;&#x5F53;&#x4E2D;</li>
+<li>&#x5982;&#x679C;&#x65B0;&#x7684;size()&#x6BD4;capacity()&#x5927;&#xFF0C;&#x6240;&#x6709;&#x7684;&#x8FED;&#x4EE3;&#x5668;&#x548C;&#x5F15;&#x7528;(&#x5305;&#x62EC;&#x8D85;&#x8FC7;&#x7ED3;&#x5C3E;&#x7684;&#x8FED;&#x4EE3;&#x5668;)&#x662F;&#x65E0;&#x6548;&#x7684;&#xFF0C;&#x5426;&#x5219;&#x53EA;&#x6709;&#x8D85;&#x8FC7;&#x7ED3;&#x5C3E;&#x7684;&#x8FED;&#x4EE3;&#x5668;&#x662F;&#x65E0;&#x6548;&#x7684;&#x3002;</li>
+</ul>
+<h3 id="&#x53C2;&#x8003;&#x94FE;&#x63A5;&#xFF1A;"><a href="#&#x53C2;&#x8003;&#x94FE;&#x63A5;&#xFF1A;" class="headerlink" title="&#x53C2;&#x8003;&#x94FE;&#x63A5;&#xFF1A;"></a>&#x53C2;&#x8003;&#x94FE;&#x63A5;&#xFF1A;</h3><p><a href="http://stackoverflow.com/questions/13324431/c-vectors-insert-push-back-difference" target="_blank" rel="external">C++ vector&#x2019;s insert &amp; push_back difference</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/04/29/release-free-space-of-vector/">如何释放vector的闲置空间</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">LeoZhang</a></p>
+        <p><span>发布时间:</span>2016-04-29, 17:17:35</p>
+        <p><span>最后更新:</span>2016-04-29, 17:23:02</p>
+	<!-- 添加更新历史 -->
+        
+            <p>
+                <span>更新历史:</span><i class="fa fa-github"></i>
+                <a href="https://github.com/zealoussnow/BlogSource/blame/master/2016-04-29-release-free-space-of-vector.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
+                <a href="https://github.com/zealoussnow/BlogSource/commits/master/2016-04-29-release-free-space-of-vector.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">文本模式:</span><i class="fa fa-file-text-o"></i>
+                <a href="https://raw.githubusercontent.com/zealoussnow/BlogSource/master/2016-04-29-release-free-space-of-vector.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
+            </p>
+        
+
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/04/29/release-free-space-of-vector/" title="如何释放vector的闲置空间">https://zealoussnow.github.io/2016/04/29/release-free-space-of-vector/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://zealoussnow.github.io/2016/04/29/release-free-space-of-vector/　　作者: LeoZhang" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/04/29/c++11-tutor/">
+                    C++11 —— override和final
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/04/29/good-habits/">
+                    开发者应该具备的15个编程好习惯
+                </a>
+            </div>
+        
+    </nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#std-vector的容量操作"><span class="toc-number">1.</span> <span class="toc-text">std::vector的容量操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#std-vector复制构造不会复制capacity"><span class="toc-number">2.</span> <span class="toc-text">std::vector复制构造不会复制capacity</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#通过复制构造和swap来释放vector容器闲置的内存空间"><span class="toc-number">3.</span> <span class="toc-text">通过复制构造和swap来释放vector容器闲置的内存空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vector的insert和push-back的区别"><span class="toc-number">4.</span> <span class="toc-text">vector的insert和push_back的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考链接："><span class="toc-number">5.</span> <span class="toc-text">参考链接：</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+    
+<div class="share">
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="2016/04/29/release-free-space-of-vector/" data-title="如何释放vector的闲置空间" data-url="https://zealoussnow.github.io/2016/04/29/release-free-space-of-vector/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"zealoussnow"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = 'https://zealoussnow.github.io/js/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/04/29/c++11-tutor/" title="上一篇: C++11 —— override和final">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/04/29/good-habits/" title="下一篇: 开发者应该具备的15个编程好习惯">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/setting-vnc/">Linux VNC服务配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/tcp-state-change/">剖析TCP状态变迁</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/api-hook/">API Hook</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/libevent/">libevent源码阅读</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/build-tools/">C++程序构建工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/boost-algorithm/">Boost学习 —— algorithm</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/c++11-tutor/">C++11 —— override和final</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/release-free-space-of-vector/">如何释放vector的闲置空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/good-habits/">开发者应该具备的15个编程好习惯</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/advanced-python-06/">Python高级编程(六)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/advanced-python-05/">Python高级编程(五)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-04/">Python高级编程(四)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-03/">Python高级编程(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-02/">Python高级编程(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-01/">Python高级编程(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/electron-quick-start/">Electron快速入门</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2016 LeoZhang
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >本站到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.1.22/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+
+    <script src="//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

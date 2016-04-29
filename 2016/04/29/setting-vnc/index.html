@@ -3,18 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>分类 &amp; 标签 | LeoZhang&#39;s Blog</title>
+  <title>Linux VNC服务配置 | LeoZhang&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Working Hard.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="分类 & 标签">
-<meta property="og:url" content="https://zealoussnow.github.io/tags/index.html">
+  <meta name="description" content="CentOS-6.5&amp;#x5B89;&amp;#x88C5;&amp;#x548C;&amp;#x914D;&amp;#x7F6E;VNC&amp;#x670D;&amp;#x52A1;1.&amp;#x4E0B;&amp;#x8F7D;tigervnc&amp;#x7684;&amp;#x5BA2;&amp;#x6237;&amp;#x7AEF;&amp;#x548C;&amp;#x670D;&amp;#x52A1;&amp;#x7AEF;&amp;#x7A0B;&amp;#x5E8F;
+1# yum install tigervnc-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux VNC服务配置">
+<meta property="og:url" content="https://zealoussnow.github.io/2016/04/29/setting-vnc/index.html">
 <meta property="og:site_name" content="LeoZhang's Blog">
-<meta property="og:description" content="Working Hard.">
-<meta property="og:updated_time" content="2016-04-29T03:13:44.901Z">
+<meta property="og:description" content="CentOS-6.5&amp;#x5B89;&amp;#x88C5;&amp;#x548C;&amp;#x914D;&amp;#x7F6E;VNC&amp;#x670D;&amp;#x52A1;1.&amp;#x4E0B;&amp;#x8F7D;tigervnc&amp;#x7684;&amp;#x5BA2;&amp;#x6237;&amp;#x7AEF;&amp;#x548C;&amp;#x670D;&amp;#x52A1;&amp;#x7AEF;&amp;#x7A0B;&amp;#x5E8F;
+1# yum install tigervnc-">
+<meta property="og:updated_time" content="2016-04-29T10:11:51.475Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="分类 & 标签">
-<meta name="twitter:description" content="Working Hard.">
+<meta name="twitter:title" content="Linux VNC服务配置">
+<meta name="twitter:description" content="CentOS-6.5&amp;#x5B89;&amp;#x88C5;&amp;#x548C;&amp;#x914D;&amp;#x7F6E;VNC&amp;#x670D;&amp;#x52A1;1.&amp;#x4E0B;&amp;#x8F7D;tigervnc&amp;#x7684;&amp;#x5BA2;&amp;#x6237;&amp;#x7AEF;&amp;#x548C;&amp;#x670D;&amp;#x52A1;&amp;#x7AEF;&amp;#x7A0B;&amp;#x5E8F;
+1# yum install tigervnc-">
   
     <link rel="alternative" href="/atom.xml" title="LeoZhang&#39;s Blog" type="application/atom+xml">
   
@@ -46,7 +49,7 @@
           fancybox: true,
           animate: true,
           isHome: false,
-          isPost: false,
+          isPost: true,
           isArchive: false,
           isTag: false,
           isCategory: false,
@@ -257,11 +260,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-setting-vnc" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/tags/index.html" class="article-date">
-      <time datetime="2016-04-29T01:43:12.000Z" itemprop="datePublished">2016-04-29</time>
+      <a href="/2016/04/29/setting-vnc/" class="article-date">
+      <time datetime="2016-04-29T10:07:18.000Z" itemprop="datePublished">2016-04-29</time>
 </a>
     </div>
   
@@ -274,7 +277,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      分类 &amp; 标签
+      Linux VNC服务配置
     </h1>
   
 
@@ -282,8 +285,16 @@
       
       <div class="article-info article-info-post">
         
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/程序设计/">程序设计</a>
+    </div>
+
 
         
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux基础/">Linux基础</a></li></ul>
+    </div>
+
         <div class="clearfix"></div>
       </div>
       
@@ -291,97 +302,109 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              <style>
-    .article-meta { display: none; }
-    #container .article .article-title { padding-right: 0; }
-    .article-header {
-        padding: 0;
-        padding-top: 26px;
-        border-left: none;
-        text-align: center;
-    }
-    .article-header:hover { border-left: none; }
-    .article-title { font-size: 1.6em }
-    .article-entry hr { margin: 0;}
-    .article-meta,
-    #container .article-info-post.article-info { display: none;}
-    #container .article .article-title { padding: 0; }
-</style>
+        <h3 id="CentOS-6-5&#x5B89;&#x88C5;&#x548C;&#x914D;&#x7F6E;VNC&#x670D;&#x52A1;"><a href="#CentOS-6-5&#x5B89;&#x88C5;&#x548C;&#x914D;&#x7F6E;VNC&#x670D;&#x52A1;" class="headerlink" title="CentOS-6.5&#x5B89;&#x88C5;&#x548C;&#x914D;&#x7F6E;VNC&#x670D;&#x52A1;"></a>CentOS-6.5&#x5B89;&#x88C5;&#x548C;&#x914D;&#x7F6E;VNC&#x670D;&#x52A1;</h3><p>1.&#x4E0B;&#x8F7D;tigervnc&#x7684;&#x5BA2;&#x6237;&#x7AEF;&#x548C;&#x670D;&#x52A1;&#x7AEF;&#x7A0B;&#x5E8F;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># yum install tigervnc-server tigervnc</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>2.&#x4E3A;&#x666E;&#x901A;&#x7528;&#x6237;&#x8BBE;&#x7F6E;vnc&#x670D;&#x52A1;</p>
+<p>&#x7F16;&#x8F91;/etc/sysconfig/vncservers&#xFF0C;&#x52A0;&#x5165;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VNCSERVERS=&quot;8:test&quot;</span><br><span class="line">VNCSERVERARGS[8]=&quot;-geometry 1400x900 -nolisten tcp&quot;</span><br></pre></td></tr></table></figure>
+<p>&#x6DFB;&#x52A0;&#x7684;&#x7528;&#x6237;test&#x5FC5;&#x987B;&#x662F;&#x7CFB;&#x7EDF;&#x4E2D;&#x5DF2;&#x7ECF;&#x5B58;&#x5728;&#x7684;&#x7528;&#x6237;&#x3002;</p>
+<p>3.&#x4E3A;test&#x8BBE;&#x7F6E;vnc&#x7684;&#x767B;&#x5F55;&#x5BC6;&#x7801;</p>
+<p>&#x5207;&#x6362;&#x5230;&#x666E;&#x901A;&#x7528;&#x6237;&#x4E0A;&#xFF0C;&#x4F7F;&#x7528;vncpasswd&#x8BBE;&#x7F6E;&#x5BC6;&#x7801;</p>
+<p>4.&#x542F;&#x52A8;vnc&#x670D;&#x52A1;</p>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service vncserver start</span><br></pre></td></tr></table></figure>
+</code></pre><h3 id="&#x53C2;&#x8003;&#x8D44;&#x6599;"><a href="#&#x53C2;&#x8003;&#x8D44;&#x6599;" class="headerlink" title="&#x53C2;&#x8003;&#x8D44;&#x6599;"></a>&#x53C2;&#x8003;&#x8D44;&#x6599;</h3><p><a href="http://blog.sina.com.cn/s/blog_6cf180d10102v07j.html" target="_blank" rel="external">CentOS-6.5&#x5B89;&#x88C5;&#x914D;&#x7F6E;tigervnc</a><br><a href="http://wenku.baidu.com/link?url=JCaAqi004QuvYXbBRvXC1qUZYvjnXHPF8Mx33wPmsUKsXXHl_tQa8npKMwvSYMYhewAv2cTU38PbF0dv3m-4uEiFfH7qFvEQ3AkhPmPfQlu" target="_blank" rel="external">VNC&#x670D;&#x52A1;&#x5168;&#x9762;&#x8BBE;&#x7F6E;</a></p>
 
-
-    <!-- Tag Cloud Page -->
-    <hr>
-<br>
-<ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Nodejs/">Nodejs</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/文章摘录/">文章摘录</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/程序设计/">程序设计</a><span class="category-list-count">8</span></li></ul>
-
-<p class="count"></p>
-
-<div class="tags">
-    <a href="/tags/C/" style="font-size: 16px; color: #808080">C</a> <a href="/tags/C/" style="font-size: 25.5px; color: #404040">C++</a> <a href="/tags/C-Boost/" style="font-size: 16px; color: #808080">C++ Boost</a> <a href="/tags/Electron/" style="font-size: 16px; color: #808080">Electron</a> <a href="/tags/Linux基础/" style="font-size: 16px; color: #808080">Linux基础</a> <a href="/tags/Python高级编程/" style="font-size: 35px; color: #000">Python高级编程</a> <a href="/tags/Windows/" style="font-size: 16px; color: #808080">Windows</a> <a href="/tags/编程经验/" style="font-size: 16px; color: #808080">编程经验</a> <a href="/tags/网络基础/" style="font-size: 16px; color: #808080">网络基础</a>
-</div>
-<style>
-    .category-list li{
-        display: inline-block;
-        margin: 0 1em .5em 0;
-        padding: 4px;
-        border: 1px solid lightgray;
-        font-size: 1.2rem;
-    }
-    .category-list a { color: gray; }
-    .category-list-item:hover a {
-        color: gray;
-        text-decoration: none;
-    }
-    .category-list-count {
-        margin-left: 2px;
-        font-size: .9rem;
-    }
-    .article-entry ul li:before{ display: none; }
-    .article-inner { text-align: center; }
-    .tags {
-        max-width: 42em;
-        margin: 2em auto;
-        margin-top: 0em;
-    }
-    .tags a {
-        margin-right: 1em;
-        line-height: 65px;
-        border-bottom: 1px solid gray;
-        white-space: nowrap;
-        transition: border-bottom .5s;
-    }
-    .tags a:hover {
-        border-bottom: 3px dotted gray;
-        text-decoration: none;
-    }
-    #count > span {
-        margin: auto .2em;
-        font-weight: bold;
-    }
-</style>
-
-<!-- Count tags and categories -->
-<p id="count">
-        已有<span><script>document.write($(".category-list-item").length)</script></span>个分类，
-        共计<span><script>document.write($(".tags > a").length)</script></span>个标签
-</p>
-<script>
-    $('#count').appendTo('.count');
-</script>
-
-          
-        
       
     </div>
     
   </div>
   
     
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/04/29/setting-vnc/">Linux VNC服务配置</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页">LeoZhang</a></p>
+        <p><span>发布时间:</span>2016-04-29, 18:07:18</p>
+        <p><span>最后更新:</span>2016-04-29, 18:11:51</p>
+	<!-- 添加更新历史 -->
+        
+            <p>
+                <span>更新历史:</span><i class="fa fa-github"></i>
+                <a href="https://github.com/zealoussnow/BlogSource/blame/master/2016-04-29-setting-vnc.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
+                <a href="https://github.com/zealoussnow/BlogSource/commits/master/2016-04-29-setting-vnc.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">文本模式:</span><i class="fa fa-file-text-o"></i>
+                <a href="https://raw.githubusercontent.com/zealoussnow/BlogSource/master/2016-04-29-setting-vnc.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
+            </p>
+        
 
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/04/29/setting-vnc/" title="Linux VNC服务配置">https://zealoussnow.github.io/2016/04/29/setting-vnc/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://zealoussnow.github.io/2016/04/29/setting-vnc/　　作者: LeoZhang" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2016/04/29/tcp-state-change/">
+                    剖析TCP状态变迁
+                </a>
+            </div>
+        
+    </nav>
 
 
   
 </article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#CentOS-6-5安装和配置VNC服务"><span class="toc-number">1.</span> <span class="toc-text">CentOS-6.5安装和配置VNC服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-number">2.</span> <span class="toc-text">参考资料</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
 
 
 
@@ -401,7 +424,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="tags/index.html" data-title="分类 &amp; 标签" data-url="https://zealoussnow.github.io/tags/index.html"></div>
+    <div class="ds-thread" data-thread-key="2016/04/29/setting-vnc/" data-title="Linux VNC服务配置" data-url="https://zealoussnow.github.io/2016/04/29/setting-vnc/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -420,6 +443,24 @@
 
     
 
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2016/04/29/tcp-state-change/" title="下一篇: 剖析TCP状态变迁">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/setting-vnc/">Linux VNC服务配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/tcp-state-change/">剖析TCP状态变迁</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/api-hook/">API Hook</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/libevent/">libevent源码阅读</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/build-tools/">C++程序构建工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/boost-algorithm/">Boost学习 —— algorithm</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/c++11-tutor/">C++11 —— override和final</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/release-free-space-of-vector/">如何释放vector的闲置空间</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/good-habits/">开发者应该具备的15个编程好习惯</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/advanced-python-06/">Python高级编程(六)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/advanced-python-05/">Python高级编程(五)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-04/">Python高级编程(四)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-03/">Python高级编程(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-02/">Python高级编程(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-01/">Python高级编程(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/electron-quick-start/">Electron快速入门</a></li></ul>
 
 
 
