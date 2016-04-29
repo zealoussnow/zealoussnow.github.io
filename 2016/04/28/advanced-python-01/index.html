@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="LeoZhang's Blog">
 <meta property="og:description" content="&amp;#x8BED;&amp;#x6CD5;&amp;#x6700;&amp;#x4F73;&amp;#x5B9E;&amp;#x8DF5;&amp;#x2014;&amp;#x2014;&amp;#x4F4E;&amp;#x4E8E;&amp;#x7C7B;&amp;#x7EA7;&amp;#x5217;&amp;#x8868;&amp;#x63A8;&amp;#x5BFC;(List Comprehensions)1[ i for i in range(10) if i % 2 == 0]
 &amp;#x6BCF;&amp;#x5">
-<meta property="og:updated_time" content="2016-04-29T06:26:41.418Z">
+<meta property="og:updated_time" content="2016-04-29T08:10:59.596Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python高级编程(一)">
 <meta name="twitter:description" content="&amp;#x8BED;&amp;#x6CD5;&amp;#x6700;&amp;#x4F73;&amp;#x5B9E;&amp;#x8DF5;&amp;#x2014;&amp;#x2014;&amp;#x4F4E;&amp;#x4E8E;&amp;#x7C7B;&amp;#x7EA7;&amp;#x5217;&amp;#x8868;&amp;#x63A8;&amp;#x5BFC;(List Comprehensions)1[ i for i in range(10) if i % 2 == 0]
@@ -153,6 +153,8 @@
                         
                             <li><a href="/about/">关于我</a></li>
                         
+                            <li><a href="/404.html">公益404</a></li>
+                        
                         </ul>
                     </nav>
                     <nav class="header-nav">
@@ -184,7 +186,7 @@
                 <section class="switch-part switch-part3">
                     <div id="js-friends">
                     
-                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://hexo.io">Hexo</a>
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://hexo.io/themes">HexoThemes</a>
                     
                       <a target="_blank" class="main-nav-link switch-friends-link" href="https://pages.github.com/">GitHub</a>
                     
@@ -233,6 +235,8 @@
                     <li><a href="/tags/">标签云</a></li>
                 
                     <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/404.html">公益404</a></li>
                 
                 <div class="clearfix"></div>
                 </ul>
@@ -387,10 +391,8 @@
 <p>&#x5982;&#xFF1A;</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">readfile</span><span class="params">()</span>:</span></span><br><span class="line">   <span class="keyword">with</span> file(<span class="string">&apos;/etc/hosts&apos;</span>) <span class="keyword">as</span> source_file:</span><br><span class="line">       <span class="keyword">for</span> line <span class="keyword">in</span> source_file:</span><br><span class="line">           <span class="keyword">if</span> line.startswith(<span class="string">&apos;#&apos;</span>):</span><br><span class="line">               <span class="keyword">continue</span></span><br><span class="line">           <span class="keyword">print</span> line</span><br></pre></td></tr></table></figure>
 <h5 id="contextlib&#x6A21;&#x5757;"><a href="#contextlib&#x6A21;&#x5757;" class="headerlink" title="contextlib&#x6A21;&#x5757;"></a>contextlib&#x6A21;&#x5757;</h5><p>&#x672A;&#x6765;&#x7ED9;with&#x8BED;&#x53E5;&#x63D0;&#x4F9B;&#x4E00;&#x4E9B;&#x8F85;&#x52A9;&#x7C7B;&#xFF0C;&#x6807;&#x51C6;&#x7A0B;&#x5E8F;&#x5E93;&#x4E2D;&#x6DFB;&#x52A0;&#x4E86;&#x4E00;&#x4E2A;&#x6A21;&#x5757;&#x3002;&#x6700;&#x6709;&#x7528;&#x7684;&#x8F85;&#x52A9;&#x7C7B;&#x662F;contextmanager&#xFF0C;&#x8FD9;&#x662F;&#x4E00;&#x4E2A;<br>&#x88C5;&#x9970;&#x5668;&#xFF0C;&#x5B83;&#x589E;&#x5F3A;&#x4E86;&#x5305;&#x542B;&#x4EE5;yield&#x8BED;&#x53E5;&#x5206;&#x5F00;&#x7684;__enter__&#x548C;__exit__&#x4E24;&#x90E8;&#x5206;&#x7684;&#x751F;&#x6210;&#x5668;&#x3002;</p>
-<h4 id="&#x53C2;&#x8003;&#x6587;&#x6863;"><a href="#&#x53C2;&#x8003;&#x6587;&#x6863;" class="headerlink" title="&#x53C2;&#x8003;&#x6587;&#x6863;"></a>&#x53C2;&#x8003;&#x6587;&#x6863;</h4><ul>
-<li><a href="https://docs.python.org/2/tutorial/" target="_blank" rel="external">Python&#x5728;&#x7EBF;&#x6559;&#x7A0B;</a></li>
-<li><a href="http://www.python.org/dev/peps/pep-0008" target="_blank" rel="external">&#x6837;&#x5F0F;&#x6307;&#x5357;</a></li>
-</ul>
+<h3 id="&#x53C2;&#x8003;&#x8D44;&#x6599;"><a href="#&#x53C2;&#x8003;&#x8D44;&#x6599;" class="headerlink" title="&#x53C2;&#x8003;&#x8D44;&#x6599;"></a>&#x53C2;&#x8003;&#x8D44;&#x6599;</h3><p><a href="https://docs.python.org/2/tutorial/" target="_blank" rel="external">Python&#x5728;&#x7EBF;&#x6559;&#x7A0B;</a></p>
+<p><a href="http://www.python.org/dev/peps/pep-0008" target="_blank" rel="external">&#x6837;&#x5F0F;&#x6307;&#x5357;</a></p>
 
       
     </div>
@@ -402,7 +404,7 @@
         <p><span>本文标题:</span><a href="/2016/04/28/advanced-python-01/">Python高级编程(一)</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">LeoZhang</a></p>
         <p><span>发布时间:</span>2016-04-28, 16:57:49</p>
-        <p><span>最后更新:</span>2016-04-29, 14:26:41</p>
+        <p><span>最后更新:</span>2016-04-29, 16:10:59</p>
 	<!-- 添加更新历史 -->
         
             <p>
@@ -448,7 +450,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#语法最佳实践——低于类级"><span class="toc-number">1.</span> <span class="toc-text">语法最佳实践——低于类级</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#列表推导-List-Comprehensions"><span class="toc-number">1.1.</span> <span class="toc-text">列表推导(List Comprehensions)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#迭代器和生成器-Iterator-amp-Generator"><span class="toc-number">1.2.</span> <span class="toc-text">迭代器和生成器(Iterator & Generator)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#迭代器-Iterator"><span class="toc-number">1.2.1.</span> <span class="toc-text">迭代器(Iterator)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#生成器-Generator"><span class="toc-number">1.2.2.</span> <span class="toc-text">生成器(Generator)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#协同程序-coroutine"><span class="toc-number">1.2.3.</span> <span class="toc-text">协同程序(coroutine)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#生成器表达式-Genexp"><span class="toc-number">1.2.4.</span> <span class="toc-text">生成器表达式(Genexp)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#itertools模块"><span class="toc-number">1.2.5.</span> <span class="toc-text">itertools模块</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#islice-窗口迭代器"><span class="toc-number">1.2.5.1.</span> <span class="toc-text">islice: 窗口迭代器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#tee-往返式迭代器"><span class="toc-number">1.2.5.2.</span> <span class="toc-text">tee: 往返式迭代器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#groupby-uniq迭代器"><span class="toc-number">1.2.5.3.</span> <span class="toc-text">groupby: uniq迭代器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#其它函数"><span class="toc-number">1.2.5.4.</span> <span class="toc-text">其它函数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#装饰器"><span class="toc-number">1.3.</span> <span class="toc-text">装饰器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#如何编写装饰器"><span class="toc-number">1.3.1.</span> <span class="toc-text">如何编写装饰器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#常见的装饰器模式包括："><span class="toc-number">1.3.1.1.</span> <span class="toc-text">常见的装饰器模式包括：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#with和contextlib"><span class="toc-number">1.4.</span> <span class="toc-text">with和contextlib</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#contextlib模块"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">contextlib模块</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#参考文档"><span class="toc-number">1.4.1.</span> <span class="toc-text">参考文档</span></a></li></ol></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#语法最佳实践——低于类级"><span class="toc-number">1.</span> <span class="toc-text">语法最佳实践——低于类级</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#列表推导-List-Comprehensions"><span class="toc-number">1.1.</span> <span class="toc-text">列表推导(List Comprehensions)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#迭代器和生成器-Iterator-amp-Generator"><span class="toc-number">1.2.</span> <span class="toc-text">迭代器和生成器(Iterator & Generator)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#迭代器-Iterator"><span class="toc-number">1.2.1.</span> <span class="toc-text">迭代器(Iterator)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#生成器-Generator"><span class="toc-number">1.2.2.</span> <span class="toc-text">生成器(Generator)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#协同程序-coroutine"><span class="toc-number">1.2.3.</span> <span class="toc-text">协同程序(coroutine)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#生成器表达式-Genexp"><span class="toc-number">1.2.4.</span> <span class="toc-text">生成器表达式(Genexp)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#itertools模块"><span class="toc-number">1.2.5.</span> <span class="toc-text">itertools模块</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#islice-窗口迭代器"><span class="toc-number">1.2.5.1.</span> <span class="toc-text">islice: 窗口迭代器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#tee-往返式迭代器"><span class="toc-number">1.2.5.2.</span> <span class="toc-text">tee: 往返式迭代器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#groupby-uniq迭代器"><span class="toc-number">1.2.5.3.</span> <span class="toc-text">groupby: uniq迭代器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#其它函数"><span class="toc-number">1.2.5.4.</span> <span class="toc-text">其它函数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#装饰器"><span class="toc-number">1.3.</span> <span class="toc-text">装饰器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#如何编写装饰器"><span class="toc-number">1.3.1.</span> <span class="toc-text">如何编写装饰器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#常见的装饰器模式包括："><span class="toc-number">1.3.1.1.</span> <span class="toc-text">常见的装饰器模式包括：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#with和contextlib"><span class="toc-number">1.4.</span> <span class="toc-text">with和contextlib</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#contextlib模块"><span class="toc-number">1.4.0.1.</span> <span class="toc-text">contextlib模块</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-number">1.5.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -545,7 +547,7 @@
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-04/">Python高级编程(四)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-03/">Python高级编程(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-02/">Python高级编程(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-01/">Python高级编程(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/electron-quick-start/">Electron快速入门</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/advanced-python-06/">Python高级编程(六)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/29/advanced-python-05/">Python高级编程(五)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-04/">Python高级编程(四)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-03/">Python高级编程(三)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-02/">Python高级编程(二)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/advanced-python-01/">Python高级编程(一)</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/28/electron-quick-start/">Electron快速入门</a></li></ul>
 
 
 
