@@ -156,8 +156,6 @@
                         
                             <li><a href="/about/">关于我</a></li>
                         
-                            <li><a href="/404.html">公益404</a></li>
-                        
                         </ul>
                     </nav>
                     <nav class="header-nav">
@@ -239,8 +237,6 @@
                 
                     <li><a href="/about/">关于我</a></li>
                 
-                    <li><a href="/404.html">公益404</a></li>
-                
                 <div class="clearfix"></div>
                 </ul>
             </nav>
@@ -264,6 +260,282 @@
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
       <div class="body-wrap">
+  
+    <article id="post-c++11-tutor" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/29/c++11-tutor/" class="article-date">
+      <time datetime="2016-04-29T09:30:32.000Z" itemprop="datePublished">2016-04-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/29/c++11-tutor/">C++11 —— override和final</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h3 id="override"><a href="#override" class="headerlink" title="override"></a>override</h3><ul>
+<li>&#x591A;&#x6001;&#x884C;&#x4E3A;&#x7684;&#x57FA;&#x7840;&#xFF1A;&#x57FA;&#x7C7B;&#x58F0;&#x660E;&#x865A;&#x51FD;&#x6570;&#xFF0C;&#x6D3E;&#x751F;&#x7C7B;&#x58F0;&#x660E;&#x4E00;&#x4E2A;&#x865A;&#x51FD;&#x6570;&#x8986;&#x5199;&#x8BE5;&#x865A;&#x51FD;&#x6570;</li>
+<li>&#x8986;&#x76D6;&#x8981;&#x6C42;&#xFF1A;&#x51FD;&#x6570;&#x7B7E;&#x540D;&#x4E00;&#x81F4;(&#x51FD;&#x6570;&#x7B7E;&#x540D;&#x5305;&#x62EC;&#xFF1A;&#x51FD;&#x6570;&#x540D;&#x3001;&#x53C2;&#x6570;&#x5217;&#x8868;&#x3001;const)</li>
+</ul>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/程序设计/">程序设计</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2016/04/29/c++11-tutor/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-release-free-space-of-vector" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/29/release-free-space-of-vector/" class="article-date">
+      <time datetime="2016-04-29T09:17:35.000Z" itemprop="datePublished">2016-04-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/29/release-free-space-of-vector/">如何释放vector的闲置空间</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h3 id="std-vector&#x7684;&#x5BB9;&#x91CF;&#x64CD;&#x4F5C;"><a href="#std-vector&#x7684;&#x5BB9;&#x91CF;&#x64CD;&#x4F5C;" class="headerlink" title="std::vector&#x7684;&#x5BB9;&#x91CF;&#x64CD;&#x4F5C;"></a>std::vector&#x7684;&#x5BB9;&#x91CF;&#x64CD;&#x4F5C;</h3><p>C++ STL&#x5BB9;&#x5668;vector&#x5BF9;&#x4E8E;&#x5BB9;&#x91CF;&#x7684;&#x64CD;&#x4F5C;&#x662F;&#x53EA;&#x589E;&#x4E0D;&#x51CF;&#xFF0C;&#x5982;&#x4E0B;&#x9762;&#x7684;&#x4EE3;&#x7801;&#xFF1A;</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v;</span><br><span class="line">v.push_back(<span class="number">12</span>); <span class="comment">// capacity: 1</span></span><br><span class="line">v.push_back(<span class="number">22</span>);<span class="comment">// capacity: 1 * 2 = 2</span></span><br><span class="line">v.push_back(<span class="number">32</span>);<span class="comment">// capacity: 2 * 2 = 4</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 4</span></span><br><span class="line">v.insert(v.begin(), <span class="number">12</span>, <span class="number">86</span>);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 15</span></span><br><span class="line"><span class="comment">// &#x5220;&#x9664;&#x7B2C; 3 &#x4E2A;&#x5230;&#x5012;&#x6570;&#x7B2C; 2 &#x4E2A;&#x5143;&#x7D20;&#xFF08;&#x4E0D;&#x542B;&#xFF09;&#x4E4B;&#x95F4;&#x7684;&#x6240;&#x6709;&#x5143;&#x7D20;</span></span><br><span class="line">v.erase(v.begin() + <span class="number">2</span>, v.end() &#xAD;- <span class="number">2</span>);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v.size() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// size: 4</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 15 &lt;&#xAD;&#xAD;&#xAD; #1</span></span><br><span class="line">v.clear();</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 15 &lt;&#xAD;&#xAD;&#xAD; #2</span></span><br><span class="line">v.reserve(<span class="number">0</span>);</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; v.capacity() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 15 &lt;&#xAD;&#xAD;&#xAD; #3</span></span><br></pre></td></tr></table></figure>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/程序设计/">程序设计</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2016/04/29/release-free-space-of-vector/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-good-habits" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/29/good-habits/" class="article-date">
+      <time datetime="2016-04-29T09:05:54.000Z" itemprop="datePublished">2016-04-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/29/good-habits/">开发者应该具备的15个编程好习惯</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <ul>
+<li>&#x52A8;&#x624B;&#x7F16;&#x7801;&#x4E4B;&#x524D;&#xFF0C;&#x4F60;&#x9700;&#x8981;&#x5BF9;&#x8981;&#x7F16;&#x7801;&#x5B9E;&#x73B0;&#x7684;&#x89E3;&#x51B3;&#x65B9;&#x6848;&#x6709;&#x4E00;&#x4E2A;&#x6B63;&#x5F0F;&#x7684;&#x6216;&#x7C97;&#x7565;&#x7684;&#x8BBE;&#x8BA1;&#x3002;&#x6C38;&#x8FDC;&#x4E0D;&#x8981;&#x5728;&#x6CA1;&#x6709;&#x4EFB;&#x4F55;&#x8BBE;&#x8BA1;&#x7684;&#x524D;&#x63D0;&#x4E0B;&#x5C31;&#x5F00;&#x59CB;&#x7F16;&#x7801;&#xFF0C;&#x9664;&#x975E;&#x6240;&#x7F16;&#x4EE3;&#x7801;&#x4E0D;&#x91CD;&#x8981;&#x3002;</li>
+<li>&#x4F18;&#x79C0;&#x7684;&#x4EE3;&#x7801;&#x6587;&#x6863;&#x8DDF;&#x7F16;&#x7A0B;&#x8BED;&#x8A00;&#x77E5;&#x8BC6;&#x4E00;&#x6837;&#x91CD;&#x8981;&#x3002;&#x5728;&#x4EE3;&#x7801;&#x6E90;&#x6587;&#x4EF6;&#x4E2D;&#xFF0C;&#x4E3A;&#x6BCF;&#x4E2A;&#x4E3B;&#x8981;&#x7684;&#x4EE3;&#x7801;&#x6BB5;&#x6DFB;&#x52A0;&#x6CE8;&#x91CA;&#xFF0C;&#x89E3;&#x91CA;&#x4EE3;&#x7801;&#x7684;&#x57FA;&#x672C;&#x903B;&#x8F91;&#x3002;&#x6700;&#x597D;&#x6CE8;&#x660E;&#x7A0B;&#x5E8F;&#x7684;&#x6784;&#x5EFA;&#x548C;&#x4FEE;&#x6539;&#x65E5;&#x671F;&#xFF0C;&#x4EE5;&#x53CA;&#x4FEE;&#x6539;&#x7684;&#x539F;&#x56E0;&#x4E5F;&#x662F;&#x975E;&#x5E38;&#x6709;&#x5FC5;&#x8981;&#x7684;&#x3002;</li>
+</ul>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/文章摘录/">文章摘录</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/编程经验/">编程经验</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2016/04/29/good-habits/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-advanced-python-06" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/29/advanced-python-06/" class="article-date">
+      <time datetime="2016-04-29T08:48:52.000Z" itemprop="datePublished">2016-04-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/29/advanced-python-06/">Python高级编程(六)</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <h2 id="&#x4F7F;&#x7528;zc-buildout"><a href="#&#x4F7F;&#x7528;zc-buildout" class="headerlink" title="&#x4F7F;&#x7528;zc.buildout"></a>&#x4F7F;&#x7528;zc.buildout</h2><h3 id="zc-buildout&#x539F;&#x7406;"><a href="#zc-buildout&#x539F;&#x7406;" class="headerlink" title="zc.buildout&#x539F;&#x7406;"></a>zc.buildout&#x539F;&#x7406;</h3><p>virtualenv&#x5BF9;&#x4E8E;&#x9694;&#x79BB;&#x4E00;&#x4E2A;python&#x73AF;&#x5883;&#x76F8;&#x5F53;&#x65B9;&#x4FBF;&#x3002;zc.buildout&#x63D0;&#x4F9B;&#x4E86;&#x76F8;&#x540C;&#x7684;&#x9694;&#x79BB;&#x529F;&#x80FD;&#xFF0C;&#x5E76;&#x4E14;&#x8FDB;&#x4E00;&#x6B65;&#x63D0;&#x4F9B;&#x4E86;&#xFF1A;</p>
+<ul>
+<li>&#x4E00;&#x4E2A;&#x7B80;&#x5355;&#x7684;&#x3001;&#x5728;&#x4E00;&#x4E2A;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4E2D;&#x5B9A;&#x4E49;&#x8FD9;&#x4E9B;&#x4F9D;&#x8D56;&#x6027;&#x7684;&#x63CF;&#x8FF0;&#x6027;&#x8BED;&#x8A00;</li>
+<li>&#x63D0;&#x4F9B;&#x94FE;&#x63A5;&#x4EE3;&#x7801;&#x8C03;&#x7528;&#x7EC4;&#x5408;&#x7684;&#x8F93;&#x5165;&#x70B9;&#x7684;&#x63D2;&#x4EF6;&#x7CFB;&#x7EDF;</li>
+<li>&#x4E00;&#x79CD;&#x90E8;&#x7F72;&#x548C;&#x53D1;&#x884C;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x6E90;&#x4EE3;&#x7801;&#x53CA;&#x5176;&#x6267;&#x884C;&#x73AF;&#x5883;&#x7684;&#x65B9;&#x6CD5;</li>
+</ul>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Python/">Python</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python高级编程/">Python高级编程</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2016/04/29/advanced-python-06/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-advanced-python-05" class="article article-type-post" itemscope itemprop="blogPost">
   

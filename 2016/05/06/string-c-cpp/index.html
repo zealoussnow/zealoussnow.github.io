@@ -3,21 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Linux VNC服务配置 | LeoZhang&#39;s Blog</title>
+  <title>String in C and C++ | LeoZhang&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="CentOS-6.5&amp;#x5B89;&amp;#x88C5;&amp;#x548C;&amp;#x914D;&amp;#x7F6E;VNC&amp;#x670D;&amp;#x52A1;1.&amp;#x4E0B;&amp;#x8F7D;tigervnc&amp;#x7684;&amp;#x5BA2;&amp;#x6237;&amp;#x7AEF;&amp;#x548C;&amp;#x670D;&amp;#x52A1;&amp;#x7AEF;&amp;#x7A0B;&amp;#x5E8F;
-1# yum install tigervnc-">
+  <meta name="description" content="This page summarizes many of the things you may find it useful to know when working with either C-strings or objects of the C++ string class.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux VNC服务配置">
-<meta property="og:url" content="https://zealoussnow.github.io/2016/04/29/setting-vnc/index.html">
+<meta property="og:title" content="String in C and C++">
+<meta property="og:url" content="https://zealoussnow.github.io/2016/05/06/string-c-cpp/index.html">
 <meta property="og:site_name" content="LeoZhang's Blog">
-<meta property="og:description" content="CentOS-6.5&amp;#x5B89;&amp;#x88C5;&amp;#x548C;&amp;#x914D;&amp;#x7F6E;VNC&amp;#x670D;&amp;#x52A1;1.&amp;#x4E0B;&amp;#x8F7D;tigervnc&amp;#x7684;&amp;#x5BA2;&amp;#x6237;&amp;#x7AEF;&amp;#x548C;&amp;#x670D;&amp;#x52A1;&amp;#x7AEF;&amp;#x7A0B;&amp;#x5E8F;
-1# yum install tigervnc-">
-<meta property="og:updated_time" content="2016-04-29T10:11:51.475Z">
+<meta property="og:description" content="This page summarizes many of the things you may find it useful to know when working with either C-strings or objects of the C++ string class.">
+<meta property="og:updated_time" content="2016-05-06T03:23:33.946Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux VNC服务配置">
-<meta name="twitter:description" content="CentOS-6.5&amp;#x5B89;&amp;#x88C5;&amp;#x548C;&amp;#x914D;&amp;#x7F6E;VNC&amp;#x670D;&amp;#x52A1;1.&amp;#x4E0B;&amp;#x8F7D;tigervnc&amp;#x7684;&amp;#x5BA2;&amp;#x6237;&amp;#x7AEF;&amp;#x548C;&amp;#x670D;&amp;#x52A1;&amp;#x7AEF;&amp;#x7A0B;&amp;#x5E8F;
-1# yum install tigervnc-">
+<meta name="twitter:title" content="String in C and C++">
+<meta name="twitter:description" content="This page summarizes many of the things you may find it useful to know when working with either C-strings or objects of the C++ string class.">
   
     <link rel="alternative" href="/atom.xml" title="LeoZhang&#39;s Blog" type="application/atom+xml">
   
@@ -256,11 +253,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-setting-vnc" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-string-c-cpp" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2016/04/29/setting-vnc/" class="article-date">
-      <time datetime="2016-04-29T10:07:18.000Z" itemprop="datePublished">2016-04-29</time>
+      <a href="/2016/05/06/string-c-cpp/" class="article-date">
+      <time datetime="2016-05-06T02:22:45.000Z" itemprop="datePublished">2016-05-06</time>
 </a>
     </div>
   
@@ -273,7 +270,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Linux VNC服务配置
+      String in C and C++
     </h1>
   
 
@@ -288,7 +285,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux基础/">Linux基础</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -298,18 +295,154 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="CentOS-6-5&#x5B89;&#x88C5;&#x548C;&#x914D;&#x7F6E;VNC&#x670D;&#x52A1;"><a href="#CentOS-6-5&#x5B89;&#x88C5;&#x548C;&#x914D;&#x7F6E;VNC&#x670D;&#x52A1;" class="headerlink" title="CentOS-6.5&#x5B89;&#x88C5;&#x548C;&#x914D;&#x7F6E;VNC&#x670D;&#x52A1;"></a>CentOS-6.5&#x5B89;&#x88C5;&#x548C;&#x914D;&#x7F6E;VNC&#x670D;&#x52A1;</h3><p>1.&#x4E0B;&#x8F7D;tigervnc&#x7684;&#x5BA2;&#x6237;&#x7AEF;&#x548C;&#x670D;&#x52A1;&#x7AEF;&#x7A0B;&#x5E8F;</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># yum install tigervnc-server tigervnc</span><br></pre></td></tr></table></figure>
+        <p>This page summarizes many of the things you may find it useful to know when working with either C-strings or objects of the C++ string class.</p>
 <a id="more"></a>
-<p>2.&#x4E3A;&#x666E;&#x901A;&#x7528;&#x6237;&#x8BBE;&#x7F6E;vnc&#x670D;&#x52A1;</p>
-<p>&#x7F16;&#x8F91;/etc/sysconfig/vncservers&#xFF0C;&#x52A0;&#x5165;</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">VNCSERVERS=&quot;8:test&quot;</span><br><span class="line">VNCSERVERARGS[8]=&quot;-geometry 1400x900 -nolisten tcp&quot;</span><br></pre></td></tr></table></figure>
-<p>&#x6DFB;&#x52A0;&#x7684;&#x7528;&#x6237;test&#x5FC5;&#x987B;&#x662F;&#x7CFB;&#x7EDF;&#x4E2D;&#x5DF2;&#x7ECF;&#x5B58;&#x5728;&#x7684;&#x7528;&#x6237;&#x3002;</p>
-<p>3.&#x4E3A;test&#x8BBE;&#x7F6E;vnc&#x7684;&#x767B;&#x5F55;&#x5BC6;&#x7801;</p>
-<p>&#x5207;&#x6362;&#x5230;&#x666E;&#x901A;&#x7528;&#x6237;&#x4E0A;&#xFF0C;&#x4F7F;&#x7528;vncpasswd&#x8BBE;&#x7F6E;&#x5BC6;&#x7801;</p>
-<p>4.&#x542F;&#x52A8;vnc&#x670D;&#x52A1;</p>
-<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service vncserver start</span><br></pre></td></tr></table></figure>
-</code></pre><h3 id="&#x53C2;&#x8003;&#x8D44;&#x6599;"><a href="#&#x53C2;&#x8003;&#x8D44;&#x6599;" class="headerlink" title="&#x53C2;&#x8003;&#x8D44;&#x6599;"></a>&#x53C2;&#x8003;&#x8D44;&#x6599;</h3><p><a href="http://blog.sina.com.cn/s/blog_6cf180d10102v07j.html" target="_blank" rel="external">CentOS-6.5&#x5B89;&#x88C5;&#x914D;&#x7F6E;tigervnc</a><br><a href="http://wenku.baidu.com/link?url=JCaAqi004QuvYXbBRvXC1qUZYvjnXHPF8Mx33wPmsUKsXXHl_tQa8npKMwvSYMYhewAv2cTU38PbF0dv3m-4uEiFfH7qFvEQ3AkhPmPfQlu" target="_blank" rel="external">VNC&#x670D;&#x52A1;&#x5168;&#x9762;&#x8BBE;&#x7F6E;</a></p>
+<p>The term string generally means an ordered sequence of characters, with a first character, a second character, and so on, and in most programming languages such strings are enclosed in either single or double quotes. In C++ the enclosing delimiters are double quotes. In this form the string is referred to as a string literal and we often use such string literals in output statements when we wish to display text on the screen for the benefit of our users. For example, the usual first C++ program displays the string literal &#x201C;Hello, world!&#x201D; on the screen with the following output statement:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Hello, world!&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
+<p>However, without string variables about all we can do with strings is output string literals to the screen, so we need to expand our ability to handle string data. When we talk about strings in C++, we must be careful because the C language, with which C++ is meant to be backward compatible, had one way of dealing with strings, while C++ has another, and to further complicate matters there are many non-standard implementations of C++ strings. These should gradually disappear as compiler vendors update their products to implement the string component of the C++ Standard Library.</p>
+<p>As a programmer, then, you must distinguish between the following three things:</p>
+<p>An &#x201C;ordinary&#x201D; array of characters, which is just like any other array and has no special properties that other arrays do not have.</p>
+<p>A C-string, which consists of an array of characters terminated by the null character &#x2018;\0&#x2019;, and which therefore is different from an ordinary array of characters. There is a whole library of functions for dealing with strings represented in this form. Its header file is <cstring>. In some implementations this library may be automatically included when you include other libraries such as the <iostream> library. Note that the null character may very well not be the very last character in the C-string array, but it will be the first character beyond the last character of the actual string data in in that array. For example if you have a C-string storing &#x201C;Hello&#x201D; in a character array of size 10, then the letters of the word &#x201C;Hello&#x201D; will be in positions with indices 0 to 4, there will be a null character at index 5, and the locations with indices 6 to 9 will contain who-knows-what. In any case, it&#x2019;s the null character at index 5 that makes this otherwise ordinary character array a C-string.<br>A C++ string object, which is an instance of a &#x201C;class&#x201D; data type whose actual internal representation you need not know or care about, as long as you know what you can and can&#x2019;t do with variables (and constants) having this data type. There is a library of C++ string functions as well, available by including the <string> header file.<br>Both the C-string library functions and the C++ string library functions are available to C++ programs. But, don&#x2019;t forget that these are two <em>different</em> function libraries, and the functions of the first library have a different notion of what a string is from the corresponding notion held by the functions of the second library. There are two further complicating aspects to this situation: first, though a function from one of the libraries may have a counterpart in the other library (i.e., a function in the other library designed to perform the same operation), the functions may not be used in the same way, and may not even have the same name; second, because of backward compatibility many functions from the C++ string library can be expected to work fine and do the expected thing with C-style strings, but not the other way around.</string></iostream></cstring></p>
+<p>The last statement above might seem to suggest we should use C++ strings and forget about C-strings altogether, and it is certainly true that there is a wider variety of more intuitive operations available for C++ strings. However, C-strings are more primitive, you may therefore find them simpler to deal with (provided you remember a few simple rules, such as the fact that the null character must always terminate such strings), and certainly if you read other, older programs you will see lots of C-strings. So, use whichever you find more convenient, but if you choose C++ strings and occasionally need to mix the two for some reason, be extra careful. Finally, there are certain situations in which C-strings must be used.</p>
+<p>To understand strings, you will have to spend some time studying sample programs. This study must include the usual prediction of how you expect a program to behave for given input, followed by a compile, link and run to test your prediction, as well as subsequent modification and testing to investigate questions that will arise along the way. In addition to experimenting with any supplied sample programs, you should be prepared to make up your own.</p>
+<p>In the following examples we attempt to draw the distinction between the two string representations and their associated operations. The list is not complete, but we do indicate how to perform many of the more useful kinds of tasks with each kind of string. The left-hand column contains examples relevant to C-strings and the right-hand column shows analogous examples in the context of C++ strings.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">C-strings  (#include <cstring>)</cstring></th>
+<th style="text-align:center">C++ strings  (#include <string>)</string></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><font color="blue">Declaring a C-string variable</font></td>
+<td style="text-align:center"><font color="blue">Declaring a C++ string object </font></td>
+</tr>
+<tr>
+<td style="text-align:center">char str[10];</td>
+<td style="text-align:center">string str;</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Initializing a C-string variable</font></td>
+<td style="text-align:center"><font color="blue">Initializing a C++ string object</font></td>
+</tr>
+<tr>
+<td style="text-align:center">char str1[11] = &#x201C;Call home!&#x201D;;</td>
+<td style="text-align:center">string str1(&#x201C;Call home!&#x201D;);</td>
+</tr>
+<tr>
+<td style="text-align:center">char str2[] = &#x201C;Send money!&#x201D;;</td>
+<td style="text-align:center">string str2 = &#x201C;Send money!&#x201D;;</td>
+</tr>
+<tr>
+<td style="text-align:center">char str3[] = {&#x2018;O&#x2019;, &#x2018;K&#x2019;, &#x2018;\0&#x2019;}; or char str3[] = &#x201C;OK&#x201D;</td>
+<td style="text-align:center">string str3(&#x201C;OK&#x201D;);</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">string str4(10, &#x2018;x&#x2019;);</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Assigning to a C-string variable</font></td>
+<td style="text-align:center"><font color="blue">Assigning to a C++ string object</font></td>
+</tr>
+<tr>
+<td style="text-align:center">Can&#x2019;t do it, i.e., can&#x2019;t do this: char str[10]; str = &#x201C;Hello!&#x201D;;</td>
+<td style="text-align:center">string str; str = &#x201C;Hello&#x201D;; str = otherString;</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Concatenating two C-strings</font></td>
+<td style="text-align:center"><font color="blue">Concatenating two C++ string objects</font></td>
+</tr>
+<tr>
+<td style="text-align:center">strcat(str1, str2);</td>
+<td style="text-align:center">str1 += str2;</td>
+</tr>
+<tr>
+<td style="text-align:center">strcpy(str, strcat(str1, str2));</td>
+<td style="text-align:center">str = str1 + str2;</td>
+</tr>
+<tr>
+<td style="text-align:center">Copying a C-string variable</td>
+<td style="text-align:center">Copying a C++ string object</td>
+</tr>
+<tr>
+<td style="text-align:center">char str[20]; strcpy(str, &#x201C;Hello!&#x201D;); strcpy(str, otherString);</td>
+<td style="text-align:center">string str; str = &#x201C;Hello&#x201D;; str = otherString;</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Accessing a single character</font></td>
+<td style="text-align:center"><font color="blue">Accessing a single character</font></td>
+</tr>
+<tr>
+<td style="text-align:center">str[index]</td>
+<td style="text-align:center">str[index]; str.at(index); str(index, count)</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Comparing two C-strings </font></td>
+<td style="text-align:center"><font color="blue">Comparing two C++ string objects</font></td>
+</tr>
+<tr>
+<td style="text-align:center">if (strcmp(str1, str2) &lt; 0)<br>cout &lt;&lt; &#x201C;str1 comes 1st.&#x201D;;</td>
+<td style="text-align:center">if (str1 &lt; str2)<br>cout &lt;&lt; &#x201C;str1 comes 1st.&#x201D;;</td>
+</tr>
+<tr>
+<td style="text-align:center">if (strcmp(str1, str2) == 0)<br>cout &lt;&lt; &#x201C;Equal strings.&#x201D;;</td>
+<td style="text-align:center">if (str1 == str2)<br>cout &lt;&lt; &#x201C;Equal strings.&#x201D;;</td>
+</tr>
+<tr>
+<td style="text-align:center">if (strcmp(str1, str2) &gt; 0)<br>cout &lt;&lt; &#x201C;str2 comes 1st.&#x201D;;</td>
+<td style="text-align:center">if (str1 &gt; str2)<br>cout &lt;&lt; &#x201C;str2 comes 1st.&#x201D;;</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Finding the length of a C-string</font></td>
+<td style="text-align:center"><font color="blue">Finding the length of a C++ string object</font></td>
+</tr>
+<tr>
+<td style="text-align:center">strlen(str)</td>
+<td style="text-align:center">str.length()</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Output of a C-string variable</font></td>
+<td style="text-align:center"><font color="blue">Output of a C++ string object</font></td>
+</tr>
+<tr>
+<td style="text-align:center">cout &lt;&lt; str;</td>
+<td style="text-align:center">cout &lt;&lt; str;</td>
+</tr>
+<tr>
+<td style="text-align:center">cout &lt;&lt; setw(width) &lt;&lt; str;</td>
+<td style="text-align:center">cout &lt;&lt; setw(width) &lt;&lt; str;</td>
+</tr>
+</tbody>
+</table>
+<p>In what follows, keep in mind that cin ignores white space when reading a string, while cin.get(), cin.getline() and getline() do not. Remember too that cin.getline() and getline() consume the delimiter while cin.get() does not. Finally, cin can be replaced with any open input stream, since file input with inFile, say, behaves in a manner completely analogous to the corresponding behavior of cin. Analogously, in the output examples given immediately above, cout could be replaced with any text output stream variable, say outFile. In all cases, numCh is the maximum number of characters that will be read.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Input of a C-style string variable</th>
+<th style="text-align:center">Input of a C++ string object</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">cin &gt;&gt; s;</td>
+<td style="text-align:center">cin &gt;&gt; s;</td>
+</tr>
+<tr>
+<td style="text-align:center">cin.get(s, numCh+1);<br>cin.get(s, numCh+1,&#x2019;\n&#x2019;);<br>cin.get(s, numCh+1,&#x2019;x&#x2019;);<br>cin.getline(s, numCh+1);</td>
+<td style="text-align:center">getline(cin, s);</td>
+</tr>
+<tr>
+<td style="text-align:center">cin.getline(s, numCh+1, &#x2018;\n&#x2019;);<br>cin.getline(s, numCh+1, &#x2018;x&#x2019;);</td>
+<td style="text-align:center">getline(cin, s, &#x2018;x&#x2019;);</td>
+</tr>
+</tbody>
+</table>
+<p>A useful naming convention for C-strings is illustrated by examples like</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">char</span> String80[<span class="number">81</span>];</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">char</span> String20[<span class="number">21</span>];</span><br></pre></td></tr></table></figure>
+<p>in which the two numbers in each definition differ by 1 to allow for the null character &#x2018;\0&#x2019; to be stored in the array of characters, but to <em>not</em> be considered as part of the string stored there. No analog to this naming convention is necessary for C++ strings, since for all practical purposes, each C++ string variable may contain a string value of virtually unlimited length.</p>
+<p>&#x6765;&#x6E90;&#xFF1A; <a href="http://cs.smu.ca/~porter/csc/ref/c_cpp_strings.html" target="_blank" rel="external">http://cs.smu.ca/~porter/csc/ref/c_cpp_strings.html</a></p>
 
       
     </div>
@@ -318,23 +451,23 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2016/04/29/setting-vnc/">Linux VNC服务配置</a></p>
+        <p><span>本文标题:</span><a href="/2016/05/06/string-c-cpp/">String in C and C++</a></p>
         <p><span>文章作者:</span><a href="/" title="回到主页">LeoZhang</a></p>
-        <p><span>发布时间:</span>2016-04-29, 18:07:18</p>
-        <p><span>最后更新:</span>2016-04-29, 18:11:51</p>
+        <p><span>发布时间:</span>2016-05-06, 10:22:45</p>
+        <p><span>最后更新:</span>2016-05-06, 11:23:33</p>
 	<!-- 添加更新历史 -->
         
             <p>
                 <span>更新历史:</span><i class="fa fa-github"></i>
-                <a href="https://github.com/zealoussnow/BlogSource/blame/master/2016-04-29-setting-vnc.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
-                <a href="https://github.com/zealoussnow/BlogSource/commits/master/2016-04-29-setting-vnc.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">文本模式:</span><i class="fa fa-file-text-o"></i>
-                <a href="https://raw.githubusercontent.com/zealoussnow/BlogSource/master/2016-04-29-setting-vnc.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
+                <a href="https://github.com/zealoussnow/BlogSource/blame/master/2016-05-06-string-c-cpp.md" title="顺序查看文章各部分修改记录" target = "_blank">Blame</a>,
+                <a href="https://github.com/zealoussnow/BlogSource/commits/master/2016-05-06-string-c-cpp.md" title="查看文章有关更新记录" target = "_blank">History</a><span class="raw">文本模式:</span><i class="fa fa-file-text-o"></i>
+                <a href="https://raw.githubusercontent.com/zealoussnow/BlogSource/master/2016-05-06-string-c-cpp.md" title="查看 & 下载文章 Markdown 原始文本" target = "_blank"> .md Raw</a>
             </p>
         
 
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2016/04/29/setting-vnc/" title="Linux VNC服务配置">https://zealoussnow.github.io/2016/04/29/setting-vnc/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://zealoussnow.github.io/2016/04/29/setting-vnc/　　作者: LeoZhang" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2016/05/06/string-c-cpp/" title="String in C and C++">https://zealoussnow.github.io/2016/05/06/string-c-cpp/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://zealoussnow.github.io/2016/05/06/string-c-cpp/　　作者: LeoZhang" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -346,16 +479,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2016/05/06/centos7-systemd/">
-                    CentOS7的使用 —— systemd
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2016/04/29/tcp-state-change/">
-                    剖析TCP状态变迁
+                <a href="/2016/05/06/linux-poco/">
+                    Linux安装poco库
                 </a>
             </div>
         
@@ -367,7 +494,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#CentOS-6-5安装和配置VNC服务"><span class="toc-number">1.</span> <span class="toc-text">CentOS-6.5安装和配置VNC服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-number">2.</span> <span class="toc-text">参考资料</span></a></li></ol>
+    
 </div>
 <style>
     .left-col .switch-btn {
@@ -426,7 +553,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2016/04/29/setting-vnc/" data-title="Linux VNC服务配置" data-url="https://zealoussnow.github.io/2016/04/29/setting-vnc/"></div>
+    <div class="ds-thread" data-thread-key="2016/05/06/string-c-cpp/" data-title="String in C and C++" data-url="https://zealoussnow.github.io/2016/05/06/string-c-cpp/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -450,15 +577,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2016/05/06/centos7-systemd/" title="上一篇: CentOS7的使用 —— systemd">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2016/04/29/tcp-state-change/" title="下一篇: 剖析TCP状态变迁">
+            <a href="/2016/05/06/linux-poco/" title="下一篇: Linux安装poco库">
                 <i class="fa fa-angle-right"></i>
             </a>
         
