@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="检视和控制systemd的主要命令是systemctl，该命令可用于查看系统状态和管理系统及服务。 在systemctl参数中添加-H &amp;lt;username&amp;gt;@&amp;lt;host&amp;gt;，可以实现对其他机器的远程控制，该过程使用SSH连接。">
+<meta name="keywords" content="Linux基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS7的使用 —— systemd">
+<meta property="og:url" content="http://yoursite.com/2016/05/06/centos7-systemd/index.html">
+<meta property="og:site_name" content="Leo Zhang&#39;s Notes">
+<meta property="og:description" content="检视和控制systemd的主要命令是systemctl，该命令可用于查看系统状态和管理系统及服务。 在systemctl参数中添加-H &amp;lt;username&amp;gt;@&amp;lt;host&amp;gt;，可以实现对其他机器的远程控制，该过程使用SSH连接。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-11-19T13:22:36.362Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CentOS7的使用 —— systemd">
+<meta name="twitter:description" content="检视和控制systemd的主要命令是systemctl，该命令可用于查看系统状态和管理系统及服务。 在systemctl参数中添加-H &amp;lt;username&amp;gt;@&amp;lt;host&amp;gt;，可以实现对其他机器的远程控制，该过程使用SSH连接。">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/05/06/centos7-systemd/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>CentOS7的使用 —— systemd | Leo Zhang's Notes</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Leo Zhang's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Cease to struggle and you cease to live.</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/06/centos7-systemd/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Leo Zhang">
+      <meta itemprop="description" content="Hear all parties.">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leo Zhang's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CentOS7的使用 —— systemd
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2016-05-06 10:00:39" itemprop="dateCreated datePublished" datetime="2016-05-06T10:00:39+08:00">2016-05-06</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-11-19 21:22:36" itemprop="dateModified" datetime="2018-11-19T21:22:36+08:00">2018-11-19</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/程序设计/" itemprop="url" rel="index"><span itemprop="name">程序设计</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>检视和控制systemd的主要命令是systemctl，该命令可用于查看系统状态和管理系统及服务。</p>
+<p>在systemctl参数中添加-H <code>&lt;username&gt;</code>@<code>&lt;host&gt;</code>，可以实现对其他机器的远程控制，该过程使用SSH连接。</p>
+<a id="more"></a>
+<p>systemadm是systemd的官方图形前端，<a href="https://wiki.archlinux.org/index.php/Official_repositories" target="_blank" rel="noopener">官方软件仓库</a>提供了稳定版的<a href="https://www.archlinux.org/packages/?name=systemd-ui" target="_blank" rel="noopener">systemd-ui</a></p>
+<h2 id="分析系统状态"><a href="#分析系统状态" class="headerlink" title="分析系统状态"></a>分析系统状态</h2><h3 id="输出激活的单元"><a href="#输出激活的单元" class="headerlink" title="输出激活的单元"></a>输出激活的单元</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl 或者 systemctl list-units</span><br></pre></td></tr></table></figure>
+<h3 id="输出运行失败的单元"><a href="#输出运行失败的单元" class="headerlink" title="输出运行失败的单元"></a>输出运行失败的单元</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl --failed</span><br></pre></td></tr></table></figure>
+<h3 id="查看所有已安装的服务"><a href="#查看所有已安装的服务" class="headerlink" title="查看所有已安装的服务"></a>查看所有已安装的服务</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl list-unit-files</span><br></pre></td></tr></table></figure>
+<p>所有可用单元文件存放在<code>/usr/lib/systemd/system</code>和<code>/etc/systemd/system</code>目录(后者优先级更高)。</p>
+<h2 id="使用单元"><a href="#使用单元" class="headerlink" title="使用单元"></a>使用单元</h2><h3 id="立即激活单元"><a href="#立即激活单元" class="headerlink" title="立即激活单元"></a>立即激活单元</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl  start &lt;unit&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="立即停止单元"><a href="#立即停止单元" class="headerlink" title="立即停止单元"></a>立即停止单元</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl stop &lt;unit&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="重启单元"><a href="#重启单元" class="headerlink" title="重启单元"></a>重启单元</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl restart &lt;unit&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="重新加载配置"><a href="#重新加载配置" class="headerlink" title="重新加载配置"></a>重新加载配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl reload &lt;unit&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="输出单元运行状态"><a href="#输出单元运行状态" class="headerlink" title="输出单元运行状态"></a>输出单元运行状态</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl status &lt;unit&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="检查单元是否配置为自动启动"><a href="#检查单元是否配置为自动启动" class="headerlink" title="检查单元是否配置为自动启动"></a>检查单元是否配置为自动启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl is-enabled &lt;unit&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="开机自动激活单元"><a href="#开机自动激活单元" class="headerlink" title="开机自动激活单元"></a>开机自动激活单元</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl enable &lt;unit&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="取消开机自动激活单元"><a href="#取消开机自动激活单元" class="headerlink" title="取消开机自动激活单元"></a>取消开机自动激活单元</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl disable &lt;unit&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="禁用一个单元（禁用后，间接启动也是不可能的）"><a href="#禁用一个单元（禁用后，间接启动也是不可能的）" class="headerlink" title="禁用一个单元（禁用后，间接启动也是不可能的）"></a>禁用一个单元（禁用后，间接启动也是不可能的）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl  mask &lt;unit&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="取消禁用一个单元"><a href="#取消禁用一个单元" class="headerlink" title="取消禁用一个单元"></a>取消禁用一个单元</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl unmask &lt;unit&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="重新载入systemd"><a href="#重新载入systemd" class="headerlink" title="重新载入systemd"></a>重新载入systemd</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+<h3 id="显示单元的手册页（必须由单元文件提供）"><a href="#显示单元的手册页（必须由单元文件提供）" class="headerlink" title="显示单元的手册页（必须由单元文件提供）"></a>显示单元的手册页（必须由单元文件提供）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># systemctl help &lt;unit&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="电源管理"><a href="#电源管理" class="headerlink" title="电源管理"></a>电源管理</h2><p>安装[polkit(<a href="https://wiki.archlinux.org/index.php/Polkit)]后才可以让一般用户使用电源管理" target="_blank" rel="noopener">https://wiki.archlinux.org/index.php/Polkit)]后才可以让一般用户使用电源管理</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl reboot(重启) | poweroff(退出系统并停止电源) | suspend(待机) | hibernate(休眠) | hybrid-sleep(混合休眠模式)</span><br></pre></td></tr></table></figure>
+<p>编写单元文件等内容请看参考。。。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="http://xiaoli110.blog.51cto.com/1724/1629533" target="_blank" rel="noopener">systemd详解</a><br><a href="https://wiki.archlinux.org/index.php/Systemd_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87" target="_blank" rel="noopener">Archlinux Wiki, systemd</a>)<br><a href="https://linux.cn/article-5926-1.html" target="_blank" rel="noopener">systemctl命令完全指南</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux基础/" rel="tag"># Linux基础</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/29/setting-vnc/" rel="next" title="Linux VNC服务配置">
+                <i class="fa fa-chevron-left"></i> Linux VNC服务配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/06/centos7-grub2/" rel="prev" title="CentOS7的使用 —— grub2">
+                CentOS7的使用 —— grub2 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Leo Zhang</p>
+              <p class="site-description motion-element" itemprop="description">Hear all parties.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#分析系统状态"><span class="nav-number">1.</span> <span class="nav-text">分析系统状态</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#输出激活的单元"><span class="nav-number">1.1.</span> <span class="nav-text">输出激活的单元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#输出运行失败的单元"><span class="nav-number">1.2.</span> <span class="nav-text">输出运行失败的单元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看所有已安装的服务"><span class="nav-number">1.3.</span> <span class="nav-text">查看所有已安装的服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用单元"><span class="nav-number">2.</span> <span class="nav-text">使用单元</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#立即激活单元"><span class="nav-number">2.1.</span> <span class="nav-text">立即激活单元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#立即停止单元"><span class="nav-number">2.2.</span> <span class="nav-text">立即停止单元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重启单元"><span class="nav-number">2.3.</span> <span class="nav-text">重启单元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重新加载配置"><span class="nav-number">2.4.</span> <span class="nav-text">重新加载配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#输出单元运行状态"><span class="nav-number">2.5.</span> <span class="nav-text">输出单元运行状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#检查单元是否配置为自动启动"><span class="nav-number">2.6.</span> <span class="nav-text">检查单元是否配置为自动启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开机自动激活单元"><span class="nav-number">2.7.</span> <span class="nav-text">开机自动激活单元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#取消开机自动激活单元"><span class="nav-number">2.8.</span> <span class="nav-text">取消开机自动激活单元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#禁用一个单元（禁用后，间接启动也是不可能的）"><span class="nav-number">2.9.</span> <span class="nav-text">禁用一个单元（禁用后，间接启动也是不可能的）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#取消禁用一个单元"><span class="nav-number">2.10.</span> <span class="nav-text">取消禁用一个单元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重新载入systemd"><span class="nav-number">2.11.</span> <span class="nav-text">重新载入systemd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#显示单元的手册页（必须由单元文件提供）"><span class="nav-number">2.12.</span> <span class="nav-text">显示单元的手册页（必须由单元文件提供）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#电源管理"><span class="nav-number">3.</span> <span class="nav-text">电源管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">3.1.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leo Zhang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

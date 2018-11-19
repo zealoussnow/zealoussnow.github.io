@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="语法最佳实践——低于类级列表推导(List Comprehensions)1[ i for i in range(10) if i % 2 == 0] 每当要对序列中的内容进行循环处理时，就应该尝试用List Comprehensions来代替它。">
+<meta name="keywords" content="Python高级编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python高级编程(一)">
+<meta property="og:url" content="http://yoursite.com/2016/04/28/advanced-python-01/index.html">
+<meta property="og:site_name" content="Leo Zhang&#39;s Notes">
+<meta property="og:description" content="语法最佳实践——低于类级列表推导(List Comprehensions)1[ i for i in range(10) if i % 2 == 0] 每当要对序列中的内容进行循环处理时，就应该尝试用List Comprehensions来代替它。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-11-19T13:22:36.351Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python高级编程(一)">
+<meta name="twitter:description" content="语法最佳实践——低于类级列表推导(List Comprehensions)1[ i for i in range(10) if i % 2 == 0] 每当要对序列中的内容进行循环处理时，就应该尝试用List Comprehensions来代替它。">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/04/28/advanced-python-01/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Python高级编程(一) | Leo Zhang's Notes</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Leo Zhang's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Cease to struggle and you cease to live.</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/04/28/advanced-python-01/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Leo Zhang">
+      <meta itemprop="description" content="Hear all parties.">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leo Zhang's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python高级编程(一)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2016-04-28 16:57:49" itemprop="dateCreated datePublished" datetime="2016-04-28T16:57:49+08:00">2016-04-28</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-11-19 21:22:36" itemprop="dateModified" datetime="2018-11-19T21:22:36+08:00">2018-11-19</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="语法最佳实践——低于类级"><a href="#语法最佳实践——低于类级" class="headerlink" title="语法最佳实践——低于类级"></a>语法最佳实践——低于类级</h2><h3 id="列表推导-List-Comprehensions"><a href="#列表推导-List-Comprehensions" class="headerlink" title="列表推导(List Comprehensions)"></a>列表推导(List Comprehensions)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ i <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>) <span class="keyword">if</span> i % <span class="number">2</span> == <span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<p>每当要对序列中的内容进行循环处理时，就应该尝试用List Comprehensions来代替它。</p>
+<a id="more"></a>
+<h3 id="迭代器和生成器-Iterator-amp-Generator"><a href="#迭代器和生成器-Iterator-amp-Generator" class="headerlink" title="迭代器和生成器(Iterator &amp; Generator)"></a>迭代器和生成器(Iterator &amp; Generator)</h3><h4 id="迭代器-Iterator"><a href="#迭代器-Iterator" class="headerlink" title="迭代器(Iterator)"></a>迭代器(Iterator)</h4><p>迭代器只不过是一个实现迭代器协议的容器对象，它基于两个方法：</p>
+<ul>
+<li>next 返回容器的下一个项目</li>
+<li>__iter__ 返回迭代器本身</li>
+</ul>
+<h4 id="生成器-Generator"><a href="#生成器-Generator" class="headerlink" title="生成器(Generator)"></a>生成器(Generator)</h4><p>生成器提供了一种出色的方法，使得需要返回一系列元素的函数所需的代码更加简单、高效。基于yield指令，可以暂停一个函数并返回中间结果。该函数将保存执行环境并且可以在必要时恢复。</p>
+<p>如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fib</span><span class="params">()</span>:</span></span><br><span class="line">	a, b = <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">	<span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">		<span class="keyword">yield</span> b</span><br><span class="line">		a, b = b, a + b</span><br><span class="line">f = fib</span><br><span class="line">[f.next() <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>)]</span><br></pre></td></tr></table></figure>
+<p>该函数将返回一个特殊的迭代器，也就是generator对象，它知道如何保存执行环境。对它的调用时不确定的，每次都将产生序列中的下一个元素。这种语法很简洁，算法的不确定特性并没有影响代码的可读性。不必提供使函数可停止的方法。实际上，这看上去像是用伪代码设计的序列一样。</p>
+<p>python引入的与生成器相关的最后一个特性是提供了与next方法调用的代码进行交互的功能。yield将变成一个表达式，而一个值可以通过一个send函数来传递。</p>
+<p>如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">psychologist</span><span class="params">()</span>:</span></span><br><span class="line">	<span class="keyword">print</span> <span class="string">'Please input OK'</span></span><br><span class="line">   	<span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">       answer = (<span class="keyword">yield</span>)</span><br><span class="line">       <span class="keyword">if</span> answer <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">           <span class="keyword">if</span> answer.endswith(<span class="string">','</span>):</span><br><span class="line">               <span class="keyword">print</span> <span class="string">'The answer is not ok'</span></span><br><span class="line">           <span class="keyword">elif</span> <span class="string">'good'</span> <span class="keyword">in</span> answer:</span><br><span class="line">               <span class="keyword">print</span> <span class="string">"That's good, go on"</span></span><br><span class="line">           <span class="keyword">elif</span> <span class="string">'bad'</span> <span class="keyword">in</span> answer:</span><br><span class="line">               <span class="keyword">print</span> <span class="string">"Don't be so negative"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> demo <span class="keyword">import</span> *</span><br><span class="line">Please input OK</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f.send(<span class="string">'ok'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f.send(<span class="string">'good'</span>)</span><br><span class="line">That<span class="string">'s good, go on</span></span><br><span class="line"><span class="string">&gt;&gt;&gt; f.send('</span>bad<span class="string">')</span></span><br><span class="line"><span class="string">Don'</span>t be so negative</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>f.send(<span class="string">'bad,'</span>)</span><br><span class="line">The answer <span class="keyword">is</span> <span class="keyword">not</span> ok</span><br></pre></td></tr></table></figure>
+<p>send的工作机制与next一样，但是yield将变成能够返回传入的值，因此这个函数可以根据客户端改变其行为，同时还添加了throw和close两个函数，以完成该行为。它们向生成器抛出一个错误：</p>
+<ul>
+<li>throw允许客户端代码传入要抛出的任何类型的异常</li>
+<li>close的工作方式是相同的，但是将会抛出一个特定的异常–GeneratorExit，在这种情况下，生成器必须再次抛出GeneratorExit或StopIteration异常</li>
+<li>finally部分在之前的版本中是不允许使用的，它将捕获任何未被<blockquote>
+<p>捕获的close和throw调用，是完成清理工作的推荐方式</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="协同程序-coroutine"><a href="#协同程序-coroutine" class="headerlink" title="协同程序(coroutine)"></a>协同程序(coroutine)</h4><p>协同程序是可以挂起，恢复，并且有多个进入点的函数。</p>
+<p>生成器几乎就是协同程序，添加send，throw和close，其初始意图就是为该语言提供一种类似协同程序的特性。</p>
+<ul>
+<li><a href="http://www.python.org/dev/peps/pep-0342" target="_blank" rel="noopener">PEP342</a>实例化了生成器的行为，也提供了创建协同程序的调度程序的完整实例，这个模式被称为Trampoline，可以被看作是生成和消费数据的协同程序之间的媒介。它使用一个队列将协同程序连接在一起。</li>
+<li>在PyPI中的multitask模块(用easy_install multitask安装)实现了这一模式，使用也十分简单：</li>
+</ul>
+<p>如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> multitask</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">coroutine_1</span><span class="params">()</span>:</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>):</span><br><span class="line">		<span class="keyword">print</span> <span class="string">'c1'</span></span><br><span class="line">		<span class="keyword">yield</span> i</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">coroutine_2</span><span class="params">()</span>:</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>):</span><br><span class="line">		<span class="keyword">print</span> <span class="string">'c2'</span></span><br><span class="line">		<span class="keyword">yield</span> i</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>multitask.add(coroutine_1())</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>multitask.add(coroutine_2())</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>multitask.run()</span><br></pre></td></tr></table></figure>
+<p>另一种协同程序的实现：greenlet</p>
+<h4 id="生成器表达式-Genexp"><a href="#生成器表达式-Genexp" class="headerlink" title="生成器表达式(Genexp)"></a>生成器表达式(Genexp)</h4><p>python为编写针对序列的简单生成器提供了一种快捷方式。可以用一种类似列表推导的语法来代替yield。在此，使用圆括号替代中括号：</p>
+<p>如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iter = (x ** <span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">10</span>) <span class="keyword">if</span> x % <span class="number">2</span> == <span class="number">0</span>)</span><br><span class="line"><span class="keyword">for</span> el <span class="keyword">in</span> iter:</span><br><span class="line">	<span class="keyword">print</span> el</span><br></pre></td></tr></table></figure>
+<h4 id="itertools模块"><a href="#itertools模块" class="headerlink" title="itertools模块"></a>itertools模块</h4><h5 id="islice-窗口迭代器"><a href="#islice-窗口迭代器" class="headerlink" title="islice: 窗口迭代器"></a>islice: 窗口迭代器</h5><p>islice将返回一个运行在序列的子分组之上的迭代器</p>
+<p>如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">starting_at_five</span><span class="params">()</span>:</span></span><br><span class="line">   value = raw_input().strip()</span><br><span class="line">   <span class="keyword">while</span> value != <span class="string">''</span>:</span><br><span class="line">       <span class="keyword">for</span> el <span class="keyword">in</span> itertools.islice(value.split(), <span class="number">4</span>, <span class="keyword">None</span>):</span><br><span class="line">           <span class="keyword">yield</span> el</span><br><span class="line">       value = raw_input().strip()</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>iter = starting_at_five()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>iter.next()</span><br><span class="line">one two three four five six</span><br><span class="line"><span class="string">'five'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>iter.next()</span><br><span class="line"><span class="string">'six'</span></span><br></pre></td></tr></table></figure>
+<p>当需要抽取位于流中特定位置的数据时，都可以使用islice。</p>
+<h5 id="tee-往返式迭代器"><a href="#tee-往返式迭代器" class="headerlink" title="tee: 往返式迭代器"></a>tee: 往返式迭代器</h5><p>迭代器将消费其处理的序列，但它不会往回处理。tee提供了在一个序列之上运行多个迭代器的模式。如果提供第一次运行的信息，就能够帮助我们再次基于这些数据运行。例如：读取文件的表头可以在运行一个处理之前提供特性信息，</p>
+<p>如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">with_head</span><span class="params">(iterable, headsize = <span class="number">1</span>)</span>:</span></span><br><span class="line">	a, b = itertools.tee(iterable)</span><br><span class="line">   	<span class="keyword">return</span> list(itertools.islice(a, headsize)), b</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>seq = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>with_head(seq)</span><br><span class="line">([<span class="number">1</span>], &lt;itertools.tee object at <span class="number">0xb82a28</span>&gt;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>with_head(seq, <span class="number">2</span>)</span><br><span class="line">([<span class="number">1</span>, <span class="number">2</span>], &lt;itertools.tee object at <span class="number">0xb82ab8</span>&gt;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>with_head(seq, <span class="number">3</span>)</span><br><span class="line">([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], &lt;itertools.tee object at <span class="number">0xb82a28</span>&gt;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>with_head(seq, <span class="number">4</span>)</span><br><span class="line">([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], &lt;itertools.tee object at <span class="number">0xb82ab8</span>&gt;)</span><br></pre></td></tr></table></figure>
+<h5 id="groupby-uniq迭代器"><a href="#groupby-uniq迭代器" class="headerlink" title="groupby: uniq迭代器"></a>groupby: uniq迭代器</h5><p>类似于unix命令uiq，它可以对来自一个迭代器的重复元素进行分组。groupby的一个应用实例是使用RLE来压缩数据，</p>
+<p>如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> itertools <span class="keyword">import</span> groupby</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compress</span><span class="params">(data)</span>:</span></span><br><span class="line">   	<span class="keyword">return</span> ((len(list(group)), name) <span class="keyword">for</span> name, group <span class="keyword">in</span> groupby(data))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decompress</span><span class="params">(data)</span>:</span></span><br><span class="line">   	<span class="keyword">return</span> (car * size <span class="keyword">for</span> size, car <span class="keyword">in</span> data)</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>list(compress(<span class="string">'get uuuuuup'</span>))</span><br><span class="line">[(<span class="number">1</span>, <span class="string">'g'</span>), (<span class="number">1</span>, <span class="string">'e'</span>), (<span class="number">1</span>, <span class="string">'t'</span>), (<span class="number">1</span>, <span class="string">' '</span>), (<span class="number">6</span>, <span class="string">'u'</span>), (<span class="number">1</span>, <span class="string">'p'</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>compressed = compress(<span class="string">'get uuuuuup'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">''</span>.join(decompress(compressed))</span><br><span class="line"><span class="string">'get uuuuuup'</span></span><br></pre></td></tr></table></figure>
+<p>每当需要在数据上完成一个摘要的时候，都可以使用groupby。这时候内建的sorted函数就非常有用，可以使传入的数据中相似的元素相邻。</p>
+<h5 id="其它函数"><a href="#其它函数" class="headerlink" title="其它函数"></a>其它函数</h5><ul>
+<li><a href="https://docs.python.org/2/library/itertools.html" target="_blank" rel="noopener">itertools函数完整列表</a></li>
+</ul>
+<h3 id="装饰器"><a href="#装饰器" class="headerlink" title="装饰器"></a>装饰器</h3><p>装饰器原始的使用场景是可以将方法在定义的首部将其定义为类方法或静态方法。使用了装饰器以后，其语法更加浅显易懂。</p>
+<h4 id="如何编写装饰器"><a href="#如何编写装饰器" class="headerlink" title="如何编写装饰器"></a>如何编写装饰器</h4><ul>
+<li>最简单和最容易理解的方法是编写一个函数，返回封装原始函数调用的一个子函数</li>
+</ul>
+<h5 id="常见的装饰器模式包括："><a href="#常见的装饰器模式包括：" class="headerlink" title="常见的装饰器模式包括："></a>常见的装饰器模式包括：</h5><ul>
+<li>参数检查</li>
+</ul>
+<p>检查函数接收或返回的参数，在特定上下文执行时可能有用。例如，如果一个函数通过XML-RPC调用，python将不能和静态类型语言中一样直接提供它的完整签名。当XML-RPC客户要求函数签名时，就要这个功能来提供内省能力。</p>
+<ul>
+<li>缓存</li>
+</ul>
+<p>TODO</p>
+<ul>
+<li>代理</li>
+</ul>
+<p>TODO</p>
+<ul>
+<li>上下文提供者</li>
+</ul>
+<p>上下文装饰器用来确保函数可以运行在正确的上下文中，或者在函数前后执行一些代码。换句话说，它可以用来设置或复位特定的执行环境。</p>
+<p>如：当一个数据项必须与其他线程共享时，就需要用一个锁来确保它在多重访问时得到保护。这个锁可以在装饰器中编写，示例如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> threading <span class="keyword">import</span> RLock</span><br><span class="line">lock = RLock()</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">synchronized</span><span class="params">(function)</span>:</span></span><br><span class="line">  		<span class="function"><span class="keyword">def</span> <span class="title">_synchronized</span><span class="params">(*args, **kw)</span>:</span></span><br><span class="line">      	lock.acquire()</span><br><span class="line">      	<span class="keyword">try</span>:</span><br><span class="line">          	<span class="keyword">return</span> function(*args, **kw)</span><br><span class="line">      	<span class="keyword">finally</span>:</span><br><span class="line">          	lock.release()</span><br><span class="line">  	<span class="keyword">return</span> _synchronized</span><br><span class="line"></span><br><span class="line"><span class="meta">@locker</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">thread_safe</span><span class="params">()</span>:</span></span><br><span class="line">  		<span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上下文装饰器可以使用with语句来替代，创造这条语句的作用是使try…finally模式更加流畅，在某些情况下，它覆盖了上下文装饰器的使用场景。</p>
+</blockquote>
+<ul>
+<li><a href="http://www.cnblogs.com/rhcad/archive/2011/12/21/2295507.html" target="_blank" rel="noopener">python装饰器学习</a></li>
+</ul>
+<h3 id="with和contextlib"><a href="#with和contextlib" class="headerlink" title="with和contextlib"></a>with和contextlib</h3><p>对于要确保即使发生一个错误时也能运行一些清理代码而言，try…finally语句是很有用的，例如：</p>
+<ul>
+<li>关闭一个文件</li>
+<li>释放一个锁</li>
+<li>创建一个临时的代码补丁</li>
+<li>在特殊环境中运行受保护的代码</li>
+</ul>
+<p>with语句覆盖了这些使用场景，为在一个代码块前后调用一些代码提供了一种简单的方法</p>
+<p>如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">readfile</span><span class="params">()</span>:</span></span><br><span class="line">   <span class="keyword">with</span> file(<span class="string">'/etc/hosts'</span>) <span class="keyword">as</span> source_file:</span><br><span class="line">       <span class="keyword">for</span> line <span class="keyword">in</span> source_file:</span><br><span class="line">           <span class="keyword">if</span> line.startswith(<span class="string">'#'</span>):</span><br><span class="line">               <span class="keyword">continue</span></span><br><span class="line">           <span class="keyword">print</span> line</span><br></pre></td></tr></table></figure>
+<h5 id="contextlib模块"><a href="#contextlib模块" class="headerlink" title="contextlib模块"></a>contextlib模块</h5><p>未来给with语句提供一些辅助类，标准程序库中添加了一个模块。最有用的辅助类是contextmanager，这是一个<br>装饰器，它增强了包含以yield语句分开的__enter__和__exit__两部分的生成器。</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a href="https://docs.python.org/2/tutorial/" target="_blank" rel="noopener">Python在线教程</a></p>
+<p><a href="http://www.python.org/dev/peps/pep-0008" target="_blank" rel="noopener">样式指南</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python高级编程/" rel="tag"># Python高级编程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/28/electron-quick-start/" rel="next" title="Electron快速入门">
+                <i class="fa fa-chevron-left"></i> Electron快速入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/04/28/advanced-python-02/" rel="prev" title="Python高级编程(二)">
+                Python高级编程(二) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Leo Zhang</p>
+              <p class="site-description motion-element" itemprop="description">Hear all parties.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#语法最佳实践——低于类级"><span class="nav-number">1.</span> <span class="nav-text">语法最佳实践——低于类级</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#列表推导-List-Comprehensions"><span class="nav-number">1.1.</span> <span class="nav-text">列表推导(List Comprehensions)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#迭代器和生成器-Iterator-amp-Generator"><span class="nav-number">1.2.</span> <span class="nav-text">迭代器和生成器(Iterator &amp; Generator)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#迭代器-Iterator"><span class="nav-number">1.2.1.</span> <span class="nav-text">迭代器(Iterator)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成器-Generator"><span class="nav-number">1.2.2.</span> <span class="nav-text">生成器(Generator)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#协同程序-coroutine"><span class="nav-number">1.2.3.</span> <span class="nav-text">协同程序(coroutine)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#生成器表达式-Genexp"><span class="nav-number">1.2.4.</span> <span class="nav-text">生成器表达式(Genexp)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#itertools模块"><span class="nav-number">1.2.5.</span> <span class="nav-text">itertools模块</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#islice-窗口迭代器"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">islice: 窗口迭代器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#tee-往返式迭代器"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">tee: 往返式迭代器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#groupby-uniq迭代器"><span class="nav-number">1.2.5.3.</span> <span class="nav-text">groupby: uniq迭代器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#其它函数"><span class="nav-number">1.2.5.4.</span> <span class="nav-text">其它函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#装饰器"><span class="nav-number">1.3.</span> <span class="nav-text">装饰器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#如何编写装饰器"><span class="nav-number">1.3.1.</span> <span class="nav-text">如何编写装饰器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#常见的装饰器模式包括："><span class="nav-number">1.3.1.1.</span> <span class="nav-text">常见的装饰器模式包括：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#with和contextlib"><span class="nav-number">1.4.</span> <span class="nav-text">with和contextlib</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#contextlib模块"><span class="nav-number">1.4.0.1.</span> <span class="nav-text">contextlib模块</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考资料"><span class="nav-number">1.5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leo Zhang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

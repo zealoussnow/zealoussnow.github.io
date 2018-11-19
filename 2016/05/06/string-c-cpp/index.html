@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="This page summarizes many of the things you may find it useful to know when working with either C-strings or objects of the C++ string class.">
+<meta name="keywords" content="C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="String in C and C++">
+<meta property="og:url" content="http://yoursite.com/2016/05/06/string-c-cpp/index.html">
+<meta property="og:site_name" content="Leo Zhang&#39;s Notes">
+<meta property="og:description" content="This page summarizes many of the things you may find it useful to know when working with either C-strings or objects of the C++ string class.">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-11-19T13:22:36.363Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="String in C and C++">
+<meta name="twitter:description" content="This page summarizes many of the things you may find it useful to know when working with either C-strings or objects of the C++ string class.">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/05/06/string-c-cpp/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>String in C and C++ | Leo Zhang's Notes</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Leo Zhang's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Cease to struggle and you cease to live.</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/06/string-c-cpp/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Leo Zhang">
+      <meta itemprop="description" content="Hear all parties.">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leo Zhang's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">String in C and C++
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2016-05-06 10:22:45" itemprop="dateCreated datePublished" datetime="2016-05-06T10:22:45+08:00">2016-05-06</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-11-19 21:22:36" itemprop="dateModified" datetime="2018-11-19T21:22:36+08:00">2018-11-19</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/程序设计/" itemprop="url" rel="index"><span itemprop="name">程序设计</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>This page summarizes many of the things you may find it useful to know when working with either C-strings or objects of the C++ string class.</p>
+<a id="more"></a>
+<p>The term string generally means an ordered sequence of characters, with a first character, a second character, and so on, and in most programming languages such strings are enclosed in either single or double quotes. In C++ the enclosing delimiters are double quotes. In this form the string is referred to as a string literal and we often use such string literals in output statements when we wish to display text on the screen for the benefit of our users. For example, the usual first C++ program displays the string literal “Hello, world!” on the screen with the following output statement:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">"Hello, world!"</span> &lt;&lt; <span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
+<p>However, without string variables about all we can do with strings is output string literals to the screen, so we need to expand our ability to handle string data. When we talk about strings in C++, we must be careful because the C language, with which C++ is meant to be backward compatible, had one way of dealing with strings, while C++ has another, and to further complicate matters there are many non-standard implementations of C++ strings. These should gradually disappear as compiler vendors update their products to implement the string component of the C++ Standard Library.</p>
+<p>As a programmer, then, you must distinguish between the following three things:</p>
+<p>An “ordinary” array of characters, which is just like any other array and has no special properties that other arrays do not have.</p>
+<p>A C-string, which consists of an array of characters terminated by the null character ‘\0’, and which therefore is different from an ordinary array of characters. There is a whole library of functions for dealing with strings represented in this form. Its header file is <cstring>. In some implementations this library may be automatically included when you include other libraries such as the <iostream> library. Note that the null character may very well not be the very last character in the C-string array, but it will be the first character beyond the last character of the actual string data in in that array. For example if you have a C-string storing “Hello” in a character array of size 10, then the letters of the word “Hello” will be in positions with indices 0 to 4, there will be a null character at index 5, and the locations with indices 6 to 9 will contain who-knows-what. In any case, it’s the null character at index 5 that makes this otherwise ordinary character array a C-string.<br>A C++ string object, which is an instance of a “class” data type whose actual internal representation you need not know or care about, as long as you know what you can and can’t do with variables (and constants) having this data type. There is a library of C++ string functions as well, available by including the <string> header file.<br>Both the C-string library functions and the C++ string library functions are available to C++ programs. But, don’t forget that these are two <em>different</em> function libraries, and the functions of the first library have a different notion of what a string is from the corresponding notion held by the functions of the second library. There are two further complicating aspects to this situation: first, though a function from one of the libraries may have a counterpart in the other library (i.e., a function in the other library designed to perform the same operation), the functions may not be used in the same way, and may not even have the same name; second, because of backward compatibility many functions from the C++ string library can be expected to work fine and do the expected thing with C-style strings, but not the other way around.</string></iostream></cstring></p>
+<p>The last statement above might seem to suggest we should use C++ strings and forget about C-strings altogether, and it is certainly true that there is a wider variety of more intuitive operations available for C++ strings. However, C-strings are more primitive, you may therefore find them simpler to deal with (provided you remember a few simple rules, such as the fact that the null character must always terminate such strings), and certainly if you read other, older programs you will see lots of C-strings. So, use whichever you find more convenient, but if you choose C++ strings and occasionally need to mix the two for some reason, be extra careful. Finally, there are certain situations in which C-strings must be used.</p>
+<p>To understand strings, you will have to spend some time studying sample programs. This study must include the usual prediction of how you expect a program to behave for given input, followed by a compile, link and run to test your prediction, as well as subsequent modification and testing to investigate questions that will arise along the way. In addition to experimenting with any supplied sample programs, you should be prepared to make up your own.</p>
+<p>In the following examples we attempt to draw the distinction between the two string representations and their associated operations. The list is not complete, but we do indicate how to perform many of the more useful kinds of tasks with each kind of string. The left-hand column contains examples relevant to C-strings and the right-hand column shows analogous examples in the context of C++ strings.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">C-strings  (#include <cstring>)</cstring></th>
+<th style="text-align:center">C++ strings  (#include <string>)</string></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><font color="blue">Declaring a C-string variable</font></td>
+<td style="text-align:center"><font color="blue">Declaring a C++ string object </font></td>
+</tr>
+<tr>
+<td style="text-align:center">char str[10];</td>
+<td style="text-align:center">string str;</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Initializing a C-string variable</font></td>
+<td style="text-align:center"><font color="blue">Initializing a C++ string object</font></td>
+</tr>
+<tr>
+<td style="text-align:center">char str1[11] = “Call home!”;</td>
+<td style="text-align:center">string str1(“Call home!”);</td>
+</tr>
+<tr>
+<td style="text-align:center">char str2[] = “Send money!”;</td>
+<td style="text-align:center">string str2 = “Send money!”;</td>
+</tr>
+<tr>
+<td style="text-align:center">char str3[] = {‘O’, ‘K’, ‘\0’}; or char str3[] = “OK”</td>
+<td style="text-align:center">string str3(“OK”);</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">string str4(10, ‘x’);</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Assigning to a C-string variable</font></td>
+<td style="text-align:center"><font color="blue">Assigning to a C++ string object</font></td>
+</tr>
+<tr>
+<td style="text-align:center">Can’t do it, i.e., can’t do this: char str[10]; str = “Hello!”;</td>
+<td style="text-align:center">string str; str = “Hello”; str = otherString;</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Concatenating two C-strings</font></td>
+<td style="text-align:center"><font color="blue">Concatenating two C++ string objects</font></td>
+</tr>
+<tr>
+<td style="text-align:center">strcat(str1, str2);</td>
+<td style="text-align:center">str1 += str2;</td>
+</tr>
+<tr>
+<td style="text-align:center">strcpy(str, strcat(str1, str2));</td>
+<td style="text-align:center">str = str1 + str2;</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Copying a C-string variable</font></td>
+<td style="text-align:center"><font color="blue">Copying a C++ string object </font></td>
+</tr>
+<tr>
+<td style="text-align:center">char str[20]; strcpy(str, “Hello!”); strcpy(str, otherString);</td>
+<td style="text-align:center">string str; str = “Hello”; str = otherString;</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Accessing a single character</font></td>
+<td style="text-align:center"><font color="blue">Accessing a single character</font></td>
+</tr>
+<tr>
+<td style="text-align:center">str[index]</td>
+<td style="text-align:center">str[index]; str.at(index); str(index, count)</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Comparing two C-strings </font></td>
+<td style="text-align:center"><font color="blue">Comparing two C++ string objects</font></td>
+</tr>
+<tr>
+<td style="text-align:center">if (strcmp(str1, str2) &lt; 0)<br>cout &lt;&lt; “str1 comes 1st.”;</td>
+<td style="text-align:center">if (str1 &lt; str2)<br>cout &lt;&lt; “str1 comes 1st.”;</td>
+</tr>
+<tr>
+<td style="text-align:center">if (strcmp(str1, str2) == 0)<br>cout &lt;&lt; “Equal strings.”;</td>
+<td style="text-align:center">if (str1 == str2)<br>cout &lt;&lt; “Equal strings.”;</td>
+</tr>
+<tr>
+<td style="text-align:center">if (strcmp(str1, str2) &gt; 0)<br>cout &lt;&lt; “str2 comes 1st.”;</td>
+<td style="text-align:center">if (str1 &gt; str2)<br>cout &lt;&lt; “str2 comes 1st.”;</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Finding the length of a C-string</font></td>
+<td style="text-align:center"><font color="blue">Finding the length of a C++ string object</font></td>
+</tr>
+<tr>
+<td style="text-align:center">strlen(str)</td>
+<td style="text-align:center">str.length()</td>
+</tr>
+<tr>
+<td style="text-align:center"><font color="blue">Output of a C-string variable</font></td>
+<td style="text-align:center"><font color="blue">Output of a C++ string object</font></td>
+</tr>
+<tr>
+<td style="text-align:center">cout &lt;&lt; str;</td>
+<td style="text-align:center">cout &lt;&lt; str;</td>
+</tr>
+<tr>
+<td style="text-align:center">cout &lt;&lt; setw(width) &lt;&lt; str;</td>
+<td style="text-align:center">cout &lt;&lt; setw(width) &lt;&lt; str;</td>
+</tr>
+</tbody>
+</table>
+<p>In what follows, keep in mind that cin ignores white space when reading a string, while cin.get(), cin.getline() and getline() do not. Remember too that cin.getline() and getline() consume the delimiter while cin.get() does not. Finally, cin can be replaced with any open input stream, since file input with inFile, say, behaves in a manner completely analogous to the corresponding behavior of cin. Analogously, in the output examples given immediately above, cout could be replaced with any text output stream variable, say outFile. In all cases, numCh is the maximum number of characters that will be read.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Input of a C-style string variable</th>
+<th style="text-align:center">Input of a C++ string object</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">cin &gt;&gt; s;</td>
+<td style="text-align:center">cin &gt;&gt; s;</td>
+</tr>
+<tr>
+<td style="text-align:center">cin.get(s, numCh+1);<br>cin.get(s, numCh+1,’\n’);<br>cin.get(s, numCh+1,’x’);<br>cin.getline(s, numCh+1);</td>
+<td style="text-align:center">getline(cin, s);</td>
+</tr>
+<tr>
+<td style="text-align:center">cin.getline(s, numCh+1, ‘\n’);<br>cin.getline(s, numCh+1, ‘x’);</td>
+<td style="text-align:center">getline(cin, s, ‘x’);</td>
+</tr>
+</tbody>
+</table>
+<p>A useful naming convention for C-strings is illustrated by examples like</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">char</span> String80[<span class="number">81</span>];</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">char</span> String20[<span class="number">21</span>];</span><br></pre></td></tr></table></figure>
+<p>in which the two numbers in each definition differ by 1 to allow for the null character ‘\0’ to be stored in the array of characters, but to <em>not</em> be considered as part of the string stored there. No analog to this naming convention is necessary for C++ strings, since for all practical purposes, each C++ string variable may contain a string value of virtually unlimited length.</p>
+<p>来源： <a href="http://cs.smu.ca/~porter/csc/ref/c_cpp_strings.html" target="_blank" rel="noopener">http://cs.smu.ca/~porter/csc/ref/c_cpp_strings.html</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/06/linux-poco/" rel="next" title="Linux安装poco库">
+                <i class="fa fa-chevron-left"></i> Linux安装poco库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Leo Zhang</p>
+              <p class="site-description motion-element" itemprop="description">Hear all parties.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leo Zhang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

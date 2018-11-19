@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="源代码组织结构libevent库主要分为：头文件、辅助功能函数、日志、libevent框架、对系统IO多路复用机制的封装、信号管理、定时事件管理、缓冲区管理、基本数据结构和基于libevent的两个实用库等几部分。">
+<meta name="keywords" content="C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="libevent源码阅读">
+<meta property="og:url" content="http://yoursite.com/2016/04/29/libevent/index.html">
+<meta property="og:site_name" content="Leo Zhang&#39;s Notes">
+<meta property="og:description" content="源代码组织结构libevent库主要分为：头文件、辅助功能函数、日志、libevent框架、对系统IO多路复用机制的封装、信号管理、定时事件管理、缓冲区管理、基本数据结构和基于libevent的两个实用库等几部分。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-11-19T13:22:36.359Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="libevent源码阅读">
+<meta name="twitter:description" content="源代码组织结构libevent库主要分为：头文件、辅助功能函数、日志、libevent框架、对系统IO多路复用机制的封装、信号管理、定时事件管理、缓冲区管理、基本数据结构和基于libevent的两个实用库等几部分。">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/04/29/libevent/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>libevent源码阅读 | Leo Zhang's Notes</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Leo Zhang's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Cease to struggle and you cease to live.</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/04/29/libevent/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Leo Zhang">
+      <meta itemprop="description" content="Hear all parties.">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leo Zhang's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">libevent源码阅读
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2016-04-29 17:43:50" itemprop="dateCreated datePublished" datetime="2016-04-29T17:43:50+08:00">2016-04-29</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-11-19 21:22:36" itemprop="dateModified" datetime="2018-11-19T21:22:36+08:00">2018-11-19</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/程序设计/" itemprop="url" rel="index"><span itemprop="name">程序设计</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="源代码组织结构"><a href="#源代码组织结构" class="headerlink" title="源代码组织结构"></a>源代码组织结构</h3><p>libevent库主要分为：头文件、辅助功能函数、日志、libevent框架、对系统IO多路复用机制的封装、信号管理、定时事件管理、缓冲区管理、基本数据结构和基于libevent的两个实用库等几部分。</p>
+<a id="more"></a>
+<h4 id="头文件"><a href="#头文件" class="headerlink" title="头文件"></a>头文件</h4><p>主要就是event.h：事件宏定义、接口函数声明，主要结构体event的声明</p>
+<h4 id="内部头文件"><a href="#内部头文件" class="headerlink" title="内部头文件"></a>内部头文件</h4><p>xxx-internal.h：内部数据结构和函数，对外不可见，以达到信息隐藏的目的</p>
+<h4 id="libevent框架"><a href="#libevent框架" class="headerlink" title="libevent框架"></a>libevent框架</h4><p>event.c：event整体框架的代码实现</p>
+<h4 id="对系统IO多路复用机制的封装-Linux默认使用epoll"><a href="#对系统IO多路复用机制的封装-Linux默认使用epoll" class="headerlink" title="对系统IO多路复用机制的封装(Linux默认使用epoll)"></a>对系统IO多路复用机制的封装(Linux默认使用epoll)</h4><p>epoll.c：对epoll的封装</p>
+<pre><code>1). epoll_init(event_base_new, event_init)
+
+2). epoll_changelist_add/epoll_nochangelist_add(event_add)
+
+3). epoll_dispatch
+
+4). epoll_changelist_del/epoll_nochangelist_del(在evmap_io_del中被调用)
+
+5). epoll_dealloc(在event_base_free中被调用)
+</code></pre><p>poll.c：对poll的封装</p>
+<p>select.c：对select的封装</p>
+<p>devpoll.c：对/dev/poll的封装</p>
+<p>kqueue.c：对kqueue的封装</p>
+<h4 id="定时事件管理"><a href="#定时事件管理" class="headerlink" title="定时事件管理"></a>定时事件管理</h4><p>min-heap.h：其实就是一个以时间作为key的小根堆结构</p>
+<h4 id="信号管理"><a href="#信号管理" class="headerlink" title="信号管理"></a>信号管理</h4><p>signal.c：对信号事件的处理</p>
+<h4 id="辅助功能函数"><a href="#辅助功能函数" class="headerlink" title="辅助功能函数"></a>辅助功能函数</h4><p>evutil.h和evutil.c：一些辅助功能函数，包括创建socket pair和一些时间<br>操作函数：加、减和比较等</p>
+<h4 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h4><p>log.h和log.c：log日志函数</p>
+<h4 id="缓冲区管理"><a href="#缓冲区管理" class="headerlink" title="缓冲区管理"></a>缓冲区管理</h4><p>evbuffer.c和buffer.c：libevent对缓冲区的封装</p>
+<h4 id="基本数据结构"><a href="#基本数据结构" class="headerlink" title="基本数据结构"></a>基本数据结构</h4><p>compact/sys下的两个源文件：queue.h是libevent基本数据结构的实现，包括<br>链表，双向链表，队列等。</p>
+<h4 id="网络库"><a href="#网络库" class="headerlink" title="网络库"></a>网络库</h4><p>http和evdns：是基于libevent实现的http服务器和异步dns查询库</p>
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><h4 id="Reactor-—-反应器"><a href="#Reactor-—-反应器" class="headerlink" title="Reactor — 反应器"></a>Reactor — 反应器</h4><p>典型的Reactor声明方式，反应器时事件管理的接口</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Reactor</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">register_handler</span><span class="params">(EventHandler *handler, <span class="keyword">int</span> event)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">remove_handler</span><span class="params">(EventHandler *handler, <span class="keyword">int</span> event)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">handle_events</span><span class="params">(timeval *tv)</span></span>;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在libevent中就是event_base结构体, event_base是一组event的集合</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* event-internal.h */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">event_base</span> &#123;</span></span><br><span class="line">	<span class="comment">/** Function pointers and other data to describe this event_base's</span></span><br><span class="line"><span class="comment">	 * backend. */</span></span><br><span class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">eventop</span> *<span class="title">evsel</span>;</span></span><br><span class="line">	<span class="comment">/** Pointer to backend-specific data. */</span></span><br><span class="line">	<span class="keyword">void</span> *evbase;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/** List of changes to tell backend about at next dispatch.  Only used</span></span><br><span class="line"><span class="comment">	 * by the O(1) backends. */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">event_changelist</span> <span class="title">changelist</span>;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/** Function pointers used to describe the backend that this event_base</span></span><br><span class="line"><span class="comment">	 * uses for signals */</span></span><br><span class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">eventop</span> *<span class="title">evsigsel</span>;</span></span><br><span class="line">	<span class="comment">/** Data to implement the common signal handelr code. */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">evsig_info</span> <span class="title">sig</span>;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/** Number of virtual events */</span></span><br><span class="line">	<span class="keyword">int</span> virtual_event_count;</span><br><span class="line">	<span class="comment">/** Number of total events added to this event_base */</span></span><br><span class="line">	<span class="keyword">int</span> event_count;</span><br><span class="line">	<span class="comment">/** Number of total events active in this event_base */</span></span><br><span class="line">	<span class="keyword">int</span> event_count_active;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/** Set if we should terminate the loop once we're done processing</span></span><br><span class="line"><span class="comment">	 * events. */</span></span><br><span class="line">	<span class="keyword">int</span> event_gotterm;</span><br><span class="line">	<span class="comment">/** Set if we should terminate the loop immediately */</span></span><br><span class="line">	<span class="keyword">int</span> event_break;</span><br><span class="line">	<span class="comment">/** Set if we should start a new instance of the loop immediately. */</span></span><br><span class="line">	<span class="keyword">int</span> event_continue;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/** The currently running priority of events */</span></span><br><span class="line">	<span class="keyword">int</span> event_running_priority;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/** Set if we're running the event_base_loop function, to prevent</span></span><br><span class="line"><span class="comment">	 * reentrant invocation. */</span></span><br><span class="line">	<span class="keyword">int</span> running_loop;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* Active event management. */</span></span><br><span class="line">	<span class="comment">/** An array of nactivequeues queues for active events (ones that</span></span><br><span class="line"><span class="comment">	 * have triggered, and whose callbacks need to be called).  Low</span></span><br><span class="line"><span class="comment">	 * priority numbers are more important, and stall higher ones.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">event_list</span> *<span class="title">activequeues</span>;</span></span><br><span class="line">	<span class="comment">/** The length of the activequeues array */</span></span><br><span class="line">	<span class="keyword">int</span> nactivequeues;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* common timeout logic */</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/** An array of common_timeout_list* for all of the common timeout</span></span><br><span class="line"><span class="comment">	 * values we know. */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">common_timeout_list</span> **<span class="title">common_timeout_queues</span>;</span></span><br><span class="line">	<span class="comment">/** The number of entries used in common_timeout_queues */</span></span><br><span class="line">	<span class="keyword">int</span> n_common_timeouts;</span><br><span class="line">	<span class="comment">/** The total size of common_timeout_queues. */</span></span><br><span class="line">	<span class="keyword">int</span> n_common_timeouts_allocated;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/** List of defered_cb that are active.  We run these after the active</span></span><br><span class="line"><span class="comment">	 * events. */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">deferred_cb_queue</span> <span class="title">defer_queue</span>;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/** Mapping from file descriptors to enabled (added) events */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">event_io_map</span> <span class="title">io</span>;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/** Mapping from signal numbers to enabled (added) events. */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">event_signal_map</span> <span class="title">sigmap</span>;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/** All events that have been enabled (added) in this event_base */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">event_list</span> <span class="title">eventqueue</span>;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/** Stored timeval; used to detect when time is running backwards. */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">event_tv</span>;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/** Priority queue of events with timeouts. */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">min_heap</span> <span class="title">timeheap</span>;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/** Stored timeval: used to avoid calling gettimeofday/clock_gettime</span></span><br><span class="line"><span class="comment">	 * too often. */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">tv_cache</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(_EVENT_HAVE_CLOCK_GETTIME) &amp;&amp; defined(CLOCK_MONOTONIC)</span></span><br><span class="line">	<span class="comment">/** Difference between internal time (maybe from clock_gettime) and</span></span><br><span class="line"><span class="comment">	 * gettimeofday. */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">tv_clock_diff</span>;</span></span><br><span class="line">	<span class="comment">/** Second in which we last updated tv_clock_diff, in monotonic time. */</span></span><br><span class="line">	<span class="keyword">time_t</span> last_updated_clock_diff;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _EVENT_DISABLE_THREAD_SUPPORT</span></span><br><span class="line">	<span class="comment">/* threading support */</span></span><br><span class="line">	<span class="comment">/** The thread currently running the event_loop for this base */</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> th_owner_id;</span><br><span class="line">	<span class="comment">/** A lock to prevent conflicting accesses to this event_base */</span></span><br><span class="line">	<span class="keyword">void</span> *th_base_lock;</span><br><span class="line">	<span class="comment">/** The event whose callback is executing right now */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">event</span> *<span class="title">current_event</span>;</span></span><br><span class="line">	<span class="comment">/** A condition that gets signalled when we're done processing an</span></span><br><span class="line"><span class="comment">	 * event with waiters on it. */</span></span><br><span class="line">	<span class="keyword">void</span> *current_event_cond;</span><br><span class="line">	<span class="comment">/** Number of threads blocking on current_event_cond. */</span></span><br><span class="line">	<span class="keyword">int</span> current_event_waiters;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> WIN32</span></span><br><span class="line">	<span class="comment">/** IOCP support structure, if IOCP is enabled. */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">event_iocp_port</span> *<span class="title">iocp</span>;</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">	<span class="comment">/** Flags that this base was configured with */</span></span><br><span class="line">	<span class="keyword">enum</span> event_base_config_flag flags;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* Notify main thread to wake up break, etc. */</span></span><br><span class="line">	<span class="comment">/** True if the base already has a pending notify, and we don't need</span></span><br><span class="line"><span class="comment">	 * to add any more. */</span></span><br><span class="line">	<span class="keyword">int</span> is_notify_pending;</span><br><span class="line">	<span class="comment">/** A socketpair used by some th_notify functions to wake up the main</span></span><br><span class="line"><span class="comment">	 * thread. */</span></span><br><span class="line">	<span class="keyword">evutil_socket_t</span> th_notify_fd[<span class="number">2</span>];</span><br><span class="line">	<span class="comment">/** An event used by some th_notify functions to wake up the main</span></span><br><span class="line"><span class="comment">	 * thread. */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">event</span> <span class="title">th_notify</span>;</span></span><br><span class="line">	<span class="comment">/** A function used to wake up the main thread from another thread. */</span></span><br><span class="line">	<span class="keyword">int</span> (*th_notify_fn)(struct event_base *base);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="EventHandler-—-事件处理程序"><a href="#EventHandler-—-事件处理程序" class="headerlink" title="EventHandler — 事件处理程序"></a>EventHandler — 事件处理程序</h4><p>event是整个libevent库的核心，是Reactor框架中的事件处理程序组件，它提供了函数接口，供Reactor在事件发生时<br>调用，以执行相应的事件处理，通常它会绑定一个有效的句柄。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* include/event2/event_struct.h */</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">event</span> &#123;</span></span><br><span class="line">    TAILQ_ENTRY(event) ev_active_next;</span><br><span class="line">    TAILQ_ENTRY(event) ev_next;</span><br><span class="line">    <span class="comment">/* for managing timeouts */</span></span><br><span class="line">    <span class="keyword">union</span> &#123;</span><br><span class="line">        TAILQ_ENTRY(event) ev_next_with_common_timeout;</span><br><span class="line">        <span class="keyword">int</span> min_heap_idx;</span><br><span class="line">    &#125; ev_timeout_pos;</span><br><span class="line">    <span class="keyword">evutil_socket_t</span> ev_fd;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">event_base</span> *<span class="title">ev_base</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">union</span> &#123;</span><br><span class="line">        <span class="comment">/* used for io events */</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">            TAILQ_ENTRY(event) ev_io_next;</span><br><span class="line">            <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">ev_timeout</span>;</span></span><br><span class="line">        &#125; ev_io;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* used by signal events */</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">            TAILQ_ENTRY(event) ev_signal_next;</span><br><span class="line">            <span class="keyword">short</span> ev_ncalls;</span><br><span class="line">            <span class="comment">/* Allows deletes in callback */</span></span><br><span class="line">            <span class="keyword">short</span> *ev_pncalls;</span><br><span class="line">        &#125; ev_signal;</span><br><span class="line">    &#125; _ev;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">short</span> ev_events;</span><br><span class="line">    <span class="keyword">short</span> ev_res;		<span class="comment">/* result passed to event callback */</span></span><br><span class="line">    <span class="keyword">short</span> ev_flags;</span><br><span class="line">    <span class="keyword">ev_uint8_t</span> ev_pri;	<span class="comment">/* smaller numbers are higher priority */</span></span><br><span class="line">    <span class="keyword">ev_uint8_t</span> ev_closure;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">ev_timeout</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* allows us to adopt for different types of events */</span></span><br><span class="line">    <span class="keyword">void</span> (*ev_callback)(<span class="keyword">evutil_socket_t</span>, <span class="keyword">short</span>, <span class="keyword">void</span> *arg);</span><br><span class="line">    <span class="keyword">void</span> *ev_arg;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>宏展开后为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">event</span> &#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> &#123;</span> <span class="class"><span class="keyword">struct</span> <span class="title">event</span> *<span class="title">tqe_next</span>;</span> <span class="class"><span class="keyword">struct</span> <span class="title">event</span> **<span class="title">tqe_prev</span>;</span> &#125; ev_active_next;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> &#123;</span> <span class="class"><span class="keyword">struct</span> <span class="title">event</span> *<span class="title">tqe_next</span>;</span> <span class="class"><span class="keyword">struct</span> <span class="title">event</span> **<span class="title">tqe_prev</span>;</span> &#125; ev_next;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">union</span> &#123;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span> <span class="class"><span class="keyword">struct</span> <span class="title">event</span> *<span class="title">tqe_next</span>;</span> <span class="class"><span class="keyword">struct</span> <span class="title">event</span> **<span class="title">tqe_prev</span>;</span> &#125; ev_next_with_common_timeout;</span><br><span class="line">        <span class="keyword">int</span> min_heap_idx;</span><br><span class="line">    &#125; ev_timeout_pos;</span><br><span class="line">    <span class="keyword">int</span> ev_fd;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">event_base</span> *<span class="title">ev_base</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">union</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span> <span class="class"><span class="keyword">struct</span> <span class="title">event</span> *<span class="title">tqe_next</span>;</span> <span class="class"><span class="keyword">struct</span> <span class="title">event</span> **<span class="title">tqe_prev</span>;</span> &#125; ev_io_next;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">ev_timeout</span>;</span></span><br><span class="line">    &#125; ev_io;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> &#123;</span> <span class="class"><span class="keyword">struct</span> <span class="title">event</span> *<span class="title">tqe_next</span>;</span> <span class="class"><span class="keyword">struct</span> <span class="title">event</span> **<span class="title">tqe_prev</span>;</span> &#125; ev_signal_next;</span><br><span class="line">            <span class="keyword">short</span> ev_ncalls;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">short</span> *ev_pncalls;</span><br><span class="line">        &#125; ev_signal;</span><br><span class="line">    &#125; _ev;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">short</span> ev_events;</span><br><span class="line">    <span class="keyword">short</span> ev_res;</span><br><span class="line">    <span class="keyword">short</span> ev_flags;</span><br><span class="line">    <span class="keyword">uint8_t</span> ev_pri;</span><br><span class="line">    <span class="keyword">uint8_t</span> ev_closure;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">timeval</span> <span class="title">ev_timeout</span>;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> (*ev_callback)(<span class="keyword">int</span>, <span class="keyword">short</span>, <span class="keyword">void</span> *arg);</span><br><span class="line">    <span class="keyword">void</span> *ev_arg;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="Signal"><a href="#Signal" class="headerlink" title="Signal"></a>Signal</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">evsig_info</span> &#123;</span></span><br><span class="line">    <span class="comment">/* Event watching ev_signal_pair[1] */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">event</span> <span class="title">ev_signal</span>;</span></span><br><span class="line">    <span class="comment">/* Socketpair used to send notifications from the signal handler */</span></span><br><span class="line">    <span class="keyword">evutil_socket_t</span> ev_signal_pair[<span class="number">2</span>];</span><br><span class="line">    <span class="comment">/* True iff we've added the ev_signal event yet. */</span></span><br><span class="line">    <span class="keyword">int</span> ev_signal_added;</span><br><span class="line">    <span class="comment">/* Count of the number of signals we're currently watching. */</span></span><br><span class="line">    <span class="keyword">int</span> ev_n_signals_added;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Array of previous signal handler objects before Libevent started</span></span><br><span class="line"><span class="comment">     * messing with them.  Used to restore old signal handlers. */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> _EVENT_HAVE_SIGACTION</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sigaction</span> **<span class="title">sh_old</span>;</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">    <span class="keyword">ev_sighandler_t</span> **sh_old;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="comment">/* Size of sh_old. */</span></span><br><span class="line">    <span class="keyword">int</span> sh_old_max;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="event-list"><a href="#event-list" class="headerlink" title="event_list"></a>event_list</h4><p>ev_map.c中的evmap_io中用到了event_list结构，event_list在event_struct.h<br>的结构是:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">TAILQ_HEAD (event_list, event);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> TAILQ_HEAD</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> _EVENT_DEFINED_TQHEAD</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TAILQ_HEAD(name, type)          \</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">name</span> &#123;</span>                   \</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">type</span> *<span class="title">tqh_first</span>;</span>         \</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">type</span> **<span class="title">tqh_last</span>;</span>         \</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<p>使用cpp或者gcc -E展开后得到的结果：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">event_list</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">event</span> *<span class="title">tqh_first</span>;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">event</span> **<span class="title">tqh_last</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+       
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/29/build-tools/" rel="next" title="C++程序构建工具">
+                <i class="fa fa-chevron-left"></i> C++程序构建工具
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/04/29/api-hook/" rel="prev" title="API Hook">
+                API Hook <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Leo Zhang</p>
+              <p class="site-description motion-element" itemprop="description">Hear all parties.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#源代码组织结构"><span class="nav-number">1.</span> <span class="nav-text">源代码组织结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#头文件"><span class="nav-number">1.1.</span> <span class="nav-text">头文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内部头文件"><span class="nav-number">1.2.</span> <span class="nav-text">内部头文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#libevent框架"><span class="nav-number">1.3.</span> <span class="nav-text">libevent框架</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对系统IO多路复用机制的封装-Linux默认使用epoll"><span class="nav-number">1.4.</span> <span class="nav-text">对系统IO多路复用机制的封装(Linux默认使用epoll)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#定时事件管理"><span class="nav-number">1.5.</span> <span class="nav-text">定时事件管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#信号管理"><span class="nav-number">1.6.</span> <span class="nav-text">信号管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#辅助功能函数"><span class="nav-number">1.7.</span> <span class="nav-text">辅助功能函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#日志"><span class="nav-number">1.8.</span> <span class="nav-text">日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缓冲区管理"><span class="nav-number">1.9.</span> <span class="nav-text">缓冲区管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基本数据结构"><span class="nav-number">1.10.</span> <span class="nav-text">基本数据结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#网络库"><span class="nav-number">1.11.</span> <span class="nav-text">网络库</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#源码分析"><span class="nav-number">2.</span> <span class="nav-text">源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Reactor-—-反应器"><span class="nav-number">2.1.</span> <span class="nav-text">Reactor — 反应器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EventHandler-—-事件处理程序"><span class="nav-number">2.2.</span> <span class="nav-text">EventHandler — 事件处理程序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Signal"><span class="nav-number">2.3.</span> <span class="nav-text">Signal</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#event-list"><span class="nav-number">2.4.</span> <span class="nav-text">event_list</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Leo Zhang</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
