@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[String in C and C++]]></title>
+    <url>%2F2016%2F05%2F06%2Fstring-c-cpp%2F</url>
+    <content type="text"><![CDATA[This page summarizes many of the things you may find it useful to know when working with either C-strings or objects of the C++ string class. The term string generally means an ordered sequence of characters, with a first character, a second character, and so on, and in most programming languages such strings are enclosed in either single or double quotes. In C++ the enclosing delimiters are double quotes. In this form the string is referred to as a string literal and we often use such string literals in output statements when we wish to display text on the screen for the benefit of our users. For example, the usual first C++ program displays the string literal “Hello, world!” on the screen with the following output statement: 1cout &lt;&lt; "Hello, world!" &lt;&lt; endl; However, without string variables about all we can do with strings is output string literals to the screen, so we need to expand our ability to handle string data. When we talk about strings in C++, we must be careful because the C language, with which C++ is meant to be backward compatible, had one way of dealing with strings, while C++ has another, and to further complicate matters there are many non-standard implementations of C++ strings. These should gradually disappear as compiler vendors update their products to implement the string component of the C++ Standard Library. As a programmer, then, you must distinguish between the following three things: An “ordinary” array of characters, which is just like any other array and has no special properties that other arrays do not have. A C-string, which consists of an array of characters terminated by the null character ‘\0’, and which therefore is different from an ordinary array of characters. There is a whole library of functions for dealing with strings represented in this form. Its header file is . In some implementations this library may be automatically included when you include other libraries such as the library. Note that the null character may very well not be the very last character in the C-string array, but it will be the first character beyond the last character of the actual string data in in that array. For example if you have a C-string storing “Hello” in a character array of size 10, then the letters of the word “Hello” will be in positions with indices 0 to 4, there will be a null character at index 5, and the locations with indices 6 to 9 will contain who-knows-what. In any case, it’s the null character at index 5 that makes this otherwise ordinary character array a C-string.A C++ string object, which is an instance of a “class” data type whose actual internal representation you need not know or care about, as long as you know what you can and can’t do with variables (and constants) having this data type. There is a library of C++ string functions as well, available by including the header file.Both the C-string library functions and the C++ string library functions are available to C++ programs. But, don’t forget that these are two different function libraries, and the functions of the first library have a different notion of what a string is from the corresponding notion held by the functions of the second library. There are two further complicating aspects to this situation: first, though a function from one of the libraries may have a counterpart in the other library (i.e., a function in the other library designed to perform the same operation), the functions may not be used in the same way, and may not even have the same name; second, because of backward compatibility many functions from the C++ string library can be expected to work fine and do the expected thing with C-style strings, but not the other way around. The last statement above might seem to suggest we should use C++ strings and forget about C-strings altogether, and it is certainly true that there is a wider variety of more intuitive operations available for C++ strings. However, C-strings are more primitive, you may therefore find them simpler to deal with (provided you remember a few simple rules, such as the fact that the null character must always terminate such strings), and certainly if you read other, older programs you will see lots of C-strings. So, use whichever you find more convenient, but if you choose C++ strings and occasionally need to mix the two for some reason, be extra careful. Finally, there are certain situations in which C-strings must be used. To understand strings, you will have to spend some time studying sample programs. This study must include the usual prediction of how you expect a program to behave for given input, followed by a compile, link and run to test your prediction, as well as subsequent modification and testing to investigate questions that will arise along the way. In addition to experimenting with any supplied sample programs, you should be prepared to make up your own. In the following examples we attempt to draw the distinction between the two string representations and their associated operations. The list is not complete, but we do indicate how to perform many of the more useful kinds of tasks with each kind of string. The left-hand column contains examples relevant to C-strings and the right-hand column shows analogous examples in the context of C++ strings. C-strings (#include ) C++ strings (#include ) Declaring a C-string variable Declaring a C++ string object char str[10]; string str; Initializing a C-string variable Initializing a C++ string object char str1[11] = “Call home!”; string str1(“Call home!”); char str2[] = “Send money!”; string str2 = “Send money!”; char str3[] = {‘O’, ‘K’, ‘\0’}; or char str3[] = “OK” string str3(“OK”); string str4(10, ‘x’); Assigning to a C-string variable Assigning to a C++ string object Can’t do it, i.e., can’t do this: char str[10]; str = “Hello!”; string str; str = “Hello”; str = otherString; Concatenating two C-strings Concatenating two C++ string objects strcat(str1, str2); str1 += str2; strcpy(str, strcat(str1, str2)); str = str1 + str2; Copying a C-string variable Copying a C++ string object char str[20]; strcpy(str, “Hello!”); strcpy(str, otherString); string str; str = “Hello”; str = otherString; Accessing a single character Accessing a single character str[index] str[index]; str.at(index); str(index, count) Comparing two C-strings Comparing two C++ string objects if (strcmp(str1, str2) &lt; 0)cout &lt;&lt; “str1 comes 1st.”; if (str1 &lt; str2)cout &lt;&lt; “str1 comes 1st.”; if (strcmp(str1, str2) == 0)cout &lt;&lt; “Equal strings.”; if (str1 == str2)cout &lt;&lt; “Equal strings.”; if (strcmp(str1, str2) &gt; 0)cout &lt;&lt; “str2 comes 1st.”; if (str1 &gt; str2)cout &lt;&lt; “str2 comes 1st.”; Finding the length of a C-string Finding the length of a C++ string object strlen(str) str.length() Output of a C-string variable Output of a C++ string object cout &lt;&lt; str; cout &lt;&lt; str; cout &lt;&lt; setw(width) &lt;&lt; str; cout &lt;&lt; setw(width) &lt;&lt; str; In what follows, keep in mind that cin ignores white space when reading a string, while cin.get(), cin.getline() and getline() do not. Remember too that cin.getline() and getline() consume the delimiter while cin.get() does not. Finally, cin can be replaced with any open input stream, since file input with inFile, say, behaves in a manner completely analogous to the corresponding behavior of cin. Analogously, in the output examples given immediately above, cout could be replaced with any text output stream variable, say outFile. In all cases, numCh is the maximum number of characters that will be read. Input of a C-style string variable Input of a C++ string object cin &gt;&gt; s; cin &gt;&gt; s; cin.get(s, numCh+1);cin.get(s, numCh+1,’\n’);cin.get(s, numCh+1,’x’);cin.getline(s, numCh+1); getline(cin, s); cin.getline(s, numCh+1, ‘\n’);cin.getline(s, numCh+1, ‘x’); getline(cin, s, ‘x’); A useful naming convention for C-strings is illustrated by examples like 12typedef char String80[81];typedef char String20[21]; in which the two numbers in each definition differ by 1 to allow for the null character ‘\0’ to be stored in the array of characters, but to not be considered as part of the string stored there. No analog to this naming convention is necessary for C++ strings, since for all practical purposes, each C++ string variable may contain a string value of virtually unlimited length. 来源： http://cs.smu.ca/~porter/csc/ref/c_cpp_strings.html]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Linux安装poco库]]></title>
+    <url>%2F2016%2F05%2F06%2Flinux-poco%2F</url>
+    <content type="text"><![CDATA[下载源码解压源码设置编译选项1./configure --omit=Data/ODBC --prefix=/home/zealoussnow/.OpenSource/poco-build --cflags=-fPIC --static --shared]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[CentOS7的使用 —— grub2]]></title>
+    <url>%2F2016%2F05%2F06%2Fcentos7-grub2%2F</url>
+    <content type="text"><![CDATA[列出默认的内核12# grubby --default-kernel/boot/vmlinuz-3.10.0-229.20.1.el7.x86_64 查找默认内核的索引12# grubby --default-index0 修改默认启动项1grubby --set-default /boot/vmlinuz-3.10-229.4.2.el7.x86_64 列出内核的grub菜单项1grub --info=ALl or grub --info /boot/vmlinuz-3.10.229.4.2.el7.x86_64 从一个grub菜单项添加或者移除参数1grubby --remove-args=&quot;argX argY&quot; --args=&quot;argA argB&quot; --update-kernel /boot/kenel 使用相同的参数更新所有的内核菜单项1grubby --update-kernel=ALL --args=console=ttyS0,115200 注： 所用的grubby的版本为grubby-8.28-11.el7.x86_64 参考MAKING PERSISTENT CHANGES TO A GRUB 2 MENU USING THE GRUBBY TOOL]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
+      <tags>
+        <tag>Linux基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[CentOS7的使用 —— systemd]]></title>
+    <url>%2F2016%2F05%2F06%2Fcentos7-systemd%2F</url>
+    <content type="text"><![CDATA[检视和控制systemd的主要命令是systemctl，该命令可用于查看系统状态和管理系统及服务。 在systemctl参数中添加-H &lt;username&gt;@&lt;host&gt;，可以实现对其他机器的远程控制，该过程使用SSH连接。 systemadm是systemd的官方图形前端，官方软件仓库提供了稳定版的systemd-ui 分析系统状态输出激活的单元1# systemctl 或者 systemctl list-units 输出运行失败的单元1# systemctl --failed 查看所有已安装的服务1systemctl list-unit-files 所有可用单元文件存放在/usr/lib/systemd/system和/etc/systemd/system目录(后者优先级更高)。 使用单元立即激活单元1# systemctl start &lt;unit&gt; 立即停止单元1# systemctl stop &lt;unit&gt; 重启单元1# systemctl restart &lt;unit&gt; 重新加载配置1# systemctl reload &lt;unit&gt; 输出单元运行状态1# systemctl status &lt;unit&gt; 检查单元是否配置为自动启动1# systemctl is-enabled &lt;unit&gt; 开机自动激活单元1# systemctl enable &lt;unit&gt; 取消开机自动激活单元1# systemctl disable &lt;unit&gt; 禁用一个单元（禁用后，间接启动也是不可能的）1# systemctl mask &lt;unit&gt; 取消禁用一个单元1# systemctl unmask &lt;unit&gt; 重新载入systemd1# systemctl daemon-reload 显示单元的手册页（必须由单元文件提供）1# systemctl help &lt;unit&gt; 电源管理安装[polkit(https://wiki.archlinux.org/index.php/Polkit)]后才可以让一般用户使用电源管理 1systemctl reboot(重启) | poweroff(退出系统并停止电源) | suspend(待机) | hibernate(休眠) | hybrid-sleep(混合休眠模式) 编写单元文件等内容请看参考。。。 参考systemd详解Archlinux Wiki, systemd)systemctl命令完全指南]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
+      <tags>
+        <tag>Linux基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Linux VNC服务配置]]></title>
+    <url>%2F2016%2F04%2F29%2Fsetting-vnc%2F</url>
+    <content type="text"><![CDATA[CentOS-6.5安装和配置VNC服务1.下载tigervnc的客户端和服务端程序 1# yum install tigervnc-server tigervnc 2.为普通用户设置vnc服务 编辑/etc/sysconfig/vncservers，加入 12VNCSERVERS="8:test"VNCSERVERARGS[8]="-geometry 1400x900 -nolisten tcp" 添加的用户test必须是系统中已经存在的用户。 3.为test设置vnc的登录密码 切换到普通用户上，使用vncpasswd设置密码 4.启动vnc服务 1service vncserver start 参考资料CentOS-6.5安装配置tigervncVNC服务全面设置]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
+      <tags>
+        <tag>Linux基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[剖析TCP状态变迁]]></title>
+    <url>%2F2016%2F04%2F29%2Ftcp-state-change%2F</url>
+    <content type="text"><![CDATA[CLOSED:初始状态 LISTEN:服务器端的某个SOCKET处于监听状态，可以接受连接了 SYN_RCVD:表示接收到了SYN报文，在正常情况下，这个状态是服务器端的SOCKET在建立TCP连接时的三次握手会话过程中的一个中间状态，很短暂，基本用netstat很难看到这种状态。因此，这种状态时，当受到客户端的ACK报文后，它会进入到ESTABLISHED状态 SYN_SENT:这个状态与SYN_RCVD遥相呼应，当客户端SOCKET执行connect连接时，它首先发送SYN报文，因此也就进入到了SYN_SENT状态，并等待服务器端的发送三次握手中的第2个报文。SYN_SENT表示客户端已经发送SYN_SENT报文 ESTABLISHED:表示连接已经建立，即三次握手已完成 FIN_WAIT_1:这个状态要好好解释一下，其实FIN_WAIT_1和FIN_WAIT_2状态的真正含义都是表示等待对方的FIN报文。而这两种状态的区别是：FIN_WAIT_1状态实际上是当SOCKET在ESTABLISHED状态时，它想主动关闭连接，向对方发送了FIN报文，此时该SOCKET即进入到FIN_WAIT_1状态。而当对方回应ACK报文后，则进入到FIN_WAIT_2状态，当然在实际的正常情况下，无论对方何种情况下，都应该马上回应ACK报文，所以FIN_WAIT_1状态一般是比较难见到的，而FIN_WAIT_2状态还有时常常可以用netstat看到。 FIN_WAIT_2:上面已经详细解释了这种状态，实际上FIN_WAIT_2状态下的SOCKET，表示半连接，也即有一方要求close连接，但另外还告诉对方，我暂时还有点数据需要传送给你，稍后再关闭连接。 TIME_WAIT:表示收到了对方的FIN报文，并发送出了ACK报文，就等2MSL后即可回到CLOSED可用状态了。如果FIN_WAIT_1状态下，收到了对方同时带FIN标志和ACK标志的报文时，可以直接进入到TIME_WAIT状态，而无须经过FIN_WAIT_2状态。例外状态。正常情况下，当你发送FIN报文后，按理来说是应该先收到（或同时收到）对方的ACK报文，再收到对方的FIN报文。但是CLOSING状态表示你发送FIN报文后，并没有收到对方的ACK报文，反而却也收到了对方的FIN报文。什么情况下会出现此种情况呢？其实细想一下，也不难得出结论：那就是如果双方几乎在同时close一个SOCKET的话，那么就出现了双方同时发送FIN报文的情况，也即会出现CLOSING状态，表示双方都正在关闭SOCKET连接。 CLOSE_WAIT:这种状态的含义其实是表示在等待关闭。怎么理解呢？当对方close一个SOCKET后发送FIN报文给自己，你系统毫无疑问地会回应一个ACK报文给对方，此时则进入到CLOSE_WAIT状态。接下来呢，实际上你真正需要考虑的事情是察看你是否还有数据发送给对方，如果没有的话，那么你也就可以close这个SOCKET，发送FIN报文给对方，也即关闭连接。所以你在CLOSE_WAIT状态下，需要完成的事情是等待你去关闭连接。 LAST_ACK:这个状态还是比较容易好理解的，它是被动关闭一方在发送FIN报文后，最后等待对方的ACK报文。当收到ACK报文后，也即可以进入到CLOSED可用状态了。]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
+      <tags>
+        <tag>网络基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[API Hook]]></title>
+    <url>%2F2016%2F04%2F29%2Fapi-hook%2F</url>
+    <content type="text"><![CDATA[每一类HOOK都存放在一个指针列表中，称之为钩子链表，这些钩子链表由Windows系统来维护。这个列表的指针指向指定的应用程序定义的，被HOOK子程调用的回调函数，也就是该钩子的各个处理子程。当与指定的HOOK类型关联的消息发生时，系统就把这个消息传递到HOOK子程（回调函数）。HOOK子程就可以监视消息，或者修改消息，或者停止消息的前进，避免这些消息传递到下一个HOOK子程或者目的窗口。调用系统API的函数SetWindowsHookEx可以把HOOK子程设置到钩子链表中去。 代码的injection常用的方法有： 1.使用注册表HKLM/Software/Microsoft/Windows NT/CurrentVersion/Windows/AppInit_DLLs 这种方法可以指定多个DLL，用空格隔开。这些DLL会被任何用到User32.dll的所有程序自动加载。当User32.dll加载的时候，User32.dll的DllMain会收到一个DLL_PROCESS_ATTACH通知，User32在这个时候读取注册表项中的值，调用LoadLibrary加载各个DLL。显然使用这种方法要求设置注册表之后立刻重起系统，不过一般情况下这不是大问题。这种方法的主要问题在于，只有用到User32.dll的应用程序才会被Inject。所有的GUI和少部分CUI程序会用到User32.dll，所以如果你的API Hook程序不打算监视CUI程序的话，那么可能问题并不太大。但是如果你的API Hook程序需要监视系统中所有进程的话，这种方法的限制将是非常致命的。 2.调用SetWindowsHookEx(WH_GETMESSAGE, …, 0) 可以使用SetWindowsHookEx(WH_GETMESSAGE, …, 0) 设置全局的消息钩子，虽然可能你的程序并不用到消息钩子，但是钩子的一个副作用是会将对应的DLL加载到所有的GUI线程之中。类似的，只有用到GUI的进程才会被挂接。虽然有这种限制，这种方法仍然是最常用的挂接进程的方法。 3.使用CreateRemoteThread函数在目标进程中创建远程线程 这种方法可以在任意的目标进程中创建一个远程线程，远程线程中可以执行任意代码，这样便可以做到把我们的代码Inject到目标进程中。这种方法具有最大活性，但是难度也最高： a) 远程线程代码必须可以自重定位 b) 要能够监视进程的启动和结束，这样才可以挂接到所有进程 4.如果你只是要挂接某个特定进程的并且情况允许你自己来创建此进程，你可以调用CreateProcess(…, CREATE_SUSPENDED)创建子进程并暂停运行，然后修改入口代码使之调用LoadLibrary加载自己的DLL。该方法在不同CPU之间显然是无法移植的。 Hook API常用的方法有： 1.找到API函数在内存中的地址，改写函数头几个字节为JMP指令跳转到自己的代码，执行完毕再执行API开头几个字节的内容再跳回原地址。这种方法对CPU有较大的依赖性，而且在多线程环境下可能出问题，当改写函数代码的时候有可能此函数正在被执行，这样做可能导致程序出错。 2.修改PE文件的IAT (Import Address Table)，使之指向自己的代码，这样EXE/DLL在调用系统API的时候便会调用你自己的函数 Refefence Website]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
+      <tags>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[libevent源码阅读]]></title>
+    <url>%2F2016%2F04%2F29%2Flibevent%2F</url>
+    <content type="text"><![CDATA[源代码组织结构libevent库主要分为：头文件、辅助功能函数、日志、libevent框架、对系统IO多路复用机制的封装、信号管理、定时事件管理、缓冲区管理、基本数据结构和基于libevent的两个实用库等几部分。 头文件主要就是event.h：事件宏定义、接口函数声明，主要结构体event的声明 内部头文件xxx-internal.h：内部数据结构和函数，对外不可见，以达到信息隐藏的目的 libevent框架event.c：event整体框架的代码实现 对系统IO多路复用机制的封装(Linux默认使用epoll)epoll.c：对epoll的封装 1). epoll_init(event_base_new, event_init) 2). epoll_changelist_add/epoll_nochangelist_add(event_add) 3). epoll_dispatch 4). epoll_changelist_del/epoll_nochangelist_del(在evmap_io_del中被调用) 5). epoll_dealloc(在event_base_free中被调用) poll.c：对poll的封装 select.c：对select的封装 devpoll.c：对/dev/poll的封装 kqueue.c：对kqueue的封装 定时事件管理min-heap.h：其实就是一个以时间作为key的小根堆结构 信号管理signal.c：对信号事件的处理 辅助功能函数evutil.h和evutil.c：一些辅助功能函数，包括创建socket pair和一些时间操作函数：加、减和比较等 日志log.h和log.c：log日志函数 缓冲区管理evbuffer.c和buffer.c：libevent对缓冲区的封装 基本数据结构compact/sys下的两个源文件：queue.h是libevent基本数据结构的实现，包括链表，双向链表，队列等。 网络库http和evdns：是基于libevent实现的http服务器和异步dns查询库 源码分析Reactor — 反应器典型的Reactor声明方式，反应器时事件管理的接口 1234567class Reactor &#123;public: int register_handler(EventHandler *handler, int event); int remove_handler(EventHandler *handler, int event); void handle_events(timeval *tv); // ...&#125; 在libevent中就是event_base结构体, event_base是一组event的集合 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116117118119120121122123124125126/* event-internal.h */struct event_base &#123; /** Function pointers and other data to describe this event_base's * backend. */ const struct eventop *evsel; /** Pointer to backend-specific data. */ void *evbase; /** List of changes to tell backend about at next dispatch. Only used * by the O(1) backends. */ struct event_changelist changelist; /** Function pointers used to describe the backend that this event_base * uses for signals */ const struct eventop *evsigsel; /** Data to implement the common signal handelr code. */ struct evsig_info sig; /** Number of virtual events */ int virtual_event_count; /** Number of total events added to this event_base */ int event_count; /** Number of total events active in this event_base */ int event_count_active; /** Set if we should terminate the loop once we're done processing * events. */ int event_gotterm; /** Set if we should terminate the loop immediately */ int event_break; /** Set if we should start a new instance of the loop immediately. */ int event_continue; /** The currently running priority of events */ int event_running_priority; /** Set if we're running the event_base_loop function, to prevent * reentrant invocation. */ int running_loop; /* Active event management. */ /** An array of nactivequeues queues for active events (ones that * have triggered, and whose callbacks need to be called). Low * priority numbers are more important, and stall higher ones. */ struct event_list *activequeues; /** The length of the activequeues array */ int nactivequeues; /* common timeout logic */ /** An array of common_timeout_list* for all of the common timeout * values we know. */ struct common_timeout_list **common_timeout_queues; /** The number of entries used in common_timeout_queues */ int n_common_timeouts; /** The total size of common_timeout_queues. */ int n_common_timeouts_allocated; /** List of defered_cb that are active. We run these after the active * events. */ struct deferred_cb_queue defer_queue; /** Mapping from file descriptors to enabled (added) events */ struct event_io_map io; /** Mapping from signal numbers to enabled (added) events. */ struct event_signal_map sigmap; /** All events that have been enabled (added) in this event_base */ struct event_list eventqueue; /** Stored timeval; used to detect when time is running backwards. */ struct timeval event_tv; /** Priority queue of events with timeouts. */ struct min_heap timeheap; /** Stored timeval: used to avoid calling gettimeofday/clock_gettime * too often. */ struct timeval tv_cache;#if defined(_EVENT_HAVE_CLOCK_GETTIME) &amp;&amp; defined(CLOCK_MONOTONIC) /** Difference between internal time (maybe from clock_gettime) and * gettimeofday. */ struct timeval tv_clock_diff; /** Second in which we last updated tv_clock_diff, in monotonic time. */ time_t last_updated_clock_diff;#endif#ifndef _EVENT_DISABLE_THREAD_SUPPORT /* threading support */ /** The thread currently running the event_loop for this base */ unsigned long th_owner_id; /** A lock to prevent conflicting accesses to this event_base */ void *th_base_lock; /** The event whose callback is executing right now */ struct event *current_event; /** A condition that gets signalled when we're done processing an * event with waiters on it. */ void *current_event_cond; /** Number of threads blocking on current_event_cond. */ int current_event_waiters;#endif#ifdef WIN32 /** IOCP support structure, if IOCP is enabled. */ struct event_iocp_port *iocp;#endif /** Flags that this base was configured with */ enum event_base_config_flag flags; /* Notify main thread to wake up break, etc. */ /** True if the base already has a pending notify, and we don't need * to add any more. */ int is_notify_pending; /** A socketpair used by some th_notify functions to wake up the main * thread. */ evutil_socket_t th_notify_fd[2]; /** An event used by some th_notify functions to wake up the main * thread. */ struct event th_notify; /** A function used to wake up the main thread from another thread. */ int (*th_notify_fn)(struct event_base *base);&#125;; EventHandler — 事件处理程序event是整个libevent库的核心，是Reactor框架中的事件处理程序组件，它提供了函数接口，供Reactor在事件发生时调用，以执行相应的事件处理，通常它会绑定一个有效的句柄。 12345678910111213141516171819202122232425262728293031323334353637383940/* include/event2/event_struct.h */struct event &#123; TAILQ_ENTRY(event) ev_active_next; TAILQ_ENTRY(event) ev_next; /* for managing timeouts */ union &#123; TAILQ_ENTRY(event) ev_next_with_common_timeout; int min_heap_idx; &#125; ev_timeout_pos; evutil_socket_t ev_fd; struct event_base *ev_base; union &#123; /* used for io events */ struct &#123; TAILQ_ENTRY(event) ev_io_next; struct timeval ev_timeout; &#125; ev_io; /* used by signal events */ struct &#123; TAILQ_ENTRY(event) ev_signal_next; short ev_ncalls; /* Allows deletes in callback */ short *ev_pncalls; &#125; ev_signal; &#125; _ev; short ev_events; short ev_res; /* result passed to event callback */ short ev_flags; ev_uint8_t ev_pri; /* smaller numbers are higher priority */ ev_uint8_t ev_closure; struct timeval ev_timeout; /* allows us to adopt for different types of events */ void (*ev_callback)(evutil_socket_t, short, void *arg); void *ev_arg;&#125;; 宏展开后为： 123456789101112131415161718192021222324252627282930313233343536373839struct event &#123; struct &#123; struct event *tqe_next; struct event **tqe_prev; &#125; ev_active_next; struct &#123; struct event *tqe_next; struct event **tqe_prev; &#125; ev_next; union &#123; struct &#123; struct event *tqe_next; struct event **tqe_prev; &#125; ev_next_with_common_timeout; int min_heap_idx; &#125; ev_timeout_pos; int ev_fd; struct event_base *ev_base; union &#123; struct &#123; struct &#123; struct event *tqe_next; struct event **tqe_prev; &#125; ev_io_next; struct timeval ev_timeout; &#125; ev_io; struct &#123; struct &#123; struct event *tqe_next; struct event **tqe_prev; &#125; ev_signal_next; short ev_ncalls; short *ev_pncalls; &#125; ev_signal; &#125; _ev; short ev_events; short ev_res; short ev_flags; uint8_t ev_pri; uint8_t ev_closure; struct timeval ev_timeout; void (*ev_callback)(int, short, void *arg); void *ev_arg;&#125;; Signal1234567891011121314151617181920struct evsig_info &#123; /* Event watching ev_signal_pair[1] */ struct event ev_signal; /* Socketpair used to send notifications from the signal handler */ evutil_socket_t ev_signal_pair[2]; /* True iff we've added the ev_signal event yet. */ int ev_signal_added; /* Count of the number of signals we're currently watching. */ int ev_n_signals_added; /* Array of previous signal handler objects before Libevent started * messing with them. Used to restore old signal handlers. */#ifdef _EVENT_HAVE_SIGACTION struct sigaction **sh_old;#else ev_sighandler_t **sh_old;#endif /* Size of sh_old. */ int sh_old_max;&#125;; event_listev_map.c中的evmap_io中用到了event_list结构，event_list在event_struct.h的结构是: 123456789TAILQ_HEAD (event_list, event);#ifndef TAILQ_HEAD#define _EVENT_DEFINED_TQHEAD#define TAILQ_HEAD(name, type) \struct name &#123; \ struct type *tqh_first; \ struct type **tqh_last; \&#125;#endif 使用cpp或者gcc -E展开后得到的结果： 12345struct event_list&#123; struct event *tqh_first; struct event **tqh_last;&#125;;]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
+      <tags>
+        <tag>C</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[C++程序构建工具]]></title>
+    <url>%2F2016%2F04%2F29%2Fbuild-tools%2F</url>
+    <content type="text"><![CDATA[depot_tools gyp Linux123export GYP_GENERATORS=make,ninjamakeninja -C out/Default Windows12set GYP_MSVS_VERSION=2015set GYP_GENERATORS=msvs,ninja gyp支持的本地构建工具有：cmake,eclipse,make,msvs,ninja,xcode 在windows下让cmake生成makefile必须用gnu makefile。 参考Hello GYPHello NinjaHello CMake]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Boost学习 —— algorithm]]></title>
+    <url>%2F2016%2F04%2F29%2Fboost-algorithm%2F</url>
+    <content type="text"><![CDATA[Searching AlgorithmsBoyer-Moore Search(boyer_moore.hpp)InterfaceFor flexibility, the Boyer-Moore algorithm has two interfaces: A object-based interface 123456789template&lt;typename patIter&gt;class boyer_moore &#123;public: boyer_moore(patIter first, patIter last); ~boyter_moore(); template&lt;typename corpusIter&gt; corpusIter operator()(corpusIter corpus_first, corpusIter corpus_last);&#125;; A procedural one 1234template&lt;typename patIter, typename corpusIter&gt;corpusIter boyer_moore_search( corpusIter corpus_first, corpusIter corpus_last, patIter first, patIter last); PerformanceMemory UseThe algorithm allocates two internal tables The first one is proportional to the length of the pattern The second one has one entry for each member of the “alphabet”in the pattern. For (8-bit) character types, this table contains 256 entries.]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
+      <tags>
+        <tag>C++ Boost</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[C++11 —— override和final]]></title>
+    <url>%2F2016%2F04%2F29%2Fc%2B%2B11-tutor%2F</url>
+    <content type="text"><![CDATA[override 多态行为的基础：基类声明虚函数，派生类声明一个虚函数覆写该虚函数 覆盖要求：函数签名一致(函数签名包括：函数名、参数列表、const) 派生类希望覆写基类的虚函数，但是虚函数的参数类型不同，如下：1234567891011class Base&#123;public: virtual void f(int) &#123; cout &lt;&lt; "f in base" &lt;&lt; endl; &#125;&#125;;class Derived : public Base&#123;public: virtual void f(short) &#123; cout &lt;&lt; "f in derived" &lt;&lt; endl; &#125;&#125;; 虽然派生类Derived继承了基类Base并希望覆写函数f，但是在派生类中，f的参数类型与基类并不相同，此时派生类只是存在另一个同名的函数f。当通过Base类型的指针指向Derived类型时，调用函数f只会打印出”f in base”。 派生类希望覆写基类的虚函数，基类中的虚函数是const的，派生类却不是1234567891011class Base&#123;public: virtual void f() const &#123; cout &lt;&lt; "f in base" &lt;&lt; endl; &#125;&#125;;class Derived : public Base&#123;public: virtual void f() &#123; cout &lt;&lt; "f in derived" &lt;&lt; endl; &#125;&#125;; 同样，此时基类也没有覆写函数f。 overried标识符123456789101112class Base&#123;public: virtual void f() const &#123; cout &lt;&lt; "f in base" &lt;&lt; endl; &#125;&#125;;class Derived : public Base&#123;public: // void f() override // error: 'void Derived::f()' marked 'override', but does not override void f() const override &#123; cout &lt;&lt; "f in derived" &lt;&lt; endl; &#125;&#125;; 在派生类中，使用了标识符overried来明确说明要覆写基类中的虚函数，此时若不加const或者参数列表与基类不一致，就会在编译时提示错误。 final 让基类不允许被继承 希望函数不要再被派生类进一步重写，可以在基类或者派生类中使用final。在派生类中，可以同时使用overried和final 让基类不允许被继承123class Base final &#123; &#125;;class Derived : public Base &#123; &#125;; 此时在编译时编译器会提示Derived类无法从Base类继承，因为它已经被声明为final 希望函数不要再被派生类进一步重写1234567891011class Base&#123;public: virtual void f() final &#123; cout &lt;&lt; "f in base" &lt;&lt; endl; &#125;&#125;;class Derived : public Base&#123;public: virtual void f() &#123; cout &lt;&lt; "f in derived" &lt;&lt; endl; &#125;&#125;; 在编译时编译器会提示Base中的f声明为final的函数无法被Derived中的f重写 1234567891011121314151617class Base&#123;public: virtual void f() &#123; cout &lt;&lt; "f in base" &lt;&lt; endl; &#125;&#125;;class Derived : public Base&#123;public: virtual void f() override final &#123; cout &lt;&lt; "f in derived" &lt;&lt; endl; &#125;&#125;;class SecondDerived : public Derived&#123;public: virtual void f() override &#123; cout &lt;&lt; "f in second derived" &lt;&lt; endl; &#125;&#125;; 此时Derived中声明为fianl的函数无法被SecondDerived中的f重写。 注意虽然override和final不是C++的关键字，但是在我们用到C++11的这两个特性时，为了防止产生歧义。]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[如何释放vector的闲置空间]]></title>
+    <url>%2F2016%2F04%2F29%2Frelease-free-space-of-vector%2F</url>
+    <content type="text"><![CDATA[std::vector的容量操作C++ STL容器vector对于容量的操作是只增不减，如下面的代码： 123456789101112131415vector&lt;int&gt; v;v.push_back(12); // capacity: 1v.push_back(22);// capacity: 1 * 2 = 2v.push_back(32);// capacity: 2 * 2 = 4cout &lt;&lt; v.capacity() &lt;&lt; endl; // 4v.insert(v.begin(), 12, 86);cout &lt;&lt; v.capacity() &lt;&lt; endl; // 15// 删除第 3 个到倒数第 2 个元素（不含）之间的所有元素v.erase(v.begin() + 2, v.end() ­- 2);cout &lt;&lt; v.size() &lt;&lt; endl; // size: 4cout &lt;&lt; v.capacity() &lt;&lt; endl; // 15 &lt;­­­ #1v.clear();cout &lt;&lt; v.capacity() &lt;&lt; endl; // 15 &lt;­­­ #2v.reserve(0);cout &lt;&lt; v.capacity() &lt;&lt; endl; // 15 &lt;­­­ #3 由上面的代码可以看出，不论是删除vector中的元素(#1)、甚至clear整个容器的内容(#2)、或显式将capacity保留为0(#3)，都无法减小vector中闲置的空间。 std::vector复制构造不会复制capacity如下列代码: 12345678910vector&lt;int&gt; v2;v2.push_back(12);v2.push_back(28);cout &lt;&lt; v2.capacity() &lt;&lt; endl; // 2v2.reserve(120);cout &lt;&lt; v2.capacity() &lt;&lt; endl; // 120cout &lt;&lt; v2.size() &lt;&lt; endl; // 2vector&lt;int&gt; v3(v2);cout &lt;&lt; v3.capacity() &lt;&lt; endl; // 2 &lt;­­ #1cout &lt;&lt; v3.size() &lt;&lt; endl; // 2 如上所示，v3的capacity只是2(#2)，即v2中的元素个数。 通过复制构造和swap来释放vector容器闲置的内存空间如下列代码： 123456789vector&lt;int&gt; v2;v2.push_back(12);v2.push_back(28);cout &lt;&lt; v2.capacity() &lt;&lt; endl; // 2v2.reserve(120);cout &lt;&lt; v2.capacity() &lt;&lt; endl; // 120cout &lt;&lt; v2.size() &lt;&lt; endl; // 2vector&lt;int&gt; (v2).swap(v2); // &lt;­­ #1cout &lt;&lt; v2.capacity() &lt;&lt; endl; // 2 &lt;­­ #2 为什么可以减小v2的capacity？ vector(v2)调用vector的复制构造函数，用v2的元素来构造一个新的、临时对象(无名对象) 由于是复制构造，所以新的、临时对象的capacity是v2的元素的个数，所以为2 由于成员函数swap()交换两个容器的一切：包括所有迭代器、size、所有元素甚至capacity 经过 swap()后，v2的capacity变成新的、临时对象的capacity，即2，对应的：临时对象的capacity变成120 由于vector(v2)创建的临时对象在vector(v2).swap(v2);这个语句结束后销毁，至此v2的capacity为2，原先闲置的空间(120-2个元素的空间)被释放(随着临时容器对象的销毁而释放)。 同理，完全清除一个vector的所有存储： 123456789vector&lt;int&gt; v2;v2.push_back(12);v2.push_back(28);cout &lt;&lt; v2.capacity() &lt;&lt; endl; // 2v2.reserve(120);cout &lt;&lt; v2.capacity() &lt;&lt; endl; // 120cout &lt;&lt; v2.size() &lt;&lt; endl; // 2vector&lt;int&gt; ().swap(v2); // &lt;­­ #1cout &lt;&lt; v2.capacity() &lt;&lt; endl; // &lt;­­ #2 (#1) 首先创建一个临时(空) 容器，然后与v2进行swap() 参考链接：如何释放 Vector 容器闲置的空间 vector的insert和push_back的区别std::vector::insert(在容器的指定位置插入元素) 如果新的size()比旧的capacity()大，会导致重新分配空间。如果新的size()比capacity()大，所有的迭代器和引用是无效的。另外，只有在插入位置之前保留的迭代器和引用是有效的，超过结尾的迭代器同样是无效的。std::vector::push_back(将给定的元素添加到容器的末尾) 新的元素被给定元素的一份拷贝所初始化 给定的值移动到新的元素当中 如果新的size()比capacity()大，所有的迭代器和引用(包括超过结尾的迭代器)是无效的，否则只有超过结尾的迭代器是无效的。 参考链接：C++ vector’s insert &amp; push_back difference]]></content>
+      <categories>
+        <category>程序设计</category>
+      </categories>
+      <tags>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[开发者应该具备的15个编程好习惯]]></title>
+    <url>%2F2016%2F04%2F29%2Fgood-habits%2F</url>
+    <content type="text"><![CDATA[动手编码之前，你需要对要编码实现的解决方案有一个正式的或粗略的设计。永远不要在没有任何设计的前提下就开始编码，除非所编代码不重要。 优秀的代码文档跟编程语言知识一样重要。在代码源文件中，为每个主要的代码段添加注释，解释代码的基本逻辑。最好注明程序的构建和修改日期，以及修改的原因也是非常有必要的。 维护程序的各个版本同样重要。当前有些编程工具都自带一个版本管理工具。无论你什么时候改变自己的程序，它们都会将其保存为.bak文件。 我的方法是为每个程序维护三个不同的版本。比如说，我有一个名为program.c的文件，这个文件同时也被其他项目组成员使用。我把这个文件复制为 program.c.old作为备份文件，并且当我修改时，我会备份另一个名为program.c.wrk的副本文件。当成功完成修改时替换 program.c.wrk文件。 你还可以给自己的程序版本添加一个日期或一些注释，像program260505.c或programReadFnWrking.c。 如果工程包含多个源文件，则声称一个README文件，注明每个源文件、数据文件、临时文件以及日志文件(如果有的话)的作用。你还可以注明编译和运行步骤。 有时候，你一定想知道为什么IF语句没有得到预想的结果。可能你使用的是等号，也就是“=”，而不是条件判定符号“==”。一个比较好的办法是用相反的顺序写条件语句。因此，你的条件语句应该如下：if(10==i)…因此，如果你错误地写成了单个等于号，在编译的时候也能检查出来并报错。 使用循环和条件语句时，先把左右括号对应起来，然后再在里面写其他语句。也就是：for(int i=0;i&lt;10;i++){printf(“i=%dn”,i);} 注：每一行开头的数字表明写循环代码的顺序。 避免使用幻数(magic numbers)。例如，不要写1circleArea = 3.14 * pow(radius,2); 而要使用如下代码： 123#define PI 3.14circleArea = PI * pow(radius,2); 使用有意义的变量和函数名称。例如，使用‘radius’来代替圆的半径，而不是用‘r’来表示。同样，函数名‘calculateArea’要比其他任 何隐晦的缩写要好得多。匆忙之下，我们也许会使用缩写的变量名，但一开始节省时间的话，之后会浪费更多的时间，去猜测缩写变量名代表什么。(编注：) 为后面的调试使用打印语句，这是个好习惯。但是，当完成最后代码后，去掉这些语句，有时也是一项危险的任务。添加一个方法，用于输出调试信息。当最终版本生成时，只要把这个方法注释掉就行。因此，只在一个地方做修改就可以了。 代码编写完之后，开始优化代码。之前声明的一些变量，现在可能没用了。同样，并不依赖循环的一些声明可以移到循环模块之外去。扎实的编译知识同样会对以后的代码优化有所帮助。 对自己的操作系统和硬件要有足够的了解，你可以从资源占用等方面提升程序的性能。 编写代码时要合理使用缩进，以使代码清晰可读。 把项目文件放到SOURCE、HEADERS、MAKE、EXES等不同的文件夹中。 研究别人编写的代码。这可以让你学习到新的编程技术，以及他们解决和你相同的任务时所使用的方法。 最后一条(但不是最不重要的一条)，备份源代码文件，这样当硬盘出错或相同的问题发生时，不至于前功尽弃。 附加：补充一条，坚持使用一种命名模式。如果你打算用匈牙利命名法，那就坚持并广泛使用，否则将适得其反。]]></content>
+      <categories>
+        <category>文章摘录</category>
+      </categories>
+      <tags>
+        <tag>编程经验</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Python高级编程(六)]]></title>
+    <url>%2F2016%2F04%2F29%2Fadvanced-python-06%2F</url>
+    <content type="text"><![CDATA[使用zc.buildoutzc.buildout原理virtualenv对于隔离一个python环境相当方便。zc.buildout提供了相同的隔离功能，并且进一步提供了： 一个简单的、在一个配置文件中定义这些依赖性的描述性语言 提供链接代码调用组合的输入点的插件系统 一种部署和发行应用程序源代码及其执行环境的方法 配置文件将描述环境中所需的egg，它们的状态以及构建应用程序所需要的所有其他元素 插件系统将注册这些包并按照执行的顺序将它们链接起来 最后，整个环境是独立和隔离的，因而可以像发行和部署后那样使用 配置文件结构zc.buildout依赖于一个结构与ConfigParser模块兼容的配置文件，类似于ini配置文件。 最小的配置文件最小的buildout配置文件中包含一个名为[buildout]的小节，其中有一个称作parts的变量。这个变量包含一个提供小节列表的多行值，如下所示： 12345678[buildout]parts= part1 part2[part1]recipe = my.recipe1[part2]recipe = my.recipe2 在parts中指定的每个小节至少有一个提供包名称的recipe值。这个包可以是任何python包，只要它定义一个zc.buildout入口点。 用这个文件，buildout将执行以下工作序列： 检查my.recipe1包是否安装，如果没有安装，读取并完成本地安装 执行my.recipe1入口点所指向的代码 然后，对parts做同样的事情 因而，buildout是一个基于插件的脚本，将被称为recipe的独立包的执行链接起来。用这个工具构建的环境包括recipe正确顺序的定义。 发行与分发小结]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python高级编程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Python高级编程(五)]]></title>
+    <url>%2F2016%2F04%2F29%2Fadvanced-python-05%2F</url>
+    <content type="text"><![CDATA[编写一个应用程序Atomisator概述整体描述工作环境编写各个包分发Atomisator包之间的依赖性小结]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python高级编程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Python高级编程(四)]]></title>
+    <url>%2F2016%2F04%2F28%2Fadvanced-python-04%2F</url>
+    <content type="text"><![CDATA[编写一个包用于所有包的公共模块setup.py模板： 12from setuptools import setupsetup(name='tools.name') name给出了egg的全名，由此，该脚本提供多个命令，可以使用–help-commands选项列出这些命令。 Standard command是distutils提供的内建命令，而Extra commands是由诸如setuptools这样的第三方包或任何其他定义和注册新命令的包所创建的。 sdistsdist命令是最简单的命令，它用来创建一个发行树，运行一个包所需的一切内容都将复制到这里。然后，这棵树被归档到一个或多个档案文件中。这个档案基本上是一个源树的副本。 这个命令是从目标系统独立地分发一个包的最简单方式。它将创建一个dist文件夹，其中包含可被分发的档案。使用它之前，必须传递一个附加的参数给setup，以提供版本号，如果不给它提供一个version值，那么它将使用version=0.0.0。 12from setuptools import setupsetup(name='tools.name', version='0.1.1') 这个版本号在升级时十分有用，每当发行包时都将提升版本号，这样目标系统就知道它已经被修改了。 在sdist分发中，如果包含有C程序库或扩展，目标系统将负责编译它们，这在基于Linux和Mac OS的系统上是很常见的，因为他们都提供编译器。但是，在windows下并不常见。这就是当一个包打算在多个平台下运行时，应该总是和一个预编译分发版本一起分发的原因。 MANIFEST.in文件基于模板的方法创建包模板开发周期小结]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python高级编程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Python高级编程(三)]]></title>
+    <url>%2F2016%2F04%2F28%2Fadvanced-python-03%2F</url>
+    <content type="text"><![CDATA[选择好的名称PEP8和命名最佳实践命名风格 命名指南参数最佳实践类名模块和包名称使用API有用的工具小结]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python高级编程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Python高级编程(二)]]></title>
+    <url>%2F2016%2F04%2F28%2Fadvanced-python-02%2F</url>
+    <content type="text"><![CDATA[语法最佳实践——类级子类化内建类型访问超类中的方法super是一个内建类型，用来访问属于某个对象的超类中的特性(attribute)，虽然它的使用与函数类似，但是它实际上仍然是一个内建类型。 理解python的方法解析顺序L[MyClass(Base1, Base2)] = MyClass + merge(L[Base1], L[Base2], Base1, Base2) C的线性化是C加上父类的线性化和父类列表的合并的总和。类的__mro__特性(只读)用来存储线性化计算的结果，计算将在类定义载入时完成。 super的缺陷当使用了多重继承的层次结构时，再使用它是相当危险的，这主要是因为类的初始化。在python中，基类不会在__init__中被隐式地调用，所以依靠开发人员来调用它们。 混用super和传统调用 不同种类的参数 最佳实践为了避免出现前面提到的所有问题，在Python在这个领域上取得进展之前，必须考虑一下几点： 应该避免多重继承 super的使用必须一致 不要混用老式和新式的类 调用父类时必须检查类层次 描述符和属性1234567class MyClass(object): __secret_value = 1def test_myclass(): instance_of = MyClass() # print instance_of.__secret_value print instance_of._MyClass__secret_value 描述符描述符用来自定义在引用一个对象上的特性时所应该完成的事情，是python中复杂特性的基础，它们在内部使用，以实现属性、类、静态方法和super类等。它们是定义另一个类特性可能的访问方式的类，换句话说，一个类可以委托另一个类来管理其特性。 描述符类基于三个必须实现的特殊方法： __set__ 在任何特性被设置的时候调用，称其为setter __get__ 在任何特性被读取的时候调用，称其为getter __delete__ 在特性上请求del时调用 这些方法将在__dict__特性之前被调用 实现了__get__和__set__的描述符被称为数据描述符，只实现__get__的描述符被称为非数据描述符 内省描述符这种描述符将检查宿主类签名，以计算一些信息 元描述符这种描述符使用类方法本身来完成值计算 属性属性提供了一个内建的描述符类型，它知道如何将一个特性链接到一组方法上。属性采用fget参数和三个可选的参数——fset，fdel和doc。最后一个参数可以提供用来定义一个链接到特性的docstring，就像是个方法一样。 属性简化了描述符的编写，但是在使用类的继承时必须小心处理，所创建的特性使用当前类的方法创建，而不应使用在派生类中重载的方法。这有些混乱，因为后者是大部分实现属性的语言中相当合乎逻辑的行为。 槽python允许使用__slots__特性为指定的类设置一个静态特性列表，并且跳过每个类实例中__dict__列表的创建工作。它们用来为特性很少的类节省存储空间，因为将不在每个实例中创建__dict__。 因为任何新的特性都将在__dict__中被添加，所以这无法在派生类上工作。 元编程元编程是在运行时通过添加新的计算功能，或者改变已有功能来改变程序行为的一种技巧。 new-style类带来了一种能力，可以通过两个特殊的方法——__new__和__metaclass__在运行时修改类和对象的定义。 __new__方法特殊方法__new__是一个元构造程序，每当一个对象必须被factory类实例化时就将调用它。 123456789101112class Myclass(object): def __new__(cls): print '__new__ called' return object.__new__(cls) def __init__(self): print '__init__ called' self.a = 1&gt;&gt;&gt; instance = Myclass() __new__ called __init__ called __new__方法必须返回一个类的实例，因此它可以在对象创建之前或之后修改类。这对于确保对象构造程序不会被设置成一个不希望的状态，或者添加一个不能被构造程序删除的初始化时有帮助的。 例如：因为__init__在子类中不会被隐式调用，所以__new__可以用来确定在整个类层次中完成初始化工作。 __metaclass__方法元类(MetaClass)提供了在类对象通过其工厂方法(Factory)在内存中创建时进行交互的能力。它的效果与__new__类似，只不过是在类级别上运行。]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python高级编程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Python高级编程(一)]]></title>
+    <url>%2F2016%2F04%2F28%2Fadvanced-python-01%2F</url>
+    <content type="text"><![CDATA[语法最佳实践——低于类级列表推导(List Comprehensions)1[ i for i in range(10) if i % 2 == 0] 每当要对序列中的内容进行循环处理时，就应该尝试用List Comprehensions来代替它。 迭代器和生成器(Iterator &amp; Generator)迭代器(Iterator)迭代器只不过是一个实现迭代器协议的容器对象，它基于两个方法： next 返回容器的下一个项目 __iter__ 返回迭代器本身 生成器(Generator)生成器提供了一种出色的方法，使得需要返回一系列元素的函数所需的代码更加简单、高效。基于yield指令，可以暂停一个函数并返回中间结果。该函数将保存执行环境并且可以在必要时恢复。 如： 1234567def fib(): a, b = 0, 1 while True: yield b a, b = b, a + bf = fib[f.next() for i in range(10)] 该函数将返回一个特殊的迭代器，也就是generator对象，它知道如何保存执行环境。对它的调用时不确定的，每次都将产生序列中的下一个元素。这种语法很简洁，算法的不确定特性并没有影响代码的可读性。不必提供使函数可停止的方法。实际上，这看上去像是用伪代码设计的序列一样。 python引入的与生成器相关的最后一个特性是提供了与next方法调用的代码进行交互的功能。yield将变成一个表达式，而一个值可以通过一个send函数来传递。 如： 1234567891011121314151617181920def psychologist(): print 'Please input OK' while True: answer = (yield) if answer is not None: if answer.endswith(','): print 'The answer is not ok' elif 'good' in answer: print "That's good, go on" elif 'bad' in answer: print "Don't be so negative"&gt;&gt;&gt; from demo import *Please input OK&gt;&gt;&gt; f.send('ok')&gt;&gt;&gt; f.send('good')That's good, go on&gt;&gt;&gt; f.send('bad')Don't be so negative&gt;&gt;&gt; f.send('bad,')The answer is not ok send的工作机制与next一样，但是yield将变成能够返回传入的值，因此这个函数可以根据客户端改变其行为，同时还添加了throw和close两个函数，以完成该行为。它们向生成器抛出一个错误： throw允许客户端代码传入要抛出的任何类型的异常 close的工作方式是相同的，但是将会抛出一个特定的异常–GeneratorExit，在这种情况下，生成器必须再次抛出GeneratorExit或StopIteration异常 finally部分在之前的版本中是不允许使用的，它将捕获任何未被 捕获的close和throw调用，是完成清理工作的推荐方式 协同程序(coroutine)协同程序是可以挂起，恢复，并且有多个进入点的函数。 生成器几乎就是协同程序，添加send，throw和close，其初始意图就是为该语言提供一种类似协同程序的特性。 PEP342实例化了生成器的行为，也提供了创建协同程序的调度程序的完整实例，这个模式被称为Trampoline，可以被看作是生成和消费数据的协同程序之间的媒介。它使用一个队列将协同程序连接在一起。 在PyPI中的multitask模块(用easy_install multitask安装)实现了这一模式，使用也十分简单： 如： 12345678910111213141516import multitaskimport timedef coroutine_1(): for i in range(3): print 'c1' yield idef coroutine_2(): for i in range(3): print 'c2' yield i&gt;&gt;&gt; multitask.add(coroutine_1())&gt;&gt;&gt; multitask.add(coroutine_2())&gt;&gt;&gt; multitask.run() 另一种协同程序的实现：greenlet 生成器表达式(Genexp)python为编写针对序列的简单生成器提供了一种快捷方式。可以用一种类似列表推导的语法来代替yield。在此，使用圆括号替代中括号： 如： 123iter = (x ** 2 for x in range(10) if x % 2 == 0)for el in iter: print el itertools模块islice: 窗口迭代器islice将返回一个运行在序列的子分组之上的迭代器 如： 12345678910111213def starting_at_five(): value = raw_input().strip() while value != '': for el in itertools.islice(value.split(), 4, None): yield el value = raw_input().strip()&gt;&gt;&gt; iter = starting_at_five()&gt;&gt;&gt; iter.next()one two three four five six'five'&gt;&gt;&gt; iter.next()'six' 当需要抽取位于流中特定位置的数据时，都可以使用islice。 tee: 往返式迭代器迭代器将消费其处理的序列，但它不会往回处理。tee提供了在一个序列之上运行多个迭代器的模式。如果提供第一次运行的信息，就能够帮助我们再次基于这些数据运行。例如：读取文件的表头可以在运行一个处理之前提供特性信息， 如： 123456789101112def with_head(iterable, headsize = 1): a, b = itertools.tee(iterable) return list(itertools.islice(a, headsize)), b&gt;&gt;&gt; seq = [1, 2, 3, 4, 5]&gt;&gt;&gt; with_head(seq)([1], &lt;itertools.tee object at 0xb82a28&gt;)&gt;&gt;&gt; with_head(seq, 2)([1, 2], &lt;itertools.tee object at 0xb82ab8&gt;)&gt;&gt;&gt; with_head(seq, 3)([1, 2, 3], &lt;itertools.tee object at 0xb82a28&gt;)&gt;&gt;&gt; with_head(seq, 4)([1, 2, 3, 4], &lt;itertools.tee object at 0xb82ab8&gt;) groupby: uniq迭代器类似于unix命令uiq，它可以对来自一个迭代器的重复元素进行分组。groupby的一个应用实例是使用RLE来压缩数据， 如： 12345678910111213from itertools import groupbydef compress(data): return ((len(list(group)), name) for name, group in groupby(data))def decompress(data): return (car * size for size, car in data)&gt;&gt;&gt; list(compress('get uuuuuup'))[(1, 'g'), (1, 'e'), (1, 't'), (1, ' '), (6, 'u'), (1, 'p')]&gt;&gt;&gt; compressed = compress('get uuuuuup')&gt;&gt;&gt; ''.join(decompress(compressed))'get uuuuuup' 每当需要在数据上完成一个摘要的时候，都可以使用groupby。这时候内建的sorted函数就非常有用，可以使传入的数据中相似的元素相邻。 其它函数 itertools函数完整列表 装饰器装饰器原始的使用场景是可以将方法在定义的首部将其定义为类方法或静态方法。使用了装饰器以后，其语法更加浅显易懂。 如何编写装饰器 最简单和最容易理解的方法是编写一个函数，返回封装原始函数调用的一个子函数 常见的装饰器模式包括： 参数检查 检查函数接收或返回的参数，在特定上下文执行时可能有用。例如，如果一个函数通过XML-RPC调用，python将不能和静态类型语言中一样直接提供它的完整签名。当XML-RPC客户要求函数签名时，就要这个功能来提供内省能力。 缓存 TODO 代理 TODO 上下文提供者 上下文装饰器用来确保函数可以运行在正确的上下文中，或者在函数前后执行一些代码。换句话说，它可以用来设置或复位特定的执行环境。 如：当一个数据项必须与其他线程共享时，就需要用一个锁来确保它在多重访问时得到保护。这个锁可以在装饰器中编写，示例如下： 1234567891011121314from threading import RLocklock = RLock()def synchronized(function): def _synchronized(*args, **kw): lock.acquire() try: return function(*args, **kw) finally: lock.release() return _synchronized@lockerdef thread_safe(): pass 上下文装饰器可以使用with语句来替代，创造这条语句的作用是使try…finally模式更加流畅，在某些情况下，它覆盖了上下文装饰器的使用场景。 python装饰器学习 with和contextlib对于要确保即使发生一个错误时也能运行一些清理代码而言，try…finally语句是很有用的，例如： 关闭一个文件 释放一个锁 创建一个临时的代码补丁 在特殊环境中运行受保护的代码 with语句覆盖了这些使用场景，为在一个代码块前后调用一些代码提供了一种简单的方法 如： 123456def readfile(): with file('/etc/hosts') as source_file: for line in source_file: if line.startswith('#'): continue print line contextlib模块未来给with语句提供一些辅助类，标准程序库中添加了一个模块。最有用的辅助类是contextmanager，这是一个装饰器，它增强了包含以yield语句分开的__enter__和__exit__两部分的生成器。 参考资料Python在线教程 样式指南]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>Python高级编程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Electron快速入门]]></title>
+    <url>%2F2016%2F04%2F28%2Felectron-quick-start%2F</url>
+    <content type="text"><![CDATA[Electron简介Electron是一种可以使用网页技术来开发跨平台桌面应用的解决方案，用html，css和js就可以写桌面应用。 安装cnpm安装好了nodejs和npm之后，为了方便在国内下载npm包，可以使用淘宝的npm镜像 首先安装cnpm 1npm install -g cnpm --registry=https://registry.npm.taobao.org 安装electron1cnpm install electron-prebuilt -g 运行官方示例electron-quick-start1234git clone https://github.com/electron/electron-quick-startcd electron-quick-startnpm installnpm start 运行结果如图所示：]]></content>
+      <categories>
+        <category>Nodejs</category>
+      </categories>
+      <tags>
+        <tag>Electron</tag>
+      </tags>
+  </entry>
+</search>
